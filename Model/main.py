@@ -124,6 +124,11 @@ class GameEngine(object):
         if random.random() < modelConst.oil_probability:
             create_oil()
 
+    def set_base(self) :
+        # todo
+        for index in range(modelConst.player_number) :
+            self.bases.append(Base(index, modelConst.base_center[index]))
+    
     def run(self):
         """
         Starts the game engine loop.
