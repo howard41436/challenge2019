@@ -33,8 +33,13 @@ class GameEngine(object):
         self.players = []
         self.TurnTo = 0
 
+<<<<<<< HEAD
         self.init_oil()
         self.setPlayer()
+=======
+        self.oil_list = []
+        self.base_list = []
+>>>>>>> 23fced82afb4ad6115e575dd7edc8ca720f1b4d8
 
         random.seed(time.time())
         
@@ -126,7 +131,7 @@ class GameEngine(object):
     def set_base(self) :
         # todo
         for index in range(modelConst.player_number) :
-            self.bases.append(Base(index, modelConst.base_center[index]))
+            self.base_list.append(Base(index, modelConst.base_center[index]))
     
     def run(self):
         """
