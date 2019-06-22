@@ -3,10 +3,10 @@ import pygame as pg
 import Model.main as model
 from Events.Manager import *
 
-import Model.const       as modelConst
-import View.const        as viewConst
-import Controller.const  as ctrlConst
-import Interface.const   as IfaConst
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as ifa_const
 
 class GraphicalView(object):
     """
@@ -44,7 +44,7 @@ class GraphicalView(object):
 
             self.display_fps()
             # limit the redraw speed to 30 frames per second
-            self.clock.tick(viewConst.frame_per_sec)
+            self.clock.tick(view_const.frame_per_sec)
         elif isinstance(event, EventQuit):
             # shut down the pygame graphics
             self.is_initialized = False
@@ -61,14 +61,14 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(viewConst.Color_Black)
+            self.screen.fill(view_const.Color_Black)
             # write some word
             somewords = self.small_font.render(
                         'You are in the Menu. Space to play. Esc exits.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.screen_size[0] - SurfaceX)/2
-            pos_y = (viewConst.screen_size[1] - SurfaceY)/2
+            pos_x = (view_const.screen_size[0] - SurfaceX)/2
+            pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
@@ -80,7 +80,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw backgound
-        self.screen.fill(viewConst.Color_White)
+        self.screen.fill(view_const.Color_White)
 
         for player in self.model.players:
             pos = ( int(player.pos[0]), int(player.pos[1]) )
@@ -97,7 +97,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_STOP
 
             # draw backgound
-            s = pg.Surface(viewConst.screen_size, pg.SRCALPHA)
+            s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
             s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
 
             # write some word
@@ -105,8 +105,8 @@ class GraphicalView(object):
                         'stop the game. space, escape to return the game.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.screen_size[0] - SurfaceX)/2
-            pos_y = (viewConst.screen_size[1] - SurfaceY)/2
+            pos_x = (view_const.screen_size[0] - SurfaceX)/2
+            pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
 
             # update surface
@@ -115,7 +115,7 @@ class GraphicalView(object):
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
-            viewConst.game_caption, self.clock.get_fps()
+            view_const.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
         
@@ -124,8 +124,8 @@ class GraphicalView(object):
         Set up the pygame graphical display and loads graphical resources.
         """
         pg.init(); pg.font.init()
-        pg.display.set_caption(viewConst.game_caption)
-        self.screen = pg.display.set_mode(viewConst.screen_size)
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
         self.small_font = pg.font.Font(None, 40)
         self.is_initialized = True
