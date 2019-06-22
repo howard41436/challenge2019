@@ -5,9 +5,9 @@ from Model.GameObject.player import *
 from Model.GameObject.oil import *
 from Model.GameObject.base import *
 
-#sys.path.append('../')  # to import from parent directory
 import Model.const       as model_const
 import View.const        as view_const
+from Events.Manager import *
 
 class GameEngine(object):
     """
@@ -68,7 +68,7 @@ class GameEngine(object):
             self.running = False
         elif isinstance(event, EventInitialize) or \
             isinstance(event, EventRestart):
-            self.initialize()
+            pass  # self.initialize()
 
     def init_player(self):
         # set AI Names List
@@ -111,6 +111,7 @@ class GameEngine(object):
             player.update(player.direction)
         for oil in self.oils :
             oil.update()
+        try_create_oil()
 
     def create_oil(self):
         pos = random.randint(0, view_const.screen_size[0]), random.randint(0, view_const.screen_size[1])
@@ -146,8 +147,3 @@ class GameEngine(object):
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
 
-def main():
-    G = GameEngine()
-
-if __name__ == '__main__':
-    main()

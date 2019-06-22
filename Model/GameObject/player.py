@@ -9,7 +9,7 @@ class Player(object):
         self.index = index
         self.name = name
         self.bag = 0
-        self.position = Vec(view_const.position[index])
+        self.position = Vec(1, 1)#TODO add position in view_const Vec(view_const.position[index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
 
