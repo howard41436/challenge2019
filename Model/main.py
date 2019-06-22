@@ -6,10 +6,10 @@ from GameObject.player import *
 from GameObject.oil import *
 from GameObject.base import *
 
-import const             as model_const
-#import View.const        as view_const
-#import Controller.const  as ctrl_const
-#import Interface.const   as Ifa_const
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as ifa_const
 
 class GameEngine(object):
     """
@@ -80,12 +80,12 @@ class GameEngine(object):
             if len(self.AI_names) > index:
                 PlayerName = self.AI_names[index]
                 if PlayerName == "~":
-                    if manual_player_num < model_const.Maxmanual_player_num:
+                    if manual_player_num < model_const.max_manual_player_num:
                         manual_player_num += 1
                     else:
                         self.AI_names[index] = "_"
             else:
-                if manual_player_num < modelConst.max_manual_player_num:
+                if manual_player_num < model_const.max_manual_player_num:
                     manual_player_num += 1
                     self.AI_names.append("~")
                 else:
