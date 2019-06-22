@@ -4,10 +4,10 @@ from Events.Manager import *
 from Model.StateMachine import *
 from Model.GameObject.Player import *
 
-import Model.const       as modelConst
-import View.const        as viewConst
-import Controller.const  as ctrlConst
-import Interface.const   as IfaConst
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as Ifa_const
 
 class GameEngine(object):
     """
@@ -31,10 +31,13 @@ class GameEngine(object):
         self.state = StateMachine()
         self.AINames = AINames
         self.players = []
+        self.oil_list = []
+        self.base_list = []
         self.TurnTo = 0
 
         self.init_oil()
-        self.setPlayer()
+        self.init_player()
+        self.init_base()
 
         random.seed(time.time())
         
@@ -67,27 +70,27 @@ class GameEngine(object):
              isinstance(event, Event_Restart):
             self.Initialize()
 
-    def setPlayer(self):
+    def init_player(self):
         # set AI Names List
         # "_" ==> default AI, "~" ==> manual player
-        self.players, ManualPlayerNum = [], 0
-        for index in range(modelConst.PlayerNum):
+        self.players, manual_player_num = [], 0
+        for index in range(model_const.PlayerNum):
             if len(self.AINames) > index:
                 PlayerName = self.AINames[index]
                 if PlayerName == "~":
-                    if ManualPlayerNum < modelConst.MaxManualPlayerNum:
+                    if ManualPlayerNum < model_const.MaxManualPlayerNum:
                         ManualPlayerNum += 1
                     else:
                         self.AINames[index] = "_"
             else:
-                if ManualPlayerNum < modelConst.MaxManualPlayerNum:
+                if ManualPlayerNum < model_const.MaxManualPlayerNum:
                     ManualPlayerNum += 1
                     self.AINames.append("~")
                 else:
                     self.AINames.append("_")
 
         # init Player object
-        for index in range(modelConst.PlayerNum):
+        for index in range(model_const.PlayerNum):
             if self.AINames[index] == "~":
                 Tmp_P = player("manual", index, False)
             elif self.AINames[index] == "_":
@@ -102,31 +105,32 @@ class GameEngine(object):
             player.direction = direction;
 
 
-    def updateObjects(self):
+    def UpdateObjects(self):
         # Update players
         for player in self.players:
-            player.updatePos()
+            player.update(player.direction)
+        for oil in self.oils :
+            oil.update()
 
     def init_oil(self):
-        self.oil_list = []
-        for _ in range(modelConst.init_oil_number):
+        for _ in range(model_const.init_oil_number):
             create_oil()
 
     def create_oil(self):
-        pos = random.randint(0, viewConst.ScreenSize), random.randint(0, viewConst.ScreenSize)
-        price = random.randint(modelConst.price_min, modelConst.price_max)
-        weight = random.randint(modelConst.weight_min, modelConst.weight_max)
+        pos = random.randint(0, view_const.ScreenSize), random.randint(0, view_const.ScreenSize)
+        price = random.randint(model_const.price_min, model_const.price_max)
+        weight = random.randint(model_const.weight_min, model_const.weight_max)
         new_oil = Oil(pos, price, weight)
         self.oil_list.append(new_oil)
 
     def try_create_oil(self):
-        if random.random() < modelConst.oil_probability:
+        if random.random() < model_const.oil_probability:
             create_oil()
 
-    def set_base(self) :
+    def init_base(self) :
         # todo
-        for index in range(modelConst.player_number) :
-            self.base_list.append(Base(index, modelConst.base_center[index]))
+        for index in range(model_const.player_number) :
+            self.base_list.append(Base(index, model_const.base_center[index]))
     
     def run(self):
         """
