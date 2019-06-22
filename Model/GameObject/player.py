@@ -1,6 +1,7 @@
 import view.const	as view_const
 import model.const 	as model_const	
 import 	oil	as oil
+import  
 from pygame.math import Vector2 as Vec
 import random
 
@@ -14,7 +15,7 @@ class player(object):
 		self.price = 0
 
 
-	def update_position(self, direction[]):
+	def update_position(self, direction, oils, bases):
 		if self.position[0] + direction[0] < 10 \
 			or self.position[0] + direction[0] > view_const.size-10 :
 			direction[0] = 0
@@ -24,13 +25,23 @@ class player(object):
 
 		self.position += Vec(direction)
 
-		for i in range(len(oils)-1, -1, -1) :
+		for i in reverse(range(len(oils)) :
 			if oils[i].pos == self.position :
 				if self.bag + oils[i].weight <= model_const.bag_capacity :
 					self.bag += oils[i].weight
 					self.price += oils[i].price
 					oils.remove(i)
-	def				
+		for i in reverse(range(len(bases))) :
+			if self.position[0] <= bases[i].center + bases[i].length/2 \
+				and self.position[0] >= bases[i].center - bases[i].length/2 \
+				or self.position[1] <= bases[i].center + bases[i].length/2 \
+				and self.position[1] <= bases[i].center - bases[i].length/2 :
+				put_oil(self.price)
+				self.price = 0
+
+
+
+
 
 
 
