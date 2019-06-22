@@ -19,14 +19,14 @@ class Player(object):
         self.bag = 0
         self.position = Vec(view_const.position[index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
-        self.price = 0
+        self.value = 0
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
             if Vec.magnitude(e.position - self.position) <= e.radius + self.radius:
                 if self.bag + e.weight <= model_const.bag_capacity:
                     self.bag += e.weight
-                    self.price += e.price
+                    self.value += e.price
                     oils.remove(i)
 
     def store_price(self, bases):

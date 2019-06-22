@@ -32,7 +32,7 @@ class GameEngine(object):
         self.running = False
         #self.state = StateMachine()
         self.AI_names = AI_names
-        self.players = []
+        self.player_list = []
         self.oil_list = []
         self.base_list = []
         self.turn_to = 0
@@ -75,7 +75,7 @@ class GameEngine(object):
     def init_player(self):
         # set AI Names List
         # "_" ==> default AI, "~" ==> manual player
-        self.players, manual_player_num = [], 0
+        self.player_list, manual_player_num = [], 0
         for index in range(model_const.player_number):
             if len(self.AI_names) > index:
                 PlayerName = self.AI_names[index]
@@ -99,17 +99,17 @@ class GameEngine(object):
                 Tmp_P = player("default", index)
             else:
                 Tmp_P = Player(self.AI_names[index], index)
-            self.players.append(Tmp_P)
+            self.player_list.append(Tmp_P)
 
     def set_player_direction(self, player_index, direction):
-        if self.players[player_index] is not None:
-            player = self.players[player_index]
+        if self.player_list[player_index] is not None:
+            player = self.player_list[player_index]
             player.direction = direction
 
 
     def update_objects(self):
-        # Update players
-        for player in self.players:
+        # Update player_list
+        for player in self.player_list:
             player.update(player.direction)
         for oil in self.oils :
             oil.update()
