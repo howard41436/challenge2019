@@ -119,6 +119,11 @@ class GameEngine(object):
             new_oil = Oil(pos, price, weight)
             oil_list.append(new_oil)
 
+    def set_base(self) :
+        # todo
+        for index in range(modelConst.player_number) :
+            self.bases.append(Base(index, modelConst.base_center[index]))
+    
     def run(self):
         """
         Starts the game engine loop.
