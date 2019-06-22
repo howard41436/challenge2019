@@ -1,5 +1,9 @@
 from pygame.math import Vector2 as Vec
-from Model.const as modelconst
+
+#import sys
+#sys.path.append('../')
+
+import const as model_const
 
 class Base(object) :
     def __init__(self, owner_index, center) :
@@ -8,8 +12,8 @@ class Base(object) :
         """
         Base is a square, given the center position and length of the square
         """
-        self.center = center
-        self.length = modelconst.base_length
+        self.center = Vec(center)
+        self.length = model_const.base_length
 
     def put_oil(self, oil) :
         self.value_sum += oil.price

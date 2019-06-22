@@ -1,5 +1,13 @@
-import view.const      as view_const
-import model.const     as model_const
+#import view.const      as view_const
+#import ..     as model_const
+
+#from . import const
+
+#import sys
+#sys.path.append('../')
+
+import const as model_cosnt
+import view.const as view_const
 
 from pygame.math import Vector2 as Vec
 import random
@@ -15,7 +23,7 @@ class Player(object):
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
-            if e.pos == self.position:
+            if Vec.magnitude(e.position - self.position) <= e.radius + self.radius:
                 if self.bag + e.weight <= model_const.bag_capacity:
                     self.bag += e.weight
                     self.price += e.price
@@ -35,7 +43,7 @@ class Player(object):
         for player in players:
             if player is self:
                 continue
-            if Vec.magnitude(player.position - self.position) <= 2 * model_const.size:
+            if Vec.magnitude(player.position - self.position) <= self.radius + player.radius:
                 collide.append(player.index)
                 sum_of_all += player.price
         sum_of_all += self.price

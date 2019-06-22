@@ -18,13 +18,14 @@ price_max = 1000
 weight_min = 20
 weight_max = 100
 init_oil_number = 5
+oil_radius = 7122
 
 # base
 base_length = 10
 base_center = [
-    [ , ] ,
-    [ , ] ,
-    [ , ] ,
-    [ , ]
+    [ 1 , 1] ,
+    [ 87 , 1] ,
+    [ 1 , 87] ,
+    [ 87 , 87]
 ]
 
