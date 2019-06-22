@@ -111,9 +111,10 @@ class GameEngine(object):
             player.update(player.direction)
         for oil in self.oils :
             oil.update()
-        try_create_oil()
+        self.try_create_oil()
 
     def create_oil(self):
+        # Uniform distribution
         pos = random.randint(0, view_const.screen_size[0]), random.randint(0, view_const.screen_size[1])
         price = random.randint(model_const.price_min, model_const.price_max)
         weight = random.randint(model_const.weight_min, model_const.weight_max)
@@ -126,7 +127,7 @@ class GameEngine(object):
 
     def try_create_oil(self):
         if random.random() < model_const.oil_probability:
-            create_oil()
+            self.create_oil()
 
     def init_base(self) :
         # todo
