@@ -33,9 +33,11 @@ class GameEngine(object):
         self.players = []
         self.TurnTo = 0
 
-        self.oil_list = []
+        self.init_oil()
+        self.setPlayer()
 
         random.seed(time.time())
+        
 
     def notify(self, event):
         """
@@ -44,7 +46,7 @@ class GameEngine(object):
         if isinstance(event, Event_EveryTick):
             cur_state = self.state.peek()
             if cur_state == STATE_PLAY:
-                self.UpdateObjects()
+                self.updateObjects()
         elif isinstance(event, Event_StateChange):
             # if event.state is None >> pop state.
             if event.state == None:
@@ -58,17 +60,14 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, Event_Move):
-            self.SetPlayerDirection(event.PlayerIndex, event.Direction)
+            self.setPlayerDirection(event.PlayerIndex, event.Direction)
         elif isinstance(event, Event_Quit):
             self.running = False
         elif isinstance(event, Event_Initialize) or \
              isinstance(event, Event_Restart):
             self.Initialize()
 
-    def Initialize(self):
-        self.SetPlayer()
-
-    def SetPlayer(self):
+    def setPlayer(self):
         # set AI Names List
         # "_" ==> default AI, "~" ==> manual player
         self.players, ManualPlayerNum = [], 0
@@ -97,18 +96,18 @@ class GameEngine(object):
                 Tmp_P = player(self.AINames[index], index, True)
             self.players.append(Tmp_P)
 
-    def SetPlayerDirection(self, playerIndex, direction):
+    def setPlayerDirection(self, playerIndex, direction):
         if self.players[playerIndex] != None:
             player = self.players[playerIndex]
             player.direction = direction;
 
 
-    def UpdateObjects(self):
+    def updateObjects(self):
         # Update players
         for player in self.players:
-            player.UpdatePos()
+            player.updatePos()
 
-    def set_oil(self):
+    def init_oil(self):
         self.oil_list = []
         for _ in range(modelConst.init_oil_number):
             create_oil()
@@ -127,7 +126,7 @@ class GameEngine(object):
     def set_base(self) :
         # todo
         for index in range(modelConst.player_number) :
-            self.bases.append(Base(index, modelConst.base_center[index]))
+            self.base_list.append(Base(index, modelConst.base_center[index]))
     
     def run(self):
         """
