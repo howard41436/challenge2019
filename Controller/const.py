@@ -12,9 +12,9 @@ DIR_LU = 8
 # [up, right, down, left]
 ManualPlayerKeys = [
     [pg.K_w, pg.K_d, pg.K_s, pg.K_a],
-    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT],
-    [-1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1]
+    [pg.K_t, pg.K_h, pg.K_g, pg.K_f],
+    [pg.K_i, pg.K_l, pg.K_k, pg.K_j],
+    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT]
 ]
 
 # up = 1, right = 2, down = 4, left = 8
