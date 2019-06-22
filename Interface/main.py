@@ -49,25 +49,25 @@ class Interface(object):
         self.is_init_AI = True
         for index, player in enumerate(self.model.players):
             if player.name == "manual":
-                    continue
+                continue
             # load TeamAI .py file
             try:
-                loadtmp = imp.load_source('', './AI/team_'+ player.name +'.py')
+                loadtmp = imp.load_source('', f"./AI/team_{player.name}.py")
             except:
-                self.load_msg( str(index), player.name, "AI can't load")
-                player.name, player.is_AI, player.ai= "Error" , False, None
+                self.load_msg(str(index), player.name, "AI can't load")
+                player.name, player.is_AI, player.ai = "Error", False, None
                 continue
-            self.load_msg( str(index), player.name, "Loading")
+            self.load_msg(str(index), player.name, "Loading")
             # init TeamAI class
             try:
-                self.player_AI[player.index] = loadtmp.TeamAI( Helper(self.model, index) )
+                self.player_AI[player.index] = loadtmp.TeamAI(Helper(self.model, index))
             except:
-                self.load_msg( str(index), player.name, "AI init crashed")
+                self.load_msg(str(index), player.name, "AI init crashed")
                 traceback.print_exc()
-                player.name, player.is_AI, player.ai= "Error" , False, None
+                player.name, player.is_AI, player.ai = "Error", False, None
                 continue
-            self.load_msg( str(index), player.name, "Successful to Load")
+            self.load_msg(str(index), player.name, "Successful to Load")
 
     def load_msg(self, index, name ,msg):
-        print("["+ str(index) +"] team_" + name + ".py: "+ msg)
+        print(f"[{str(index)}] team_{name}.py: {msg}")
     
