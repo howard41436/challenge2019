@@ -17,4 +17,14 @@ price_min = 10
 price_max = 1000
 weight_min = 20
 weight_max = 100
+init_oil_number = 5
+
+# base
+base_length = 10
+base_center = [
+    [ , ] ,
+    [ , ] ,
+    [ , ] ,
+    [ , ]
+]
 
