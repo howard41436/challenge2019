@@ -5,10 +5,10 @@ from Events.Manager import *
 
 from Interface.helper import Helper
 
-import Model.const       as modelConst
-import View.const        as viewConst
-import Controller.const  as ctrlConst
-import Interface.const   as IfaConst
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as ifa_const
 
 class Interface(object):
     def __init__(self, ev_manager, model):

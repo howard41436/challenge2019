@@ -4,10 +4,10 @@ from Events.Manager import *
 from Model.StateMachine import *
 from Model.GameObject.Player import *
 
-import Model.const       as modelConst
-import View.const        as viewConst
-import Controller.const  as ctrlConst
-import Interface.const   as IfaConst
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as ifa_const
 
 class GameEngine(object):
     """
@@ -70,23 +70,23 @@ class GameEngine(object):
         # set AI Names List
         # "_" ==> default AI, "~" ==> manual player
         self.players, manual_player_num = [], 0
-        for index in range(modelConst.player_num):
+        for index in range(model_const.player_num):
             if len(self.AI_names) > index:
                 PlayerName = self.AI_names[index]
                 if PlayerName == "~":
-                    if manual_player_num < modelConst.max_manual_player_num:
+                    if manual_player_num < model_const.max_manual_player_num:
                         manual_player_num += 1
                     else:
                         self.AI_names[index] = "_"
             else:
-                if manual_player_num < modelConst.max_manual_player_num:
+                if manual_player_num < model_const.max_manual_player_num:
                     manual_player_num += 1
                     self.AI_names.append("~")
                 else:
                     self.AI_names.append("_")
 
         # init Player object
-        for index in range(modelConst.player_num):
+        for index in range(model_const.player_num):
             if self.AI_names[index] == "~":
                 Tmp_P = Player("manual", index, False)
             elif self.AI_names[index] == "_":
