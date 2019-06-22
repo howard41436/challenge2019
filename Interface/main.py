@@ -11,42 +11,42 @@ import Controller.const  as ctrlConst
 import Interface.const   as IfaConst
 
 class Interface(object):
-    def __init__(self, evManager, model):
+    def __init__(self, ev_manager, model):
         """
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
         """
-        self.evManager = evManager
-        evManager.RegisterListener(self)
+        self.ev_manager = ev_manager
+        ev_manager.register_listener(self)
         self.model = model
 
-        self.playerAI = {}
+        self.player_AI = {}
 
-        self.is_initAI = False
+        self.is_init_AI = False
     
     def notify(self, event):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, Event_EveryTick):
+        if isinstance(event, EventEveryTick):
             cur_state = self.model.state.peek()
             if cur_state == model.STATE_PLAY:
                 self.API_play()
-        elif isinstance(event, Event_Quit):
+        elif isinstance(event, EventQuit):
             pass
-        elif isinstance(event, Event_Initialize):
+        elif isinstance(event, EventInitialize):
             self.initialize()
     
     def API_play(self):
         for player in self.model.players:
             if player.is_AI:
-                AI_Dir = self.playerAI[player.index].decide()
-                self.evManager.Post(Event_Move(player.index, AI_Dir))
+                AI_dir = self.player_AI[player.index].decide()
+                self.ev_manager.post(EventMove(player.index, AI_dir))
         
     def initialize(self):
-        if self.is_initAI: return
+        if self.is_init_AI: return
 
-        self.is_initAI = True
+        self.is_init_AI = True
         for index, player in enumerate(self.model.players):
             if player.name == "manual":
                     continue
@@ -54,20 +54,20 @@ class Interface(object):
             try:
                 loadtmp = imp.load_source('', './AI/team_'+ player.name +'.py')
             except:
-                self.loadmsg( str(index), player.name, "AI can't load")
+                self.load_msg( str(index), player.name, "AI can't load")
                 player.name, player.is_AI, player.ai= "Error" , False, None
                 continue
-            self.loadmsg( str(index), player.name, "Loading")
+            self.load_msg( str(index), player.name, "Loading")
             # init TeamAI class
             try:
-                self.playerAI[player.index] = loadtmp.TeamAI( Helper(self.model, index) )
+                self.player_AI[player.index] = loadtmp.TeamAI( Helper(self.model, index) )
             except:
-                self.loadmsg( str(index), player.name, "AI init crashed")
+                self.load_msg( str(index), player.name, "AI init crashed")
                 traceback.print_exc()
                 player.name, player.is_AI, player.ai= "Error" , False, None
                 continue
-            self.loadmsg( str(index), player.name, "Successful to Load")
+            self.load_msg( str(index), player.name, "Successful to Load")
 
-    def loadmsg(self, index, name ,msg):
+    def load_msg(self, index, name ,msg):
         print("["+ str(index) +"] team_" + name + ".py: "+ msg)
     

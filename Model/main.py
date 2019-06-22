@@ -13,7 +13,7 @@ class GameEngine(object):
     """
     Tracks the game state.
     """
-    def __init__(self, evManager, AINames):
+    def __init__(self, ev_manager, AI_names):
         """
         evManager (EventManager): Allows posting messages to the event queue.
 
@@ -24,14 +24,14 @@ class GameEngine(object):
             players (list.player()): all player object.
             TurnTo (int): current player
         """
-        self.evManager = evManager
-        evManager.RegisterListener(self)
+        self.ev_manager = ev_manager
+        ev_manager.register_listener(self)
 
         self.running = False
         self.state = StateMachine()
-        self.AINames = AINames
+        self.AI_names = AI_names
         self.players = []
-        self.TurnTo = 0
+        self.turn_to = 0
 
         random.seed(time.time())
 
@@ -39,72 +39,72 @@ class GameEngine(object):
         """
         Called by an event in the message queue. 
         """
-        if isinstance(event, Event_EveryTick):
+        if isinstance(event, EventEveryTick):
             cur_state = self.state.peek()
             if cur_state == STATE_PLAY:
-                self.UpdateObjects()
-        elif isinstance(event, Event_StateChange):
+                self.update_objects()
+        elif isinstance(event, EventStateChange):
             # if event.state is None >> pop state.
-            if event.state == None:
+            if event.state is None:
                 # false if no more states are left
                 if not self.state.pop():
-                    self.evManager.Post(Event_Quit())
+                    self.ev_manager.post(EventQuit())
             elif event.state == STATE_RESTART:
                 self.state.clear()
                 self.state.push(STATE_MENU)
             else:
                 # push a new state on the stack
                 self.state.push(event.state)
-        elif isinstance(event, Event_Move):
-            self.SetPlayerDirection(event.PlayerIndex, event.Direction)
-        elif isinstance(event, Event_Quit):
+        elif isinstance(event, EventMove):
+            self.set_player_direction(event.player_index, event.direction)
+        elif isinstance(event, EventQuit):
             self.running = False
-        elif isinstance(event, Event_Initialize) or \
-             isinstance(event, Event_Restart):
-            self.Initialize()
+        elif isinstance(event, EventInitialize) or \
+             isinstance(event, EventRestart):
+            self.initialize()
 
-    def Initialize(self):
-        self.SetPlayer()
+    def initialize(self):
+        self.set_player()
 
-    def SetPlayer(self):
+    def set_player(self):
         # set AI Names List
         # "_" ==> default AI, "~" ==> manual player
-        self.players, ManualPlayerNum = [], 0
-        for index in range(modelConst.PlayerNum):
-            if len(self.AINames) > index:
-                PlayerName = self.AINames[index]
+        self.players, manual_player_num = [], 0
+        for index in range(modelConst.player_num):
+            if len(self.AI_names) > index:
+                PlayerName = self.AI_names[index]
                 if PlayerName == "~":
-                    if ManualPlayerNum < modelConst.MaxManualPlayerNum:
-                        ManualPlayerNum += 1
+                    if manual_player_num < modelConst.max_manual_player_num:
+                        manual_player_num += 1
                     else:
-                        self.AINames[index] = "_"
+                        self.AI_names[index] = "_"
             else:
-                if ManualPlayerNum < modelConst.MaxManualPlayerNum:
-                    ManualPlayerNum += 1
-                    self.AINames.append("~")
+                if manual_player_num < modelConst.max_manual_player_num:
+                    manual_player_num += 1
+                    self.AI_names.append("~")
                 else:
-                    self.AINames.append("_")
+                    self.AI_names.append("_")
 
         # init Player object
-        for index in range(modelConst.PlayerNum):
-            if self.AINames[index] == "~":
-                Tmp_P = player("manual", index, False)
-            elif self.AINames[index] == "_":
-                Tmp_P = player("default", index, True)
+        for index in range(modelConst.player_num):
+            if self.AI_names[index] == "~":
+                Tmp_P = Player("manual", index, False)
+            elif self.AI_names[index] == "_":
+                Tmp_P = Player("default", index, True)
             else:
-                Tmp_P = player(self.AINames[index], index, True)
+                Tmp_P = Player(self.AI_names[index], index, True)
             self.players.append(Tmp_P)
 
-    def SetPlayerDirection(self, playerIndex, direction):
-        if self.players[playerIndex] != None:
-            player = self.players[playerIndex]
-            player.direction = direction;
+    def set_player_direction(self, player_index, direction):
+        if self.players[player_index] is not None:
+            player = self.players[player_index]
+            player.direction = direction
 
 
-    def UpdateObjects(self):
+    def update_objects(self):
         # Update players
         for player in self.players:
-            player.UpdatePos()
+            player.update_pos()
 
 
     def run(self):
@@ -115,8 +115,8 @@ class GameEngine(object):
         The loop ends when this object hears a QuitEvent in notify(). 
         """
         self.running = True
-        self.evManager.Post(Event_Initialize())
+        self.ev_manager.post(EventInitialize())
         self.state.push(STATE_MENU)
         while self.running:
-            newTick = Event_EveryTick()
-            self.evManager.Post(newTick)
+            newTick = EventEveryTick()
+            self.ev_manager.post(newTick)
