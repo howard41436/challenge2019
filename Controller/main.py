@@ -18,7 +18,7 @@ class Control(object):
         model (GameEngine): a strong reference to the game Model.
         """
         self.ev_manager = ev_manager
-        ev_manager.RegisterListener(self)
+        ev_manager.register_listener(self)
         self.model = model
 
         self.control_keys = {}
@@ -29,21 +29,18 @@ class Control(object):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, Event_EveryTick):
+        if isinstance(event, EventEveryTick):
             # Called for each game tick. We check our keyboard presses here.
             for event in pg.event.get():
                 # handle window manager closing our window
                 if event.type == pg.QUIT:
-                    self.ev_manager.Post(Event_Quit())
+                    self.ev_manager.post(EventQuit())
                 else:
                     cur_state = self.model.state.peek()
-                    if cur_state == model.STATE_MENU:
-                        self.ctrl_menu(event)
-                    if cur_state == model.STATE_PLAY:
-                        self.ctrl_play(event)
-                    if cur_state == model.STATE_STOP:
-                        self.ctrl_stop(event)
-        elif isinstance(event, Event_Initialize):
+                    if cur_state == model.STATE_MENU: self.ctrl_menu(event)
+                    if cur_state == model.STATE_PLAY: self.ctrl_play(event)
+                    if cur_state == model.STATE_STOP: self.ctrl_stop(event)
+        elif isinstance(event, EventInitialize):
             self.initialize()
 
     def ctrl_menu(self, event):
@@ -53,10 +50,10 @@ class Control(object):
         if event.type == pg.KEYDOWN:
             # escape pops the menu
             if event.key == pg.K_ESCAPE:
-                self.ev_manager.Post(Event_StateChange(None))
+                self.ev_manager.post(EventStateChange(None))
             # space plays the game
             if event.key == pg.K_SPACE:
-                self.ev_manager.Post(Event_StateChange(model.STATE_PLAY))
+                self.ev_manager.post(EventStateChange(model.STATE_PLAY))
 
     def ctrl_stop(self, event):
         """
@@ -64,8 +61,8 @@ class Control(object):
         """
         if event.type == pg.KEYDOWN:
             # space, enter or escape pops help
-            if event.key in [pg.K_ESCAPE, pg.K_SPACE ]:
-                self.ev_manager.Post(Event_StateChange(None))
+            if event.key in [pg.K_ESCAPE, pg.K_SPACE]:
+                self.ev_manager.post(EventStateChange(None))
 
     def ctrl_play(self, event):
         """
@@ -74,20 +71,19 @@ class Control(object):
         if event.type == pg.KEYDOWN:
             # escape pops the menu
             if event.key == pg.K_ESCAPE:
-                self.ev_manager.Post(Event_StateChange(None))
-                self.ev_manager.Post(Event_Restart())
+                self.ev_manager.post(EventStateChange(None))
+                self.ev_manager.post(EventRestart())
             # space to stop the game
             elif event.key == pg.K_SPACE:    
-                self.ev_manager.Post(Event_StateChange(model.STATE_STOP))
+                self.ev_manager.post(EventStateChange(model.STATE_STOP))
 
         # player controler
         for player in self.model.players:
-            if player.is_AI:
-                continue
-            dir_keys = self.control_keys[player.index][0:4]
-            now_pressing = self.get_key_pressing(dir_keys)
-            dir_hash_value = self.get_dir_hash_value(now_pressing, dir_keys)
-            self.ev_manager.Post(Event_Move(player.index, ctrl_const.dir_hash[dir_hash_value]))
+            if not player.is_AI:
+                dir_keys = self.control_keys[player.index][0:4]
+                now_pressing = self.get_key_pressing(dir_keys)
+                dir_hash_value = self.get_dir_hash_value(now_pressing, dir_keys)
+                self.ev_manager.post(EventMove(player.index, ctrl_const.dir_hash[dir_hash_value]))
         
     def get_key_pressing(self, keylist):
         return [key for key, value in enumerate(pg.key.get_pressed()) if value == 1 and key in keylist]
@@ -109,7 +105,7 @@ class Control(object):
         pg.time.set_timer(self.sec_event_type, 1000)
 
         now_manual_index = 0
-        for index, AI_name in enumerate(self.model.AINames):
+        for index, AI_name in enumerate(self.model.AI_names):
             if AI_name == "~":
                 self.control_keys[index] = ctrl_const.manual_player_keys[now_manual_index]
                 now_manual_index += 1
