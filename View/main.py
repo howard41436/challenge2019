@@ -66,7 +66,7 @@ class GraphicalView(object):
             self.screen.fill(viewConst.Color_Black)
             # write some word
             somewords = self.smallfont.render(
-                        'You are in the Menu. Space to play. Esc exits.', 
+                        'You are in the Menu', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
@@ -74,7 +74,16 @@ class GraphicalView(object):
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
-        
+    
+    def draw_player(self):
+        for player in self.model.player_list:
+            pos = player.position
+            radius = player.radius
+            color = player.color
+            gfxdraw.filled_circle(self.gameSurface, *pos,
+                                  int(radius), player.color)
+
+
     def render_play(self):
         """
         Render the game play.
@@ -85,7 +94,8 @@ class GraphicalView(object):
         s = pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
         self.screen.fill(viewConst.Color_White)
 
-        done = False
+        #draw player
+        self.draw_player()
 
 
 
@@ -136,7 +146,7 @@ class GraphicalView(object):
         pg.display.set_caption(viewConst.GameCaption)
         self.screen = pg.display.set_mode(viewConst.ScreenSize)
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.smallfont = pg.font.Font(viewConst.titleFont, viewConst.titleFontSize)
         self.is_initialized = True
 """
 	def render_end(self):

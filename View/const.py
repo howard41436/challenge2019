@@ -16,6 +16,7 @@ Color_Green          = (  0, 255,   0)
 Color_Red            = (255,   0,   0)
 Color_Gray           = (128, 128, 128)
 
+
 # These cooler colors are preferred
 Color_Turquoise      = ( 64, 224, 208)
 Color_Lightcoral     = (240, 128, 128)
@@ -110,3 +111,5 @@ countDownFontSize  = 200
 
 tmpScoreFont       = 'View/Font/Noto/NotoSansCJK-Black.ttc'
 tmpScoreFontSize   = 80
+
+playerColor = [Color_Blue, Color_Green, Color_Red, Color_Black ]
