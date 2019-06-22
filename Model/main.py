@@ -33,13 +33,8 @@ class GameEngine(object):
         self.players = []
         self.TurnTo = 0
 
-<<<<<<< HEAD
         self.init_oil()
         self.setPlayer()
-=======
-        self.oil_list = []
-        self.base_list = []
->>>>>>> 23fced82afb4ad6115e575dd7edc8ca720f1b4d8
 
         random.seed(time.time())
         
