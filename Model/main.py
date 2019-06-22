@@ -25,7 +25,7 @@ class GameEngine(object):
             TurnTo (int): current player
         """
         self.ev_manager = ev_manager
-        ev_manager.RegisterListener(self)
+        ev_manager.register_listener(self)
 
         self.running = False
         self.state = StateMachine()
@@ -48,7 +48,7 @@ class GameEngine(object):
             if event.state is None:
                 # false if no more states are left
                 if not self.state.pop():
-                    self.ev_manager.Post(EventQuit())
+                    self.ev_manager.post(EventQuit())
             elif event.state == STATE_RESTART:
                 self.state.clear()
                 self.state.push(STATE_MENU)
@@ -115,8 +115,8 @@ class GameEngine(object):
         The loop ends when this object hears a QuitEvent in notify(). 
         """
         self.running = True
-        self.ev_manager.Post(EventInitialize())
+        self.ev_manager.post(EventInitialize())
         self.state.push(STATE_MENU)
         while self.running:
             newTick = EventEveryTick()
-            self.ev_manager.Post(newTick)
+            self.ev_manager.post(newTick)

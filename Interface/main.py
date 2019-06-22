@@ -41,7 +41,7 @@ class Interface(object):
         for player in self.model.players:
             if player.is_AI:
                 AI_dir = self.player_AI[player.index].decide()
-                self.ev_manager.Post(EventMove(player.index, AI_dir))
+                self.ev_manager.post(EventMove(player.index, AI_dir))
         
     def initialize(self):
         if self.is_init_AI: return
