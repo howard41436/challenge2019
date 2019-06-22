@@ -1,4 +1,4 @@
-import view.const    as view_const
+import view.const      as view_const
 import model.const     as model_const
 
 from pygame.math import Vector2 as Vec
@@ -20,6 +20,7 @@ class Player(object):
                     self.bag += oils[i].price
                     self.price += oils[i].price
                     oils.remove(i)
+
     def store_price(self, bases):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
@@ -53,12 +54,4 @@ class Player(object):
         pick_oil(oils)
         store_price(bases)
         check_collide(players)
-
-
-
-
-
-
-
-
 
