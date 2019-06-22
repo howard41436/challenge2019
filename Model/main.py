@@ -33,6 +33,8 @@ class GameEngine(object):
         self.players = []
         self.TurnTo = 0
 
+        self.oil_list = []
+
         random.seed(time.time())
 
     def notify(self, event):
@@ -106,6 +108,16 @@ class GameEngine(object):
         for player in self.players:
             player.UpdatePos()
 
+    def init_oil(self):
+        self.oil_list = []
+
+    def try_create_oil(self):
+        if random.random() < modelConst.oil_probability:
+            pos = random.randint(0, viewConst.ScreenSize), random.randint(0, viewConst.ScreenSize)
+            price = random.randint(modelConst.price_min, modelConst.price_max)
+            weight = random.randint(modelConst.weight_min, modelConst.weight_max)
+            new_oil = Oil(pos, price, weight)
+            oil_list.append(new_oil)
 
     def run(self):
         """
