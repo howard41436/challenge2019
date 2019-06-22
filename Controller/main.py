@@ -29,12 +29,12 @@ class Control(object):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, Event_EveryTick):
+        if isinstance(event, EventEveryTick):
             # Called for each game tick. We check our keyboard presses here.
             for event in pg.event.get():
                 # handle window manager closing our window
                 if event.type == pg.QUIT:
-                    self.evManager.Post(Event_Quit())
+                    self.evManager.Post(EventQuit())
                 else:
                     cur_state = self.model.state.peek()
                     if cur_state == model.STATE_MENU:
@@ -43,7 +43,7 @@ class Control(object):
                         self.ctrl_play(event)
                     if cur_state == model.STATE_STOP:
                         self.ctrl_stop(event)
-        elif isinstance(event, Event_Initialize):
+        elif isinstance(event, EventInitialize):
             self.initialize()
 
     def ctrl_menu(self, event):
@@ -53,10 +53,10 @@ class Control(object):
         if event.type == pg.KEYDOWN:
             # escape pops the menu
             if event.key == pg.K_ESCAPE:
-                self.evManager.Post(Event_StateChange(None))
+                self.evManager.Post(EventStateChange(None))
             # space plays the game
             if event.key == pg.K_SPACE:
-                self.evManager.Post(Event_StateChange(model.STATE_PLAY))
+                self.evManager.Post(EventStateChange(model.STATE_PLAY))
 
     def ctrl_stop(self, event):
         """
@@ -65,7 +65,7 @@ class Control(object):
         if event.type == pg.KEYDOWN:
             # space, enter or escape pops help
             if event.key in [pg.K_ESCAPE, pg.K_SPACE ]:
-                self.evManager.Post(Event_StateChange(None))
+                self.evManager.Post(EventStateChange(None))
 
     def ctrl_play(self, event):
         """
@@ -74,11 +74,11 @@ class Control(object):
         if event.type == pg.KEYDOWN:
             # escape pops the menu
             if event.key == pg.K_ESCAPE:
-                self.evManager.Post(Event_StateChange(None))
-                self.evManager.Post(Event_Restart())
+                self.evManager.Post(EventStateChange(None))
+                self.evManager.Post(EventRestart())
             # space to stop the game
             elif event.key == pg.K_SPACE:    
-                self.evManager.Post(Event_StateChange(model.STATE_STOP))
+                self.evManager.Post(EventStateChange(model.STATE_STOP))
             # player controler
             for player in self.model.players:
                 if player.is_AI:
@@ -89,7 +89,7 @@ class Control(object):
                     DirHashValue = self.Get_DirHashValue(NowPressedKeys, DirKeys)
                     if ctrlConst.DirHash[DirHashValue] != 0:
                         self.evManager.Post(
-                            Event_Move( player.index, ctrlConst.DirHash[DirHashValue] )
+                            EventMove( player.index, ctrlConst.DirHash[DirHashValue] )
                         )
         
     def Get_KeyPressIn(self, keylist):

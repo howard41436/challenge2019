@@ -7,9 +7,9 @@ class TeamAI( BaseAI ):
         self.helper = helper
         self.skill = []
 
-        self.lastdir = random.randint(1, 8)
+        self.last_dir = random.randint(1, 8)
 
     def decide( self ):
         if not random.randint(0, 9) % 10:
-            self.lastdir = random.randint(1, 8)
-        return self.lastdir
+            self.last_dir = random.randint(1, 8)
+        return self.last_dir

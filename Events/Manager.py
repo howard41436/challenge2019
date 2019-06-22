@@ -8,7 +8,7 @@ class BaseEvent(object):
     def __str__(self):
         return self.name
 
-class Event_Initialize(BaseEvent):
+class EventInitialize(BaseEvent):
     """
     Initialize event.
     """
@@ -17,13 +17,13 @@ class Event_Initialize(BaseEvent):
     def __str__(self):
         return self.name
 
-class Event_Restart(BaseEvent):
+class EventRestart(BaseEvent):
     def __init__(self):
         self.name = "Restart event"
     def __str__(self):
         return self.name
 
-class Event_Quit(BaseEvent):
+class EventQuit(BaseEvent):
     """
     Quit event.
     """
@@ -32,7 +32,7 @@ class Event_Quit(BaseEvent):
     def __str__(self):
         return self.name
 
-class Event_StateChange(BaseEvent):
+class EventStateChange(BaseEvent):
     """
     change state event.
     """
@@ -42,7 +42,7 @@ class Event_StateChange(BaseEvent):
     def __str__(self):
         return "{0} => StateTo:{1}".format(self.name, self.state)
 
-class Event_EveryTick(BaseEvent):
+class EventEveryTick(BaseEvent):
     """
     Tick event.
     """
@@ -51,7 +51,7 @@ class Event_EveryTick(BaseEvent):
     def __str__(self):
         return self.name
 
-class Event_EverySec(BaseEvent):
+class EventEverySec(BaseEvent):
     """
     Sec event.
     """
@@ -60,7 +60,7 @@ class Event_EverySec(BaseEvent):
     def __str__(self):
         return self.name
 
-class Event_TimeUp(BaseEvent):
+class EventTimeUp(BaseEvent):
     """
     TimeUp event.
     """
@@ -69,16 +69,16 @@ class Event_TimeUp(BaseEvent):
     def __str__(self):
         return self.name
 
-class Event_Move(BaseEvent):
+class EventMove(BaseEvent):
     """
     Move event.
     """
     def __init__(self, player, direction):
         self.name = "Move event"
-        self.PlayerIndex = player
-        self.Direction = direction
+        self.player_index = player
+        self.direction = direction
     def __str__(self):
-        return "{0} => Playerindex={1}, DirectionTo:{2}".format(self.name, self.PlayerIndex, self.Direction)
+        return "{0} => player_index={1}, DirectionTo:{2}".format(self.name, self.player_index, self.direction)
 
 class EventManager(object):
     """
@@ -87,14 +87,14 @@ class EventManager(object):
     def __init__(self):
         self.listeners = []
 
-    def RegisterListener(self, listener):
+    def register_listener(self, listener):
         """ 
         Adds a listener to our spam list. 
         It will receive Post()ed events through it's notify(event) call. 
         """
         self.listeners.append(listener)
 
-    def UnregisterListener(self, listener):
+    def unregister_listener(self, listener):
         """ 
         Remove a listener from our spam list.
         This is implemented but hardly used.
@@ -102,7 +102,7 @@ class EventManager(object):
         """
         pass
         
-    def Post(self, event):
+    def post(self, event):
         """
         Post a new event to the message queue.
         It will be broadcast to all listeners.

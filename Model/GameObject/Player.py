@@ -2,7 +2,7 @@ import Model.const       as modelConst
 
 import random
 
-class player(object):
+class Player(object):
     def __init__(self, name, index, is_AI):
         self.name = name
         self.is_AI = is_AI
@@ -13,9 +13,9 @@ class player(object):
         self.pos = [ random.randint(20,780), random.randint(20,780) ]
         self.direction = 1
 
-    def UpdatePos(self):
-        [add_x, add_y] = modelConst.dirConst[self.direction]
-        Bounce = modelConst.dirBounce
+    def update_pos(self):
+        [add_x, add_y] = modelConst.dir_const[self.direction]
+        Bounce = modelConst.dir_bounce
         if self.pos[0] + add_x < 20 \
             or self.pos[0] + add_x > 780 :
             self.direction = Bounce[0][self.direction]
@@ -23,7 +23,7 @@ class player(object):
             or self.pos[1] + add_y > 780 :
             self.direction = Bounce[1][self.direction]
 
-        addDir = modelConst.dirConst[self.direction]
+        add_dir = modelConst.dir_const[self.direction]
 
-        self.pos[0] += addDir[0]
-        self.pos[1] += addDir[1]
+        self.pos[0] += add_dir[0]
+        self.pos[1] += add_dir[1]
