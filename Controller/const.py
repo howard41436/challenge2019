@@ -10,16 +10,16 @@ DIR_L  = 7
 DIR_LU = 8
 
 # [up, right, down, left]
-ManualPlayerKeys = [
+manual_player_keys = [
     [pg.K_w, pg.K_d, pg.K_s, pg.K_a],
-    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT],
-    [-1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1]
+    [pg.K_t, pg.K_h, pg.K_g, pg.K_f],
+    [pg.K_i, pg.K_l, pg.K_k, pg.K_j],
+    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT]
 ]
 
 # up = 1, right = 2, down = 4, left = 8
 # -> RU = 3, RD = 6, LU = 9, LD = 12
-DirHash = [
+dir_hash = [
     0, DIR_U, DIR_R, DIR_RU, DIR_D,
     0, DIR_RD, 0, DIR_L, DIR_LU, 0, 0, DIR_LD, 0, 0, 0
 ]

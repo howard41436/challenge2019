@@ -12,19 +12,19 @@ class GraphicalView(object):
     """
     Draws the model state onto the screen.
     """
-    def __init__(self, evManager, model):
+    def __init__(self, ev_manager, model):
         """
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
         """
-        self.evManager = evManager
-        evManager.RegisterListener(self)
+        self.ev_manager = ev_manager
+        ev_manager.register_listener(self)
         self.model = model
 
         self.is_initialized = False
         self.screen = None
         self.clock = None
-        self.smallfont = None
+        self.small_font = None
 
         self.last_update = 0
     
@@ -32,7 +32,7 @@ class GraphicalView(object):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, Event_EveryTick) \
+        if isinstance(event, EventEveryTick) \
            and self.is_initialized:
             cur_state = self.model.state.peek()
             if cur_state == model.STATE_MENU:
@@ -44,13 +44,13 @@ class GraphicalView(object):
 
             self.display_fps()
             # limit the redraw speed to 30 frames per second
-            self.clock.tick(viewConst.FramePerSec)
-        elif isinstance(event, Event_Quit):
+            self.clock.tick(viewConst.frame_per_sec)
+        elif isinstance(event, EventQuit):
             # shut down the pygame graphics
             self.is_initialized = False
             pg.quit()
-        elif isinstance(event, Event_Initialize) or\
-             isinstance(event, Event_Restart):
+        elif isinstance(event, EventInitialize) or\
+             isinstance(event, EventRestart):
             self.initialize()
     
     def render_menu(self):
@@ -63,12 +63,12 @@ class GraphicalView(object):
             # draw backgound
             self.screen.fill(viewConst.Color_Black)
             # write some word
-            somewords = self.smallfont.render(
+            somewords = self.small_font.render(
                         'You are in the Menu. Space to play. Esc exits.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
-            pos_y = (viewConst.ScreenSize[1] - SurfaceY)/2
+            pos_x = (viewConst.screen_size[0] - SurfaceX)/2
+            pos_y = (viewConst.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
@@ -97,16 +97,16 @@ class GraphicalView(object):
             self.last_update = model.STATE_STOP
 
             # draw backgound
-            s = pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
+            s = pg.Surface(viewConst.screen_size, pg.SRCALPHA)
             s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
 
             # write some word
-            somewords = self.smallfont.render(
+            somewords = self.small_font.render(
                         'stop the game. space, escape to return the game.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
-            pos_y = (viewConst.ScreenSize[1] - SurfaceY)/2
+            pos_x = (viewConst.screen_size[0] - SurfaceX)/2
+            pos_y = (viewConst.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
 
             # update surface
@@ -115,7 +115,7 @@ class GraphicalView(object):
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
-            viewConst.GameCaption, self.clock.get_fps()
+            viewConst.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
         
@@ -124,8 +124,8 @@ class GraphicalView(object):
         Set up the pygame graphical display and loads graphical resources.
         """
         pg.init(); pg.font.init()
-        pg.display.set_caption(viewConst.GameCaption)
-        self.screen = pg.display.set_mode(viewConst.ScreenSize)
+        pg.display.set_caption(viewConst.game_caption)
+        self.screen = pg.display.set_mode(viewConst.screen_size)
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.small_font = pg.font.Font(None, 40)
         self.is_initialized = True
