@@ -36,7 +36,10 @@ class player(object):
 			if Vec.magnitude(player.position - self.position) <= 2 * model_const.size:
 				collide.append(player.index)
 				sum_of_all += player.price
-		self.price = sum_of_all / len(collide)
+		sum_of_all += self.price
+        self.price = sum_of_all / (len(collide) + 1)
+        for player in collide :
+            player.price = sum_of_all / (len(collide) + 1)
 		
 	def update(self, direction, oils, bases):
 		if self.position[0] + direction[0] < model_const.size \
