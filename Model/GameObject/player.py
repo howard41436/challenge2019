@@ -14,11 +14,11 @@ class Player(object):
         self.price = 0
 
     def pick_oil(self, oils):
-        for i in reverse(range(len(oils)):
-            if oils[i].pos == self.position:
-                if self.bag + oils[i].weight <= model_const.bag_capacity:
-                    self.bag += oils[i].price
-                    self.price += oils[i].price
+        for i, e in reversed(list(enumerate(oils))):
+            if e.pos == self.position:
+                if self.bag + e.weight <= model_const.bag_capacity:
+                    self.bag += e.weight
+                    self.price += e.price
                     oils.remove(i)
 
     def store_price(self, bases):
@@ -26,7 +26,7 @@ class Player(object):
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
             or self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
-            put_oil(self.price)
+            bases[self.index].change_value_sum(self.price)
             self.price = 0
 
     def check_collide(self, players):
