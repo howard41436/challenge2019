@@ -1,15 +1,13 @@
-import time, random
+import time, random, sys
 
-#from Events.Manager import *
-#from Model.StateMachine import *
-from GameObject.player import *
-from GameObject.oil import *
-from GameObject.base import *
+from Model.StateMachine import *
+from Model.GameObject.player import *
+from Model.GameObject.oil import *
+from Model.GameObject.base import *
 
+#sys.path.append('../')  # to import from parent directory
 import Model.const       as model_const
 import View.const        as view_const
-import Controller.const  as ctrl_const
-import Interface.const   as ifa_const
 
 class GameEngine(object):
     """
@@ -27,10 +25,10 @@ class GameEngine(object):
             TurnTo (int): current player
         """
         self.ev_manager = ev_manager
-        #ev_manager.register_listener(self)
+        ev_manager.register_listener(self)
 
         self.running = False
-        #self.state = StateMachine()
+        self.state = StateMachine()
         self.AI_names = AI_names
         self.player_list = []
         self.oil_list = []
@@ -69,7 +67,7 @@ class GameEngine(object):
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, EventInitialize) or \
-             isinstance(event, EventRestart):
+            isinstance(event, EventRestart):
             self.initialize()
 
     def init_player(self):
@@ -94,9 +92,9 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = player("manual", index)
+                Tmp_P = Player("manual", index)
             elif self.AI_names[index] == "_":
-                Tmp_P = player("default", index)
+                Tmp_P = Player("default", index)
             else:
                 Tmp_P = Player(self.AI_names[index], index)
             self.player_list.append(Tmp_P)
@@ -115,8 +113,7 @@ class GameEngine(object):
             oil.update()
 
     def create_oil(self):
-        #pos = random.randint(0, view_const.ScreenSize), random.randint(0, view_const.ScreenSize)
-        pos = None
+        pos = random.randint(0, view_const.screen_size[0]), random.randint(0, view_const.screen_size[1])
         price = random.randint(model_const.price_min, model_const.price_max)
         weight = random.randint(model_const.weight_min, model_const.weight_max)
         new_oil = Oil(pos, price, weight)

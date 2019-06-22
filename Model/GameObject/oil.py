@@ -1,6 +1,7 @@
+import Model.const as model_const
+import View.const as view_const
+
 from pygame.math import Vector2 as Vec
-import const as model_const
-import view.const as view_const
 
 class Oil(object):
     def __init__(self, pos, price, weight):

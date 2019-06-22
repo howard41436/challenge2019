@@ -10,6 +10,7 @@ dir_const = [
 # player
 player_number = 4
 bag_capacity = 100
+max_manual_player_num = 4
 
 # oil_const
 oil_probability = 5e-3

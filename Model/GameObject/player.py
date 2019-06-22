@@ -1,13 +1,5 @@
-#import view.const      as view_const
-#import ..     as model_const
-
-#from . import const
-
-#import sys
-#sys.path.append('../')
-
-import const as model_cosnt
-import view.const as view_const
+import View.const      as view_const
+import Model.const     as model_const
 
 from pygame.math import Vector2 as Vec
 import random

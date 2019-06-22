@@ -1,9 +1,6 @@
+import Model.const as model_const
+
 from pygame.math import Vector2 as Vec
-
-#import sys
-#sys.path.append('../')
-
-import const as model_const
 
 class Base(object) :
     def __init__(self, owner_index, center) :
