@@ -110,7 +110,7 @@ class GameEngine(object):
 
     def set_oil(self):
         self.oil_list = []
-        for _ in range(4):
+        for _ in range(modelConst.init_oil_number):
             create_oil()
 
     def create_oil(self):
