@@ -3,10 +3,10 @@ import pygame as pg
 import Model.main as model
 from Events.Manager import *
 
-import Model.const       as modelConst
-import View.const        as viewConst
+import Model.const       as model_const
+import View.const        as view_const
 import Controller.const  as ctrl_const
-import Interface.const   as IfaConst
+import Interface.const   as ifa_const
 
 class Control(object):
     """
