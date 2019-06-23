@@ -38,7 +38,7 @@ class Interface(object):
             self.initialize()
     
     def API_play(self):
-        for player in self.model.players:
+        for player in self.model.player_list:
             if player.is_AI:
                 AI_dir = self.player_AI[player.index].decide()
                 self.ev_manager.post(EventMove(player.index, AI_dir))
@@ -47,7 +47,7 @@ class Interface(object):
         if self.is_init_AI: return
 
         self.is_init_AI = True
-        for index, player in enumerate(self.model.players):
+        for index, player in enumerate(self.model.player_list):
             if player.name == "manual":
                     continue
             # load TeamAI .py file

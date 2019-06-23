@@ -26,6 +26,7 @@ player_number = 4
 bag_capacity = 100
 max_manual_player_num = 4
 player_normal_speed = 1
+init_insurance = 0
 
 # pet
 pet_normal_speed = 1
