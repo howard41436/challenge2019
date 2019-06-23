@@ -47,11 +47,11 @@ class Player(object):
         if self.position[0] + direction[0] < model_const.size \
             or self.position[0] + direction[0] > view_const.size - model_const.size:
             direction[0] = 0
-        elif self.position[1] + direction[1] < model_const.size \
+        if self.position[1] + direction[1] < model_const.size \
             or self.position[1] + direction[1] > view_const.size - model_const.size:
             direction[1] = 0
         self.position += Vec(direction)
-        pick_oil(oils)
-        store_price(bases)
-        check_collide(players)
+        self.pick_oil(oils)
+        self.store_price(bases)
+        self.check_collide(players)
 
