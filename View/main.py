@@ -61,7 +61,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(view_const.Color_Black)
+            self.screen.fill(view_const.COLOR_BLACK)
             # write some word
             somewords = self.smallfont.render(
                         'You are in the Menu', 
@@ -83,16 +83,16 @@ class GraphicalView(object):
 
     def draw_oil(self):
         for oil in self.model.oil_list:
-            position = oil.position
+            pos = tuple(map(int, oil.position))
             radius = oil.radius
-            gfxdraw.filled_circle(self.screen, *position,
-                                  int(oil.radius), Color_Black)
+            gfxdraw.filled_circle(self.screen, *pos,
+                                  int(oil.radius), view_const.COLOR_BLACK)
 
     def draw_base(self):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pygame.draw.rect(self.screen, Color_Gray, [center-length/2, center+length/2, length, length], 2)       
+            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]+length/2, length, length], 2)       
 
     def render_play(self):
         """
@@ -102,18 +102,18 @@ class GraphicalView(object):
             self.last_update = model.STATE_PLAY
         # draw backgound
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-        self.screen.fill(view_const.Color_White)
+        self.screen.fill(view_const.COLOR_WHITE)
 
         #draw player
         self.draw_player()
         self.draw_oil()
         self.draw_base()
 
-        pg.draw.rect(s,view_const.Color_Black,[800,0,5,800])
-        pg.draw.rect(s,view_const.Color_Black,[1275,0,5,800])
-        pg.draw.rect(s,view_const.Color_Black,[800,197,480,5])
-        pg.draw.rect(s,view_const.Color_Black,[800,397,480,5])
-        pg.draw.rect(s,view_const.Color_Black,[800,597,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,197,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,397,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,597,480,5])
         self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()
@@ -150,7 +150,7 @@ class GraphicalView(object):
             for player in seld.model.player_list:
                 result.append((player.name, player.value_sum))
             result.sort(key=takeSecond)
-            self.screen.fill(view_const.Color_White)
+            self.screen.fill(view_const.COLOR_WHITE)
             pos_x = 0
             for player in result:
                 line = boardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))

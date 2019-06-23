@@ -38,7 +38,7 @@ price_max = 1000
 weight_min = 20
 weight_max = 100
 init_oil_number = 5
-oil_radius = 7122
+oil_radius = 12
 
 # base
 base_length = 10
