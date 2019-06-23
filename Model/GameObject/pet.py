@@ -14,8 +14,26 @@ class Pet(object) :
         2 for going base
         """
         self.speed = model_const.pat_normal_speed
-
+    
+    def check_collide_with_player(self, player) :
+        if Vec.magnitude(self.position - player.position) <= player.radius :
+            delta = min(carry_max - carry_now, player.value)
+            self.carry_now += delta
+            player.value -= delta
+            self.status = 2
+    
+    def check_collide_with_base(self, base) :
+        if base.center[0] - base.length / 2 <= self.position[0] and 
+           self.position[0] <= base.center[0] + base.length / 2 and
+           base.center[1] - base.length / 2 <= self.position[1] and 
+           self.position[1] <= base.center[1] + base.length / 2 :
+            self.status = 0
+            base.value_sum += self.carry_now
+            self.carry_now = 0
+    
     def update(self, player_list, base_list) :
+        check_collide_with_player(player_list[self.owner_index])
+        check_collide_with_base(base_list[self.owner_index])
         if self.stauts == 0 :
             # do nothing
             pass
