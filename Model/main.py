@@ -34,6 +34,7 @@ class GameEngine(object):
         self.oil_list = []
         self.base_list = []
         self.turn_to = 0
+        self.timer = 0
 
         self.init_oil()
         self.init_player()
@@ -54,7 +55,7 @@ class GameEngine(object):
             # if event.state is None >> pop state.
             if event.state is None:
                 # false if no more states are left
-                if not self.state.pop():
+                if not self.state.pop() or event.state == STATE_ENDGAME:
                     self.ev_manager.post(EventQuit())
             elif event.state == STATE_RESTART:
                 self.state.clear()
@@ -100,6 +101,7 @@ class GameEngine(object):
             self.player_list.append(Tmp_P)
 
     def set_player_direction(self, player_index, direction):
+        if direction > 0: print(direction) 
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
@@ -111,6 +113,10 @@ class GameEngine(object):
         for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
+        self.timer -= 1
+        if self.timer == 0:
+            print("End Game")
+            self.ev_manager.post(EventStateChange(STATE_ENDGAME))
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
@@ -138,6 +144,7 @@ class GameEngine(object):
         self.running = True
         self.ev_manager.post(EventInitialize())
         self.state.push(STATE_MENU)
+        self.timer = model_const.game_length
         while self.running:
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
