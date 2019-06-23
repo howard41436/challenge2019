@@ -40,6 +40,7 @@ class Player(object):
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
             self.value = 0
+            self.bag = 0
 
     def check_collide(self, player_list):
         collide = []
