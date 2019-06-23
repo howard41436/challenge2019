@@ -36,7 +36,7 @@ class Player(object):
     def store_price(self, bases):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
-            or self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
+            and self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
             self.value = 0
