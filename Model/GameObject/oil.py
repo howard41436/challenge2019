@@ -2,6 +2,7 @@ import Model.const as model_const
 import View.const as view_const
 import numpy as np
 import math
+import random
 from pygame.math import Vector2 as Vec
 
 class Oil(object):
@@ -15,11 +16,11 @@ class Oil(object):
 
 def calc_price(pos):
     game_center = Vec(
-        game_size[0] / 2,
-        game_size[1] / 2
+        view_const.game_size[0] / 2,
+        view_const.game_size[1] / 2
         )
     dist_from_center = (pos - game_center).length()
-    mean = game_size[0] / dist_from_center
+    mean = view_const.game_size[0] / dist_from_center
     price = min(
         model_const.price_max, 
         np.random.normal(mean, model_const.price_scale)

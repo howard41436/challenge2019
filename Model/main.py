@@ -100,16 +100,16 @@ class GameEngine(object):
             self.player_list.append(Tmp_P)
 
     def set_player_direction(self, player_index, direction):
+        if direction > 0: print(direction) 
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
-            player.direction = model_const.dir_mapping[direction]
-
+            player.direction = Vec(model_const.dir_mapping[direction]) 
 
     def update_objects(self):
         # Update player_list
         for player in self.player_list:
-            player.update(player.direction)
-        for oil in self.oils :
+            player.update(self.oil_list, self.base_list, self.player_list)
+        for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
 

@@ -1,5 +1,5 @@
 import pygame as pg
-
+import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
 
@@ -61,10 +61,10 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(view_const.Color_Black)
+            self.screen.fill(view_const.COLOR_BLACK)
             # write some word
-            somewords = self.small_font.render(
-                        'You are in the Menu. Space to play. Esc exits.', 
+            somewords = self.smallfont.render(
+                        'You are in the Menu', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
@@ -72,7 +72,28 @@ class GraphicalView(object):
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
-        
+    
+    def draw_player(self):
+        for player in self.model.player_list:
+            pos = tuple(map(int, player.position))
+            radius = player.radius
+            color = player.color
+            gfxdraw.filled_circle(self.screen, *pos,
+                                  int(radius), player.color)
+
+    def draw_oil(self):
+        for oil in self.model.oil_list:
+            pos = tuple(map(int, oil.position))
+            radius = oil.radius
+            gfxdraw.filled_circle(self.screen, *pos,
+                                  int(oil.radius), view_const.COLOR_BLACK)
+
+    def draw_base(self):
+        for base in self.model.base_list:
+            center = base.center
+            length = base.length
+            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]+length/2, length, length], 2)       
+
     def render_play(self):
         """
         Render the game play.
@@ -80,12 +101,20 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw backgound
-        self.screen.fill(view_const.Color_White)
+        s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
+        self.screen.fill(view_const.COLOR_WHITE)
 
-        for player in self.model.players:
-            pos = ( int(player.pos[0]), int(player.pos[1]) )
-            pg.draw.circle( self.screen, player.color, pos, 20 )
+        #draw player
+        self.draw_player()
+        self.draw_oil()
+        self.draw_base()
 
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,197,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,397,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,597,480,5])
+        self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()
         
@@ -101,8 +130,8 @@ class GraphicalView(object):
             s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
 
             # write some word
-            somewords = self.small_font.render(
-                        'stop the game. space, escape to return the game.', 
+            somewords = self.smallfont.render(
+                        'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
@@ -111,6 +140,24 @@ class GraphicalView(object):
 
             # update surface
             pg.display.flip()
+
+    def render_end(self):
+        if self.last_update != model.STATE_END:
+            self.last_update = model.STATE_END
+            result = []
+            boardfont = pg.font.SysFont("Ubuntu", 30)
+
+            for player in seld.model.player_list:
+                result.append((player.name, player.value_sum))
+            result.sort(key=takeSecond)
+            self.screen.fill(view_const.COLOR_WHITE)
+            pos_x = 0
+            for player in result:
+                line = boardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
+                self.screen.blit(line, (50, 50 + pos_x))
+                pg.display.flip()
+                pos_x += 50
+
 
     def display_fps(self):
         """Show the programs FPS in the window handle."""
@@ -127,5 +174,5 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
-        self.small_font = pg.font.Font(None, 40)
+        self.smallfont = pg.font.Font(None, 40)
         self.is_initialized = True

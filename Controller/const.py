@@ -9,12 +9,12 @@ DIR_LD = 6
 DIR_L  = 7
 DIR_LU = 8
 
-# [up, right, down, left]
+# [up, right, down, left, buy_item]
 manual_player_keys = [
-    [pg.K_w, pg.K_d, pg.K_s, pg.K_a],
-    [pg.K_t, pg.K_h, pg.K_g, pg.K_f],
-    [pg.K_i, pg.K_l, pg.K_k, pg.K_j],
-    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT]
+    [pg.K_w, pg.K_d, pg.K_s, pg.K_a, pg.K_z],
+    [pg.K_t, pg.K_h, pg.K_g, pg.K_f, pg.K_v],
+    [pg.K_i, pg.K_l, pg.K_k, pg.K_j, pg.K_m],
+    [pg.K_UP, pg.K_RIGHT, pg.K_DOWN, pg.K_LEFT, pg.K_KP1]
 ]
 
 # up = 1, right = 2, down = 4, left = 8

@@ -40,7 +40,7 @@ class EventStateChange(BaseEvent):
         self.name = "StateChange event"
         self.state = state
     def __str__(self):
-        return "{0} => StateTo:{1}".format(self.name, self.state)
+        return "{0} => StateTo: {1}".format(self.name, self.state)
 
 class EventEveryTick(BaseEvent):
     """
@@ -78,7 +78,17 @@ class EventMove(BaseEvent):
         self.player_index = player
         self.direction = direction
     def __str__(self):
-        return "{0} => player_index={1}, DirectionTo:{2}".format(self.name, self.player_index, self.direction)
+        return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
+
+class EventBuy(BaseEvent):
+    """
+    Buy event.
+    """
+    def __init__(self, player):
+        self.name = "Buy event"
+        self.player_index = player
+    def __str__(self):
+        return f"{self.name} => player_index = {player}"
 
 class EventManager(object):
     """
