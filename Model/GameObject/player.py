@@ -30,21 +30,21 @@ class Player(object):
             bases[self.index].change_value_sum(self.price)
             self.price = 0
 
-    def check_collide(self, players):
+    def check_collide(self, player_list):
         collide = []
         sum_of_all = 0
-        for player in players:
+        for player in player_list:
             if player is self:
                 continue
             if Vec.magnitude(player.position - self.position) <= self.radius + player.radius:
-                collide.append(player.index)
+                collide.append(player)
                 sum_of_all += player.price
         sum_of_all += self.price
         self.price = sum_of_all / (len(collide) + 1)
-        for player in collide :
+        for player in collide:
             player.price = sum_of_all / (len(collide) + 1)
         
-    def update(self, direction, oils, bases, players):
+    def update(self, direction, oil_list, base_list, player_list):
         if self.position[0] + direction[0] < model_const.size \
             or self.position[0] + direction[0] > view_const.size - model_const.size:
             direction[0] = 0
@@ -52,7 +52,7 @@ class Player(object):
             or self.position[1] + direction[1] > view_const.size - model_const.size:
             direction[1] = 0
         self.position += Vec(direction)
-        self.pick_oil(oils)
-        self.store_price(bases)
-        self.check_collide(players)
+        self.pick_oil(oil_list)
+        self.store_price(base_list)
+        self.check_collide(player_list)
 
