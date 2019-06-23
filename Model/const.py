@@ -1,3 +1,5 @@
+game_length = 60 * 60 * 3
+
 #dir const
 """
 DIR_U  = 1

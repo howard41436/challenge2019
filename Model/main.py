@@ -34,6 +34,7 @@ class GameEngine(object):
         self.oil_list = []
         self.base_list = []
         self.turn_to = 0
+        self.timer = 0
 
         self.init_oil()
         self.init_player()
@@ -112,6 +113,9 @@ class GameEngine(object):
         for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
+        self.timer -= 1
+        if self.timer == 0:
+            self.ev_manager.post(EventStateChange(STATE_ENDGAME))
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
@@ -139,6 +143,7 @@ class GameEngine(object):
         self.running = True
         self.ev_manager.post(EventInitialize())
         self.state.push(STATE_MENU)
+        self.timer = model_const.game_length
         while self.running:
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
