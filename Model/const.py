@@ -1,3 +1,5 @@
+import View.const as view_const
+
 game_length = 60 * 60 * 5
 #dir const
 """
