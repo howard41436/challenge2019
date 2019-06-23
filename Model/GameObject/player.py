@@ -9,6 +9,7 @@ class Player(object):
         self.index = index
         self.name = name
         self.bag = 0
+        self.radius = 10
         self.position = Vec(1, 1)#TODO add position in view_const Vec(view_const.position[index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
@@ -43,7 +44,7 @@ class Player(object):
         for player in collide :
             player.price = sum_of_all / (len(collide) + 1)
         
-    def update(self, direction, oils, bases):
+    def update(self, direction, oils, bases, players):
         if self.position[0] + direction[0] < model_const.size \
             or self.position[0] + direction[0] > view_const.size - model_const.size:
             direction[0] = 0
