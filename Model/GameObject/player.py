@@ -9,7 +9,7 @@ class Player(object):
         self.index = index
         self.name = name
         self.bag = 0
-        self.radius = 10
+        self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
