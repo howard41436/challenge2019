@@ -3,28 +3,28 @@ import pygame as pg
 import Model.main as model
 from Events.Manager import *
 
-import Model.const       as modelConst
-import View.const        as viewConst
-import Controller.const  as ctrlConst
-import Interface.const   as IfaConst
+import Model.const       as model_const
+import View.const        as view_const
+import Controller.const  as ctrl_const
+import Interface.const   as ifa_const
 
 class GraphicalView(object):
     """
     Draws the model state onto the screen.
     """
-    def __init__(self, evManager, model):
+    def __init__(self, ev_manager, model):
         """
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
         """
-        self.evManager = evManager
-        evManager.RegisterListener(self)
+        self.ev_manager = ev_manager
+        ev_manager.register_listener(self)
         self.model = model
 
         self.is_initialized = False
         self.screen = None
         self.clock = None
-        self.smallfont = None
+        self.small_font = None
 
         self.last_update = 0
     
@@ -32,7 +32,7 @@ class GraphicalView(object):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, Event_EveryTick) \
+        if isinstance(event, EventEveryTick) \
            and self.is_initialized:
             cur_state = self.model.state.peek()
             if cur_state == model.STATE_MENU:
@@ -41,18 +41,16 @@ class GraphicalView(object):
                 self.render_play()
             if cur_state == model.STATE_STOP:
                 self.render_stop()
-#			if cur_state == model.STATE_END:
-#				self.render_end()
 
             self.display_fps()
             # limit the redraw speed to 30 frames per second
-            self.clock.tick(viewConst.FramePerSec)
-        elif isinstance(event, Event_Quit):
+            self.clock.tick(view_const.frame_per_sec)
+        elif isinstance(event, EventQuit):
             # shut down the pygame graphics
             self.is_initialized = False
             pg.quit()
-        elif isinstance(event, Event_Initialize) or\
-             isinstance(event, Event_Restart):
+        elif isinstance(event, EventInitialize) or\
+             isinstance(event, EventRestart):
             self.initialize()
     
     def render_menu(self):
@@ -63,14 +61,14 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(viewConst.Color_Black)
+            self.screen.fill(view_const.Color_Black)
             # write some word
             somewords = self.smallfont.render(
                         'You are in the Menu', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
-            pos_y = (viewConst.ScreenSize[1] - SurfaceY)/2
+            pos_x = (view_const.screen_size[0] - SurfaceX)/2
+            pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
@@ -116,7 +114,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_STOP
 
             # draw backgound
-            s = pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
+            s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
             s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
 
             # write some word
@@ -124,8 +122,8 @@ class GraphicalView(object):
                         'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
-            pos_y = (viewConst.ScreenSize[1] - SurfaceY)/2
+            pos_x = (view_const.screen_size[0] - SurfaceX)/2
+            pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
 
             # update surface
@@ -134,7 +132,7 @@ class GraphicalView(object):
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
-            viewConst.GameCaption, self.clock.get_fps()
+            view_const.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
         
@@ -143,35 +141,8 @@ class GraphicalView(object):
         Set up the pygame graphical display and loads graphical resources.
         """
         pg.init(); pg.font.init()
-        pg.display.set_caption(viewConst.GameCaption)
-        self.screen = pg.display.set_mode(viewConst.ScreenSize)
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
         self.smallfont = pg.font.Font(viewConst.titleFont, viewConst.titleFontSize)
         self.is_initialized = True
-"""
-	def render_end(self):
-		if self.last_update != model.STATE_END:
-			self.last_update = model.STATE_END
-
-			#draw background
-			s - pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
-			s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-			#end 
-			somewords = self.smallfont.renter(
-					'The game is end',True, (0, 255, 0))
-			(SurfaceX, SurfaceY) = spmewords.get_size();
-			pos_x = (viewConst.ScreenSize[0] - SurfaceX)/2
-			pos_y = (viewConst.ScreenSize[1] - SurfaceY)/2
-			self.screem.blit(somewords. (pos_x, pos_y))
-
-			#score table
-			
-
-			#the winner
-			
-
-			#update surface
-			pg.display.flip();
-"""
-

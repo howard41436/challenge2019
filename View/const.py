@@ -1,11 +1,9 @@
 # Window hyperparameters
-GameCaption = "Challenge 2019"
-ScreenSize  = (1280, 800)
-GameSize    = (800, 800)
+game_caption = "Challenge 2019"
+screen_size  = (1280, 800)
+game_size    = (800, 800)
 
-# Display setting
-# To be adjusted
-FramePerSec = 60
+frame_per_sec = 60
 
 # Table of colors
 # Using these monotone colors is discouraged
