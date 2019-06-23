@@ -11,14 +11,14 @@ DIR_LU = 8
 """
 dir_mapping = [
     [0, 0],             #steady
-    [0, 1],             #up
-    [0.707, 0.707],     #up right
+    [0, -1],             #up
+    [0.707, -0.707],     #up right
     [1, 0],             #right
-    [0.707, -0.707],    #right down
-    [0, -1],            #down
-    [-0.707, -0.707],   #left down
+    [0.707, 0.707],    #right down
+    [0, 1],            #down
+    [-0.707, 0.707],   #left down
     [-1, 0],	        #left
-    [-0.707, 0.707],    #left up
+    [-0.707, -0.707],    #left up
 ]
 
 # player
