@@ -140,13 +140,13 @@ class GraphicalView(object):
         i = 0
         for player in self.model.player_list:
             name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(player.value), True, view_const.COLOR_BLACK)
+            value = numfont.render(str(round(player.value,3)), True, view_const.COLOR_BLACK)
             self.screen.blit(name,(850, 170+i*160))
             self.screen.blit(value,(1000, 170+i*160))
             i += 1
         i = 0
         for base in self.model.base_list:
-            value_sum =	numfont.render(str(base.value_sum), True, view_const.COLOR_BLACK)
+            value_sum =	numfont.render(str(round(base.value_sum,3)), True, view_const.COLOR_BLACK)
             self.screen.blit(value_sum,(1150, 170+i*160))
             i += 1
         self.screen.blit(s,(0,0))
