@@ -25,14 +25,14 @@ dir_mapping = [
 player_number = 4
 bag_capacity = 100**20
 max_manual_player_num = 4
-player_normal_speed = 1
+player_normal_speed = 3
 init_insurance = 50
 
 # pet
 pet_normal_speed = 1
 
 # oil_const
-oil_probability = 5e-3
+oil_probability = 1 / 60
 init_oil_number = 5
 oil_radius = 10
 price_max = 1000
