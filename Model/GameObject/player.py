@@ -52,6 +52,7 @@ class Player(object):
         for player in collide:
             player.value = min(player.value, player.insurance_value)
             player.value += sum_of_all / len(collide)
+            player.bag = sum_of_all / len(collide)
 
     def update_speed(self):
         self.speed = max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
