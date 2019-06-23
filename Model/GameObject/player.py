@@ -66,3 +66,4 @@ class Player(object):
         self.store_price(bases)
         self.check_collide(players)
 
+
