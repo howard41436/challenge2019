@@ -7,6 +7,10 @@ class Pet(object) :
         self.carry_max = model_const.pat_carry_max
         self.carry_now = 0
         self.position = Vec(position)
+        self.radius = model_const.pet_radius
+        """
+        Pet is a circle
+        """
         self.status = 0
         """
         0 for staying base
@@ -16,7 +20,7 @@ class Pet(object) :
         self.speed = model_const.pat_normal_speed
     
     def check_collide_with_player(self, player) :
-        if Vec.magnitude(self.position - player.position) <= player.radius :
+        if Vec.magnitude(self.position - player.position) <= player.radius + self.radius:
             delta = min(carry_max - carry_now, player.value)
             self.carry_now += delta
             player.value -= delta
