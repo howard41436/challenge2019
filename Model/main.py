@@ -92,7 +92,7 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = Player("manual", index)
+                Tmp_P = Player("manual", index, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
                 Tmp_P = Player("default", index)
             else:
@@ -113,17 +113,12 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
-    def create_oil(self):
-        # Uniform distribution
-        pos = random.randint(0, view_const.screen_size[0]), random.randint(0, view_const.screen_size[1])
-        price = random.randint(model_const.price_min, model_const.price_max)
-        weight = random.randint(model_const.weight_min, model_const.weight_max)
-        new_oil = Oil(pos, price, weight)
-        self.oil_list.append(new_oil)
-
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
             self.create_oil()
+
+    def create_oil(self):
+        self.oil_list.append(new_oil())
 
     def try_create_oil(self):
         if random.random() < model_const.oil_probability:

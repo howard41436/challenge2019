@@ -26,19 +26,17 @@ player_number = 4
 bag_capacity = 100
 max_manual_player_num = 4
 player_normal_speed = 1
-init_insurance = 0
+init_insurance = 50
 
 # pet
 pet_normal_speed = 1
 
 # oil_const
 oil_probability = 5e-3
-price_min = 10
-price_max = 1000
-weight_min = 20
-weight_max = 100
 init_oil_number = 5
-oil_radius = 12
+oil_radius = 10
+price_max = 1000
+price_scale = 50
 
 # base
 base_length = 10
@@ -49,3 +47,19 @@ base_center = [
     [ 790 , 790]
 ]
 
+
+# item
+speed_up_idx = 0
+oil_up_idx = 1
+insurance_idx = 2
+
+speed_multiplier = 1.2
+oil_multiplier = 1.2
+init_insurance = 50
+
+default_equipments = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+]
