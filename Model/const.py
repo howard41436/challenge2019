@@ -34,7 +34,7 @@ pet_normal_speed = 1
 # oil_const
 oil_probability = 5e-3
 init_oil_number = 5
-oil_radius = 7122
+oil_radius = 10
 price_max = 1000
 price_scale = 50
 
