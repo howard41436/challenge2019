@@ -1,7 +1,7 @@
 import Model.const as model_const
 import View.const as view_const
 import numpy as np
-
+import math
 from pygame.math import Vector2 as Vec
 
 class Oil(object):
@@ -14,12 +14,12 @@ class Oil(object):
         pass
 
 def calc_price(pos):
-    screen_center = Vec(
-        screen_size[0] / 2,
-        screen_size[1] / 2
+    game_center = Vec(
+        game_size[0] / 2,
+        game_size[1] / 2
         )
-    dist_from_center = (pos - screen_center).length()
-    mean = screen_size[0] / dist_from_center
+    dist_from_center = (pos - game_center).length()
+    mean = game_size[0] / dist_from_center
     price = min(
         model_const.price_max, 
         np.random.normal(mean, model_const.price_scale)
@@ -27,9 +27,11 @@ def calc_price(pos):
     return price
 
 def new_oil(): 
+    R = random.random() * 400
+    theta = random.random() * np.pi
     pos = Vec(
-        random.randint(0, view_const.screen_size[0]),
-        random.randint(0, view_const.screen_size[1])
+	R * math.cos(theta) + 400,
+	R * math.sin(theta) + 400
         )
     price = calc_price(pos)
     return Oil(pos, price) 
