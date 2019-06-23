@@ -25,11 +25,11 @@ def calc_price(pos):
     return price
 
 def new_oil(): 
-    R = random.random() * (game_size[0] / 2)
+    R = random.random() * (view_const.game_size[0] / 2)
     theta = random.random() * 2 * np.pi
     pos = Vec(
-	R * math.cos(theta) + game_size[0] / 2,
-	R * math.sin(theta) + game_size[0] / 2
+	R * math.cos(theta) + view_const.game_size[0] / 2,
+	R * math.sin(theta) + view_const.game_size[0] / 2
         )
     price = calc_price(pos)
     return Oil(pos, price) 
