@@ -16,7 +16,7 @@ class Player(object):
         self.direction = Vec(0, 0)
         self.insurance_value = model_const.init_insurance
         #when collide, the player can keep at least this oil
-        self.speed = model_const.normal_speed
+        self.speed = model_const.player_normal_speed
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
@@ -56,4 +56,5 @@ class Player(object):
         self.pick_oil(oils)
         self.store_price(bases)
         self.check_collide(players)
+
 
