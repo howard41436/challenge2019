@@ -57,7 +57,7 @@ speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
 
-manual_player_default_items = [
+default_equipments = [
     [0, 0, 0],
     [0, 0, 0],
     [0, 0, 0],

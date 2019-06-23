@@ -92,7 +92,7 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = Player("manual", index, model_const.manual_player_default_items[index])
+                Tmp_P = Player("manual", index, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
                 Tmp_P = Player("default", index)
             else:
