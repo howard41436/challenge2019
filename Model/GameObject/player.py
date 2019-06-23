@@ -20,9 +20,9 @@ class Player(object):
         self.init_equipments(equipments)
 
     def init_equipments(self, equipments):
-        self.speed *= model_const.speed_multiplier ** items[model_const.speed_up_idx]
-        self.oil_multiplier = model_const.oil_multiplier ** items[model_const.oil_up_idx]
-        self.insurance_value = model_const.init_insurance * items[model_const.insurance_idx]
+        self.speed *= model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
+        self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
+        self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
