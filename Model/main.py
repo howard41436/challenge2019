@@ -108,8 +108,8 @@ class GameEngine(object):
     def update_objects(self):
         # Update player_list
         for player in self.player_list:
-            player.update(player.direction)
-        for oil in self.oils :
+            player.update(self.oil_list, self.base_list, self.player_list)
+        for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
 

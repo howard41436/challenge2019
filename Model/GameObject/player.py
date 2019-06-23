@@ -10,7 +10,7 @@ class Player(object):
         self.name = name
         self.bag = 0
         self.radius = 10
-        self.position = Vec(1, 1)#TODO add position in view_const Vec(view_const.position[index])
+        self.position = Vec(model_const.base_center[self.index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
         self.is_AI = False
@@ -21,37 +21,37 @@ class Player(object):
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
-            if Vec.magnitude(e.position - self.position) <= e.radius + self.radius:
+            if (e.position - self.position).length_squared() <= (e.radius + self.radius)**2:
                 if self.bag + e.weight <= model_const.bag_capacity:
                     self.bag += e.weight
                     self.value += e.price
-                    oils.remove(i)
+                    oils.remove(e)
 
     def store_price(self, bases):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
             or self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
-            bases[self.index].change_value_sum(self.price)
-            self.price = 0
+            bases[self.index].change_value_sum(self.value)
+            self.value = 0
 
     def check_collide(self, player_list):
         collide = []
         sum_of_all = 0
         for player in player_list:
-            if Vec.magnitude(player.position - self.position) <= self.radius + player.radius:
+            if (player.position - self.position).length() <= self.radius + player.radius:
                 collide.append(player)
-                sum_of_all += max(player.price - player.insurance_value, 0)
+                sum_of_all += max(player.value - player.insurance_value, 0)
         for player in collide:
-            player.price = min(player.price, player.insurance_value)
-            player.price += sum_of_all / len(collide)
+            player.value = min(player.value, player.insurance_value)
+            player.value += sum_of_all / len(collide)
 
     def update(self, oils, bases, players):
-        if self.position[0] + self.direction[0] * self.speed < model_const.size \
-            or self.position[0] + self.direction[0] * self.speed > view_const.size - model_const.size:
+        if self.position[0] + self.direction[0] * self.speed < self.radius \
+            or self.position[0] + self.direction[0] * self.speed > view_const.screen_size[0] - self.radius:
             self.direction[0] = 0
-        if self.position[1] + self.direction[1] * self.speed < model_const.size \
-            or self.position[1] + self.direction[1] * self.speed > view_const.size - model_const.size:
+        if self.position[1] + self.direction[1] * self.speed < self.radius \
+            or self.position[1] + self.direction[1] * self.speed > view_const.screen_size[1] - self.radius:
             self.direction[1] = 0
         self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)

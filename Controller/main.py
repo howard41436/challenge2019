@@ -77,13 +77,13 @@ class Control(object):
             elif event.key == pg.K_SPACE:    
                 self.ev_manager.post(EventStateChange(model.STATE_STOP))
             # player control
-            for player in self.model.players:
+            for player in self.model.player_list:
                 if not player.is_AI:
                     if event.key == self.control_keys[player.index][4]:
                         self.ev_manager.post(EventBuy(player.index))
 
         # player direction control
-        for player in self.model.players:
+        for player in self.model.player_list:
             if not player.is_AI:
                 dir_keys = self.control_keys[player.index][0:4]
                 now_pressing = self.get_key_pressing(dir_keys)
