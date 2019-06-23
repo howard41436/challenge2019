@@ -89,18 +89,18 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw backgound
-        s = pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
-        self.screen.fill(viewConst.Color_White)
+        s = pg.Surface(view_const.ScreenSize, pg.SRCALPHA)
+        self.screen.fill(view_const.Color_White)
 
         #draw player
         self.draw_player()
 
 
-        pg.draw.rect(s,viewConst.Color_Black,[800,0,5,800])
-        pg.draw.rect(s,viewConst.Color_Black,[1275,0,5,800])
-        pg.draw.rect(s,viewConst.Color_Black,[800,197,480,5])
-        pg.draw.rect(s,viewConst.Color_Black,[800,397,480,5])
-        pg.draw.rect(s,viewConst.Color_Black,[800,597,480,5])
+        pg.draw.rect(s,view_const.Color_Black,[800,0,5,800])
+        pg.draw.rect(s,view_const.Color_Black,[1275,0,5,800])
+        pg.draw.rect(s,view_const.Color_Black,[800,197,480,5])
+        pg.draw.rect(s,view_const.Color_Black,[800,397,480,5])
+        pg.draw.rect(s,view_const.Color_Black,[800,597,480,5])
         self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()
@@ -143,5 +143,5 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(viewConst.titleFont, viewConst.titleFontSize)
+        self.smallfont = pg.font.Font(view_const.titleFont, view_const.titleFontSize)
         self.is_initialized = True
