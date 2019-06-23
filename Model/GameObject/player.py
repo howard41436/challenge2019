@@ -15,6 +15,9 @@ class Player(object):
         self.value = 0
         self.is_AI = False
         self.direction = Vec(0, 0)
+        self.insurance_value = model_const.init_insurance
+        #when collide, the player can keep at least this oil
+        self.speed = model_const.player_normal_speed
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
@@ -32,28 +35,25 @@ class Player(object):
             bases[self.index].change_value_sum(self.price)
             self.price = 0
 
-    def check_collide(self, players):
+    def check_collide(self, player_list):
         collide = []
         sum_of_all = 0
-        for player in players:
-            if player is self:
-                continue
+        for player in player_list:
             if Vec.magnitude(player.position - self.position) <= self.radius + player.radius:
-                collide.append(player.index)
-                sum_of_all += player.price
-        sum_of_all += self.price
-        self.price = sum_of_all / (len(collide) + 1)
-        for player in collide :
-            player.price = sum_of_all / (len(collide) + 1)
-        
+                collide.append(player)
+                sum_of_all += max(player.price - player.insurance_value, 0)
+        for player in collide:
+            player.price = min(player.price, player.insurance_value)
+            player.price += sum_of_all / len(collide)
+
     def update(self, oils, bases, players):
-        if self.position[0] + self.direction[0] < model_const.size \
-            or self.position[0] + self.direction[0] > view_const.size - model_const.size:
+        if self.position[0] + self.direction[0] * self.speed < model_const.size \
+            or self.position[0] + self.direction[0] * self.speed > view_const.size - model_const.size:
             self.direction[0] = 0
-        if self.position[1] + self.direction[1] < model_const.size \
-            or self.position[1] + self.direction[1] > view_const.size - model_const.size:
+        if self.position[1] + self.direction[1] * self.speed < model_const.size \
+            or self.position[1] + self.direction[1] * self.speed > view_const.size - model_const.size:
             self.direction[1] = 0
-        self.position += Vec(self.direction)
+        self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
         self.check_collide(players)
