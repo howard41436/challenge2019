@@ -1,5 +1,4 @@
 import Model.const as model_const
-
 from pygame.math import Vector2 as Vec
 
 class Pet(object) :
@@ -16,9 +15,12 @@ class Pet(object) :
         """
         self.speed = model_const.pat_normal_speed
 
-    def update(self, base_list) :
+    def update(self, player_list, base_list) :
         if self.stauts == 0 :
-            ;
-        
-
+            # do nothing
+            pass
+        else :
+            target = (player_list[self.owner_index].position if status == 1 \
+                      else base_list[self.owner_index].position)
+            self.position += Vec.normalize(target - self.position) * self.speed
 
