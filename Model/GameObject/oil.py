@@ -1,7 +1,7 @@
 import Model.const as model_const
 import View.const as view_const
 import numpy as np
-
+import math
 from pygame.math import Vector2 as Vec
 
 class Oil(object):
@@ -27,9 +27,11 @@ def calc_price(pos):
     return price
 
 def new_oil(): 
+    radius = random.random() * 400
+    theta = random.random() * np.pi
     pos = Vec(
-        random.randint(0, view_const.screen_size[0]),
-        random.randint(0, view_const.screen_size[1])
+	radius * math.cos(theta) + 400,
+	radius * math.sin(theta) + 400
         )
     price = calc_price(pos)
     return Oil(pos, price) 
