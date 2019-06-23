@@ -85,9 +85,9 @@ class GraphicalView(object):
         for oil in self.model.oil_list:
             position = oil.position
             radius = oil.radius
-            color = oil.color
             gfxdraw.filled_circle(self.gameSurface, *position,
-                                  int(oil.radius), oil.color)
+                                  int(oil.radius), Color_Black)
+
 
     def render_play(self):
         """
@@ -102,7 +102,6 @@ class GraphicalView(object):
         #draw player
         self.draw_player()
         self.draw_oil()
-
 
         pg.draw.rect(s,view_const.Color_Black,[800,0,5,800])
         pg.draw.rect(s,view_const.Color_Black,[1275,0,5,800])
