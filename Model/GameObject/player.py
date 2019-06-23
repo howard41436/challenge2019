@@ -5,18 +5,27 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index):
+    def __init__(self, name, index, items=[False, False, False]):
         self.index = index
         self.name = name
         self.bag = 0
         self.radius = 10
-        self.position = Vec(1, 1)#TODO add position in view_const Vec(view_const.position[index])
+        self.position = Vec(1, 1)  #TODO add position in view_const Vec(view_const.position[index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
         self.direction = Vec(0, 0)
-        self.insurance_value = model_const.init_insurance
-        #when collide, the player can keep at least this oil
+        self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
+        self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
+        self.init_stable_items(items)
+
+    def init_stable_items(self, items):
+        if items[model_const.speed_up_idx]:
+            self.speed *= model_const.speed_multiplier
+        if items[model_const.oil_up_idx]:
+            self.oil_multiplier = model_const.oil_multiplier
+        if items[model_const.insurance_idx]:
+            self.insurance_value = model_const.init_insurance
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
