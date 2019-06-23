@@ -32,7 +32,7 @@ class Player(object):
             if Vec.magnitude(e.position - self.position) <= e.radius + self.radius:
                 if self.bag + e.weight <= model_const.bag_capacity:
                     self.bag += e.weight
-                    self.value += e.price
+                    self.value += e.price * self.oil_multiplier
                     oils.remove(i)
 
     def store_price(self, bases):
@@ -65,5 +65,4 @@ class Player(object):
         self.pick_oil(oils)
         self.store_price(bases)
         self.check_collide(players)
-
 
