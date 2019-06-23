@@ -102,7 +102,7 @@ class GameEngine(object):
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
-            player.direction = direction
+            player.direction = model_const.dir_mapping[direction]
 
 
     def update_objects(self):
