@@ -5,7 +5,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, items=[False, False, False]):
+    def __init__(self, name, index, items=[0, 0, 0]):
         self.index = index
         self.name = name
         self.bag = 0
@@ -20,12 +20,9 @@ class Player(object):
         self.init_stable_items(items)
 
     def init_stable_items(self, items):
-        if items[model_const.speed_up_idx]:
-            self.speed *= model_const.speed_multiplier
-        if items[model_const.oil_up_idx]:
-            self.oil_multiplier = model_const.oil_multiplier
-        if items[model_const.insurance_idx]:
-            self.insurance_value = model_const.init_insurance
+        self.speed *= model_const.speed_multiplier ** items[model_const.speed_up_idx]
+        self.oil_multiplier = model_const.oil_multiplier ** items[model_const.oil_up_idx]
+        self.insurance_value = model_const.init_insurance * items[model_const.insurance_idx]
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
