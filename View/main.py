@@ -82,8 +82,8 @@ class GraphicalView(object):
         # draw backgound
         self.screen.fill(view_const.Color_White)
 
-        for player in self.model.players:
-            pos = ( int(player.pos[0]), int(player.pos[1]) )
+        for player in self.model.player_list:
+            pos = ( int(player.position[0]), int(player.position[1]) )
             pg.draw.circle( self.screen, player.color, pos, 20 )
 
         # update surface
