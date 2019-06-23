@@ -63,8 +63,8 @@ class GraphicalView(object):
             # draw backgound
             self.screen.fill(view_const.Color_Black)
             # write some word
-            somewords = self.small_font.render(
-                        'You are in the Menu. Space to play. Esc exits.', 
+            somewords = self.smallfont.render(
+                        'You are in the Menu', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
@@ -72,7 +72,16 @@ class GraphicalView(object):
             self.screen.blit(somewords, (pos_x, pos_y))
             # update surface
             pg.display.flip()
-        
+    
+    def draw_player(self):
+        for player in self.model.player_list:
+            pos = player.position
+            radius = player.radius
+            color = player.color
+            gfxdraw.filled_circle(self.gameSurface, *pos,
+                                  int(radius), player.color)
+
+
     def render_play(self):
         """
         Render the game play.
@@ -80,12 +89,19 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw backgound
-        self.screen.fill(view_const.Color_White)
+        s = pg.Surface(viewConst.ScreenSize, pg.SRCALPHA)
+        self.screen.fill(viewConst.Color_White)
 
-        for player in self.model.player_list:
-            pos = ( int(player.position[0]), int(player.position[1]) )
-            pg.draw.circle( self.screen, player.color, pos, 20 )
+        #draw player
+        self.draw_player()
 
+
+        pg.draw.rect(s,viewConst.Color_Black,[800,0,5,800])
+        pg.draw.rect(s,viewConst.Color_Black,[1275,0,5,800])
+        pg.draw.rect(s,viewConst.Color_Black,[800,197,480,5])
+        pg.draw.rect(s,viewConst.Color_Black,[800,397,480,5])
+        pg.draw.rect(s,viewConst.Color_Black,[800,597,480,5])
+        self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()
         
@@ -101,8 +117,8 @@ class GraphicalView(object):
             s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
 
             # write some word
-            somewords = self.small_font.render(
-                        'stop the game. space, escape to return the game.', 
+            somewords = self.smallfont.render(
+                        'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
@@ -127,5 +143,5 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
-        self.small_font = pg.font.Font(None, 40)
+        self.smallfont = pg.font.Font(viewConst.titleFont, viewConst.titleFontSize)
         self.is_initialized = True
