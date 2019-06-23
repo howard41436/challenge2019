@@ -32,5 +32,4 @@ def new_oil():
         random.randint(0, view_const.screen_size[1])
         )
     price = calc_price(pos)
-    ret = Oil(pos, price)
-    return ret
+    return Oil(pos, price) 
