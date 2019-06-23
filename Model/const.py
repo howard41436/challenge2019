@@ -1,5 +1,4 @@
-game_length = 60 * 5
-
+import View.const as view_const
 #dir const
 """
 DIR_U  = 1
@@ -23,31 +22,35 @@ dir_mapping = [
     [-0.707, -0.707],    #left up
 ]
 
-# player
-player_number = 4
-player_radius = 10
-bag_capacity = 100**20
-max_manual_player_num = 4
-player_normal_speed = 3
-init_insurance = 50
-
-# pet
-pet_normal_speed = 1
-
 # oil_const
 oil_probability = 1 / 60
 init_oil_number = 5
 oil_radius = 8
 price_max = 1000
+price_min = 10
 price_scale = 50
 
+# player
+player_number = 4
+player_radius = 15
+bag_capacity = 100**20
+max_manual_player_num = 4
+player_normal_speed = 3
+init_insurance = 50
+player_speed_decreasing_rate = player_normal_speed / price_max
+player_speed_min = 1
+
+# pet
+pet_normal_speed = 1
+
 # base
-base_length = 10
+
+base_length = 100
 base_center = [
-    [ 10 , 10] ,
-    [ 790 , 10] ,
-    [ 10 , 790] ,
-    [ 790 , 790]
+    [ base_length / 2 , base_length / 2] ,
+    [ view_const.game_size[0] - base_length / 2 , base_length / 2] ,
+    [ base_length / 2 , view_const.game_size[0] - base_length / 2] ,
+    [ view_const.game_size[0] - base_length / 2 , view_const.game_size[0] - base_length / 2]
 ]
 
 

@@ -11,7 +11,7 @@ class Player(object):
         self.bag = 0
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
-        self.color = [ random.randint(0,255) for _ in range(3) ]
+        self.color = [ random.randint(0, 255) for _ in range(3) ]
         self.value = 0
         self.is_AI = False
         self.direction = Vec(0, 0)
@@ -40,6 +40,7 @@ class Player(object):
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
             self.value = 0
+            self.bag = 0
 
     def check_collide(self, player_list):
         collide = []
@@ -52,7 +53,11 @@ class Player(object):
             player.value = min(player.value, player.insurance_value)
             player.value += sum_of_all / len(collide)
 
+    def update_speed(self):
+        self.speed = max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
+
     def update(self, oils, bases, players):
+        self.update_speed()
         new_x = self.position[0] + self.direction[0] * self.speed
         new_y = self.position[1] + self.direction[1] * self.speed 
         if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
