@@ -87,6 +87,7 @@ class GraphicalView(object):
             radius = oil.radius
             gfxdraw.filled_circle(self.gameSurface, *position,
                                   int(oil.radius), Color_Black)
+            
 
     def render_play(self):
         """
