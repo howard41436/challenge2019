@@ -26,7 +26,7 @@ player_number = 4
 bag_capacity = 100
 max_manual_player_num = 4
 player_normal_speed = 1
-init_insurance = 0
+init_insurance = 50
 
 # pet
 pet_normal_speed = 1
@@ -47,3 +47,12 @@ base_center = [
     [ 87 , 87]
 ]
 
+
+# item
+speed_up_idx = 0
+oil_up_idx = 1
+insurance_idx = 2
+
+speed_multiplier = 1.2
+oil_multiplier = 1.2
+init_insurance = 50
