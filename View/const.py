@@ -89,6 +89,7 @@ thermometerBallSize = 80
 thermometerBarWidth = 40
 
 # Font
+"""
 titleFont          = 'View/Font/makinas_scrap/Makinas-Scrap-5.otf'
 titleFontSize      = 200
 
@@ -111,3 +112,4 @@ tmpScoreFont       = 'View/Font/Noto/NotoSansCJK-Black.ttc'
 tmpScoreFontSize   = 80
 
 playerColor = [Color_Blue, Color_Green, Color_Red, Color_Black ]
+"""
