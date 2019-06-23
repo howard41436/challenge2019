@@ -1,4 +1,4 @@
-game_length = 60 * 60 * 3
+game_length = 60 * 5
 
 #dir const
 """
