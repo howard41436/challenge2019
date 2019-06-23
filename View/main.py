@@ -111,9 +111,10 @@ class GraphicalView(object):
 
         pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
         pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,197,480,5])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,397,480,5])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,597,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,157,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,317,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,477,480,5])
+        pg.draw.rect(s,view_const.COLOR_BLACK,[800,637,480,5])
         self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()
