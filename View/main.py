@@ -111,20 +111,22 @@ class GraphicalView(object):
 
         pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
         pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
-        namefont = pg.font,Font(board_name_font, 30)
-        numfont = pg.font,Font(board_name_font, 15)
+        namefont = pg.font.Font(view_const.board_name_font, 30)
+        numfont = pg.font.Font(view_const.board_name_font, 15)
         for i in range(0,4,1):
             pg.draw.rect(s,view_const.COLOR_BLACK,[800,157+i*160,480,5])
         i = 0
         for player in self.model.player_list:
             name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
             value = numfont.render(str(player.value), True, view_const.COLOR_BLACK)
-            value_sum =	numfont.render(str(player.value_sum), True, view_const.COLOR_BLACK)
-            self.s.blit(name,(850, 170+i*160))
-            self.s.blit(value,(1000, 170+i*160))
-            self.s.blit(value_sum,(1150, 170+i*160))
+            self.screen.blit(name,(850, 170+i*160))
+            self.screen.blit(value,(1000, 170+i*160))
             i += 1
-
+        i = 0
+        for base in self.model.base_list:
+            value_sum =	numfont.render(str(base.value_sum), True, view_const.COLOR_BLACK)
+            self.screen.blit(value_sum,(1150, 170+i*160))
+            i += 1
         self.screen.blit(s,(0,0))
         # update surface
         pg.display.flip()

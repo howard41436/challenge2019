@@ -90,5 +90,5 @@ thermometerBarWidth = 40
 
 # Font
 
-board_name_font      ='View/Font/Noto/NotoSansCJK-Black.ttc'
-board_num_font ='View/Font/Noto/NotoSansCJK-Black.ttc'
+board_name_font      ='Font/Noto/NotoSansCJK-Black.ttc'
+board_num_font ='Font/Noto/NotoSansCJK-Black.ttc'
