@@ -40,6 +40,7 @@ class Control(object):
                     if cur_state == model.STATE_MENU: self.ctrl_menu(event)
                     if cur_state == model.STATE_PLAY: self.ctrl_play(event)
                     if cur_state == model.STATE_STOP: self.ctrl_stop(event)
+                    if cur_state == model.STATE_ENDGAME: self.ctrl_endgame(event)
         elif isinstance(event, EventInitialize):
             self.initialize()
 
@@ -54,6 +55,14 @@ class Control(object):
             # space plays the game
             if event.key == pg.K_SPACE:
                 self.ev_manager.post(EventStateChange(model.STATE_PLAY))
+
+    def ctrl_endgame(self, event):
+        """
+        Handles menu events.
+        """
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_ESCAPE:
+                self.ev_manager.post(EventQuit())
 
     def ctrl_stop(self, event):
         """

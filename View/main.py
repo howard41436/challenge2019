@@ -41,6 +41,8 @@ class GraphicalView(object):
                 self.render_play()
             if cur_state == model.STATE_STOP:
                 self.render_stop()
+            if cur_state == model.STATE_ENDGAME:
+                self.render_endgame()
 
             self.display_fps()
             # limit the redraw speed to 30 frames per second
@@ -65,6 +67,26 @@ class GraphicalView(object):
             # write some word
             somewords = self.smallfont.render(
                         'You are in the Menu', 
+                        True, (0, 255, 0))
+            (SurfaceX, SurfaceY) = somewords.get_size()
+            pos_x = (view_const.screen_size[0] - SurfaceX)/2
+            pos_y = (view_const.screen_size[1] - SurfaceY)/2
+            self.screen.blit(somewords, (pos_x, pos_y))
+            # update surface
+            pg.display.flip()
+    
+    def render_endgame(self):
+        """
+        Render the game menu.
+        """
+        if self.last_update != model.STATE_MENU:
+            self.last_update = model.STATE_MENU
+
+            # draw backgound
+            self.screen.fill(view_const.COLOR_BLACK)
+            # write some word
+            somewords = self.smallfont.render(
+                        'You are in the Endgame', 
                         True, (0, 255, 0))
             (SurfaceX, SurfaceY) = somewords.get_size()
             pos_x = (view_const.screen_size[0] - SurfaceX)/2

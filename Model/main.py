@@ -55,13 +55,11 @@ class GameEngine(object):
             # if event.state is None >> pop state.
             if event.state is None:
                 # false if no more states are left
-                if not self.state.pop():
+                if not self.state.pop() or event.state == STATE_ENDGAME:
                     self.ev_manager.post(EventQuit())
             elif event.state == STATE_RESTART:
                 self.state.clear()
                 self.state.push(STATE_MENU)
-            elif event.state == STATE_ENDGAME:
-                self.running = False
             else:
                 # push a new state on the stack
                 self.state.push(event.state)
@@ -116,7 +114,6 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
         self.timer -= 1
-        print(self.timer)
         if self.timer == 0:
             print("End Game")
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
