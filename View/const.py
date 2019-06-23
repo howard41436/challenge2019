@@ -89,27 +89,6 @@ thermometerBallSize = 80
 thermometerBarWidth = 40
 
 # Font
-"""
-titleFont          = 'View/Font/makinas_scrap/Makinas-Scrap-5.otf'
-titleFontSize      = 200
 
-titleSmallFont     = 'View/Font/makinas_scrap/Makinas-Scrap-5.otf'
-titleSmallFontSize = 60
-
-teamNameFont       = 'View/Font/Noto/NotoSansCJK-Black.ttc'
-teamNameFontSize   = 20
-
-teamLengthFont     = 'View/Font/Noto/NotoSansCJK-Black.ttc'
-teamLengthFontSize = 40
-
-teamScoreFont      = 'View/Font/Noto/NotoSansCJK-Black.ttc'
-teamScoreFontSize  = 60
-
-countDownFont      = 'View/Font/Noto/NotoSansCJK-Black.ttc'
-countDownFontSize  = 200
-
-tmpScoreFont       = 'View/Font/Noto/NotoSansCJK-Black.ttc'
-tmpScoreFontSize   = 80
-
-playerColor = [Color_Blue, Color_Green, Color_Red, Color_Black ]
-"""
+board_name_font      ='View/Font/Noto/NotoSansCJK-Black.ttc'
+board_num_font ='View/Font/Noto/NotoSansCJK-Black.ttc'
