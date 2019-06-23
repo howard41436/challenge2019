@@ -20,12 +20,12 @@ class Player(object):
         self.speed = model_const.player_normal_speed
 
     def pick_oil(self, oils):
-        for i, e in reversed(list(enumerate(oils))):
-            if (e.position - self.position).length_squared() <= (e.radius + self.radius)**2:
-                if self.bag + e.weight <= model_const.bag_capacity:
-                    self.bag += e.weight
-                    self.value += e.price
-                    oils.remove(e)
+        for i, oil in reversed(list(enumerate(oils))):
+            if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
+                if self.bag + oil.price <= model_const.bag_capacity:
+                    self.bag += oil.price
+                    self.value += oil.price
+                    oils.remove(oil)
 
     def store_price(self, bases):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
@@ -47,11 +47,11 @@ class Player(object):
             player.value += sum_of_all / len(collide)
 
     def update(self, oils, bases, players):
-        if self.position[0] + self.direction[0] * self.speed < self.radius \
-            or self.position[0] + self.direction[0] * self.speed > view_const.screen_size[0] - self.radius:
+        new_x = self.position[0] + self.direction[0] * self.speed
+        new_y = self.position[1] + self.direction[1] * self.speed 
+        if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
             self.direction[0] = 0
-        if self.position[1] + self.direction[1] * self.speed < self.radius \
-            or self.position[1] + self.direction[1] * self.speed > view_const.screen_size[1] - self.radius:
+        if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
             self.direction[1] = 0
         self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
