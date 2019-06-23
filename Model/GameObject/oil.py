@@ -21,10 +21,7 @@ def calc_price(pos):
         )
     dist_from_center = (pos - game_center).length()
     mean = view_const.game_size[0] / dist_from_center
-    price = min(
-        model_const.price_max, 
-        np.random.normal(mean, model_const.price_scale)
-        )
+    price = max(min(model_const.price_max, np.random.normal(mean, model_const.price_scale)), 0)
     return price
 
 def new_oil(): 
