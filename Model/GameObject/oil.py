@@ -21,18 +21,15 @@ def calc_price(pos):
         )
     dist_from_center = (pos - game_center).length()
     mean = view_const.game_size[0] / dist_from_center
-    price = min(
-        model_const.price_max, 
-        np.random.normal(mean, model_const.price_scale)
-        )
+    price = max(min(model_const.price_max, np.random.normal(mean, model_const.price_scale)), 0)
     return price
 
 def new_oil(): 
-    R = random.random() * 400
-    theta = random.random() * np.pi
+    R = random.random() * (view_const.game_size[0] / 2)
+    theta = random.random() * 2 * np.pi
     pos = Vec(
-	R * math.cos(theta) + 400,
-	R * math.sin(theta) + 400
+	R * math.cos(theta) + view_const.game_size[0] / 2,
+	R * math.sin(theta) + view_const.game_size[0] / 2
         )
     price = calc_price(pos)
     return Oil(pos, price) 

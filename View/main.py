@@ -92,7 +92,7 @@ class GraphicalView(object):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]+length/2, length, length], 2)       
+            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
 
     def render_play(self):
         """

@@ -100,7 +100,6 @@ class GameEngine(object):
             self.player_list.append(Tmp_P)
 
     def set_player_direction(self, player_index, direction):
-        if direction > 0: print(direction) 
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 

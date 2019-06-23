@@ -1,3 +1,4 @@
+import View.const as view_const
 #dir const
 """
 DIR_U  = 1
@@ -23,7 +24,7 @@ dir_mapping = [
 
 # player
 player_number = 4
-bag_capacity = 100
+bag_capacity = 100**20
 max_manual_player_num = 4
 player_normal_speed = 1
 init_insurance = 50
@@ -39,12 +40,13 @@ price_max = 1000
 price_scale = 50
 
 # base
-base_length = 10
+
+base_length = 100
 base_center = [
-    [ 10 , 10] ,
-    [ 790 , 10] ,
-    [ 10 , 790] ,
-    [ 790 , 790]
+    [ base_length / 2 , base_length / 2] ,
+    [ view_const.game_size[0] - base_length / 2 , base_length / 2] ,
+    [ base_length / 2 , view_const.game_size[0] - base_length / 2] ,
+    [ view_const.game_size[0] - base_length / 2 , view_const.game_size[0] - base_length / 2]
 ]
 
 
