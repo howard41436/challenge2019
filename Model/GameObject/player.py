@@ -13,6 +13,7 @@ class Player(object):
         self.position = Vec(1, 1)#TODO add position in view_const Vec(view_const.position[index])
         self.color = [ random.randint(0,255) for _ in range(3) ]
         self.value = 0
+        self.direction = Vec(0, 0)
 
     def pick_oil(self, oils):
         for i, e in reversed(list(enumerate(oils))):
@@ -43,16 +44,16 @@ class Player(object):
         self.price = sum_of_all / (len(collide) + 1)
         for player in collide:
             player.price = sum_of_all / (len(collide) + 1)
-        
-    def update(self, direction, oil_list, base_list, player_list):
-        if self.position[0] + direction[0] < model_const.size \
-            or self.position[0] + direction[0] > view_const.size - model_const.size:
-            direction[0] = 0
-        if self.position[1] + direction[1] < model_const.size \
-            or self.position[1] + direction[1] > view_const.size - model_const.size:
-            direction[1] = 0
-        self.position += Vec(direction)
-        self.pick_oil(oil_list)
-        self.store_price(base_list)
-        self.check_collide(player_list)
+
+    def update(self, oils, bases, players):
+        if self.position[0] + self.direction[0] < model_const.size \
+            or self.position[0] + self.direction[0] > view_const.size - model_const.size:
+            self.direction[0] = 0
+        if self.position[1] + self.direction[1] < model_const.size \
+            or self.position[1] + self.direction[1] > view_const.size - model_const.size:
+            self.direction[1] = 0
+        self.position += Vec(self.direction)
+        self.pick_oil(oils)
+        self.store_price(bases)
+        self.check_collide(players)
 
