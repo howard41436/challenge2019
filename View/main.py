@@ -1,5 +1,5 @@
 import pygame as pg
-
+import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
 
@@ -75,10 +75,10 @@ class GraphicalView(object):
     
     def draw_player(self):
         for player in self.model.player_list:
-            pos = player.position
+            pos = tuple(map(int, player.position))
             radius = player.radius
             color = player.color
-            gfxdraw.filled_circle(self.gameSurface, *pos,
+            gfxdraw.filled_circle(self.screen, *pos,
                                   int(radius), player.color)
 
 
@@ -89,7 +89,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw backgound
-        s = pg.Surface(view_const.ScreenSize, pg.SRCALPHA)
+        s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.Color_White)
 
         #draw player
@@ -143,5 +143,5 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(view_const.titleFont, view_const.titleFontSize)
+        self.smallfont = pg.font.Font(None, 40)
         self.is_initialized = True
