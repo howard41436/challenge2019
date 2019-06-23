@@ -24,7 +24,7 @@ dir_mapping = [
 
 # player
 player_number = 4
-player_radius = 10
+player_radius = 15
 bag_capacity = 100**20
 max_manual_player_num = 4
 player_normal_speed = 3
