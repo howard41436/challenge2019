@@ -23,7 +23,7 @@ dir_mapping = [
 
 # player
 player_number = 4
-bag_capacity = 100
+bag_capacity = 100**20
 max_manual_player_num = 4
 player_normal_speed = 1
 init_insurance = 50
