@@ -68,7 +68,7 @@ class Player(object):
 
     def check_market(self, market_list):
         for market in market_list:
-            if (market.position - self.position).length() <= self.radius + market_radius:
+            if (market.position - self.position).length() <= self.radius + model_const.market_radius:
                 return market
         return None
 
