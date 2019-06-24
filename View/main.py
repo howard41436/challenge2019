@@ -2,6 +2,7 @@ import pygame as pg
 import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
+import os
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -111,45 +112,45 @@ class GraphicalView(object):
             pos = tuple(map(int, player.position))
             radius = player.radius
             color = player.color
-            direction = player.direction_no   #1 to 8
-            if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()        
-            image.convert()
-            screen.blit(image, *pos)
-            #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
+            # direction = player.direction_no   #1 to 8
+            # if direction =
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()
+            # else if direction =           
+            #     image = pygame.image.load()        
+            #image.convert()
+            #screen.blit(image, *pos)
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
-<<<<<<< HEAD
-            price_class = price
-=======
             price = oil.price
->>>>>>> 3aa4a550a6e5dfc3eab8bb96d01c3a6dfc6caccd
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
 
     def draw_base(self):
+        num = 1
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
-
+            image = pg.image.load(os.path.join('View','image','base_0'+str(int(num))+'.png'))
+            image = pg.transform.scale(image,(95,95))
+            image.convert()
+            self.screen.blit(image, base.center-[50,50])
+            num += 1
 
     def draw_pet(self):
         for pet in self.model.pet_list:
