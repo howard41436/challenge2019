@@ -85,8 +85,8 @@ skillCardLargeScaleRate    = 1.5
 skillCardCutInPicLargeSize = tuple([int(x * skillCardLargeScaleRate) for x in skillCardCutInPicSize])
 
 # Size
-thermometerBallSize = 80
-thermometerBarWidth = 40
+player_height = 100
+player_width = 100
 
 # Font
 

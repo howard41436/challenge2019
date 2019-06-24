@@ -7,6 +7,7 @@ import Model.const       as model_const
 import View.const        as view_const
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
+from pygame.math import Vector2 as Vec
 
 class GraphicalView(object):
     """
@@ -108,39 +109,38 @@ class GraphicalView(object):
     
     def draw_player(self):
         for player in self.model.player_list:
-            pos = tuple(map(int, player.position))
+            pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
             radius = player.radius
             color = player.color
-            direction = player.direction_no   #1 to 8
-            if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()
-            else if direction =           
-                image = pygame.image.load()        
+            direction = 1 #player.direction_no   #1 to 8
+            if direction == 1 :        
+                image = pg.transform.scale(pg.image.load("View/image/player_blue_down.png"),(view_const.player_height, view_const.player_width))
+            elif direction == 2 :        
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 3 :        
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 4 :        
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 5 :         
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 6 :         
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 7 :         
+                image = pg.image.load("View/image/player_blue_down.png")
+            elif direction == 8 :        
+                image = pg.image.load("View/image/player_blue_down.png")        
+            rect = image.get_rect()
+            rect.center = (pos)
             image.convert()
-            screen.blit(image, *pos)
+
+            self.screen.blit(image, pos)
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
-<<<<<<< HEAD
-            price_class = price
-=======
             price = oil.price
->>>>>>> 3aa4a550a6e5dfc3eab8bb96d01c3a6dfc6caccd
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
 
@@ -151,12 +151,12 @@ class GraphicalView(object):
             pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
 
 
-    def draw_pet(self):
-        for pet in self.model.pet_list:
-            pos = tuple(map(int, pet.position))
-            radius = pet.radius
-            color = pet.color
-            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
+ #   def draw_pet(self):
+ #       for pet in self.model.pet_list:
+ #           pos = tuple(map(int, pet.position))
+ #           radius = pet.radius
+#          color = pet.color
+#            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
 
     def render_play(self):
         """
@@ -172,7 +172,7 @@ class GraphicalView(object):
         self.draw_player()
         self.draw_oil()
         self.draw_base()
-        self.draw_pet()
+    #    self.draw_pet()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
