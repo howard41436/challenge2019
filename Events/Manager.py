@@ -90,6 +90,16 @@ class EventBuy(BaseEvent):
     def __str__(self):
         return f"{self.name} => player_index = {player}"
 
+class EventUseItem(BaseEvent):
+    """
+    Use item event.
+    """
+    def __init__(self, player):
+        self.name = "Use item event"
+        self.player_index = player
+    def __str__(self):
+        return f"{self.name} => player_index = {player}"
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
