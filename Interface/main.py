@@ -55,6 +55,7 @@ class Interface(object):
                 loadtmp = imp.load_source('', f"./AI/team_{player.name}.py")
             except:
                 self.load_msg(str(index), player.name, "AI can't load")
+                print(player.name)
                 player.name, player.is_AI, player.ai = "Error", False, None
                 continue
             self.load_msg(str(index), player.name, "Loading")

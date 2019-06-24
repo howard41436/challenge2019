@@ -92,7 +92,8 @@ class GameEngine(object):
 
         # init Player object
         for index in range(model_const.player_number):
-            if self.AI_names[index] == "~":
+            print(self.AI_names[index])
+            if self.AI_names[index] in ["~" or "Error"]:
                 Tmp_P = Player("manual", index, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
                 Tmp_P = Player("default", index, is_AI = True)

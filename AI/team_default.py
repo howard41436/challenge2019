@@ -20,7 +20,25 @@ class TeamAI(BaseAI):
             if cp > best_cp:
                 cp = best_cp
                 best_pos = pos
-        return best_pos
+        return best_pos, my_pos
 
     def decide(self):
-        return random.randint(1, 8)
+        radius = self.helper.get_my_data().radius
+        best_pos, my_pos = self.get_best_oil_position()
+        home = self.helper.get_base_position()
+        if 
+        if best_pos[1] - my_pos[1] < -radius: return DIR_U
+        if best_pos[0] - my_pos[0] > radius: return DIR_R
+        if best_pos[0] - my_pos[0] < -radius: return DIR_L
+        if best_pos[1] - my_pos[1] > radius: return DIR_D
+"""
+DIR_stop = 0
+DIR_U    = 1
+DIR_RU   = 2
+DIR_R    = 3
+DIR_RD   = 4
+DIR_D    = 5
+DIR_LD   = 6
+DIR_L    = 7
+DIR_LU   = 8
+"""
