@@ -35,6 +35,7 @@ class GameEngine(object):
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
+        self.item_status = {}
         self.turn_to = 0
         self.timer = 0
 
@@ -67,12 +68,22 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
-            self.set_player_direction(event.player_index, event.direction)
+            if item_status['The World'] is not None:
+                the_world = item_status['The World']
+                if event.player_index == the_world.player_index
+                    self.set_player_direction(event.player_index, event.direction)
+            else
+                self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, EventInitialize) or \
             isinstance(event, EventRestart):
             pass  # self.initialize()
+        elif isinstance(event, EventTheWorldStart):
+            item_status['The World'] = event
+        elif isinstance(event, EventTheWorldStop):
+            item_status['The World'] = None
+
 
     def init_player(self):
         # set AI Names List
