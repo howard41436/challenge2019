@@ -138,7 +138,7 @@ class GameEngine(object):
     def init_pet(self):
         self.pet_list = []
         for index in range(model_const.player_number):
-			self.pet_list.append(Pet(index, model_const.base_center[index]))
+            self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
         self.market_list = [ Market(position) for position in model_const.market_positions ]
