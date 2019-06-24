@@ -20,7 +20,7 @@ def calc_price(pos):
         view_const.game_size[1] / 2
         )
     dist_from_center = (pos - game_center).length()
-    mean = view_const.game_size[0] / dist_from_center
+    mean = model_const.curve_a / (dist_from_center + model_const.curve_b)
     price = max(
         min(
         model_const.price_max,

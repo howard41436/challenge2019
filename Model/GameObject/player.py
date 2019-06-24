@@ -5,7 +5,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, equipments=[0, 0, 0]):
+    def __init__(self, name, index, equipments=[0, 0, 0, 0]):
         self.index = index
         self.name = name
         self.bag = 0
@@ -18,19 +18,21 @@ class Player(object):
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
+        self.pet = None
         self.init_equipments(equipments)
 
     def init_equipments(self, equipments):
-        self.speed *= model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
+        self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
+        self.speed *= self.speed_multiplier 
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
 
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
-                if self.bag + oil.price <= model_const.bag_capacity:
-                    self.bag += oil.price
-                    self.value += oil.price
+                if self.bag + oil.price * self.oil_multiplier <= model_const.bag_capacity:
+                    self.bag += oil.price * self.oil_multiplier
+                    self.value += oil.price * self.oil_multiplier
                     oils.remove(oil)
 
     def store_price(self, bases):
@@ -55,7 +57,7 @@ class Player(object):
             player.bag = sum_of_all / len(collide)
 
     def update_speed(self):
-        self.speed = max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
+        self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
 
     def update(self, oils, bases, players):
         self.update_speed()
