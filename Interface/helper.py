@@ -10,21 +10,13 @@ class Helper(object):
     def __init__(self, model, index):
         self.model = model
         self.index = index
-
-    # Get constants
-    def get_oil_radius(self):
-        return model_const.oil_radius
-    def get_player_radius(self):
-        return model_const.player_radius
-    def get_bag_capacity(self):
-        return model_const.bag_capacity
-    def get_player_normal_speed(self):
-        return model_const.player_normal_speed
-    def get_base_length(self):
-        return model_const.base_length
-    
-    def get_game_size(self):
-        return view_const.game_size
+        self.oil_radius = model_const.oil_radius
+        self.player_radius = model_const.player_radius
+        self.bag_capacity = model_const.bag_capacity
+        self.player_normal_speed = model_const.player_normal_speed
+        self.base_length = model_const.base_length
+        self.game_size = view_const.game_size
+        
 
     # Get player data
     def get_players_position(self):
