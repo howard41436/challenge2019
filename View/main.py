@@ -7,9 +7,11 @@ import os
 import Model.const       as model_const
 import View.const        as view_const
 import View.animations   as view_Animation
+import View.utils        as view_utils
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
 from pygame.math import Vector2 as Vec
+
 
 class GraphicalView(object):
     """
@@ -115,33 +117,16 @@ class GraphicalView(object):
     
     def draw_player(self):
         for player in self.model.player_list:
-            pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
-            radius = player.radius
-            color = player.color
-            direction = 1 #player.direction_no   #1 to 8
-            if direction == 1 :        
-                image = pg.transform.scale(pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),(view_const.player_height, view_const.player_width))
-            elif direction == 2 :        
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 3 :        
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 4 :        
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 5 :         
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 6 :         
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 7 :         
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
-            elif direction == 8 :        
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+            # pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
+            # radius = player.radius
+            # color = player.color
                 
-            image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+            image = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),
+                0.15
+            )
 
-            rect = image.get_rect()
-            rect.center = (pos)
-            image.convert()
-            self.screen.blit(image, pos)
+            self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):

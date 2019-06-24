@@ -68,6 +68,8 @@ class Animation_raster(Animation_base):
         self.expired = False
         pos[next(iter(pos))] = pg.math.Vector2(pos[next(iter(pos))]) # turn tuple into vec2
         self.pos = pos
+        for i in range(len(self.frames)):
+            self.frames[i] = self.frames[i].convert_alpha()
 
     def update(self):
         self._timer += 1
