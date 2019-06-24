@@ -131,6 +131,27 @@ class EventMagnetAttractStop(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventInvincibleStart(BaseEvent):
+    '''
+    A player trigger 'Invincible'
+    '''
+    def __init__(self, player):
+        self.name = "Invincible Start"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventInvincibleStop(BaseEvent):
+    '''
+    The duration of 'Invincible' ends
+    '''
+    def __init__(self, player):
+        self.name = "Invincible End"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
