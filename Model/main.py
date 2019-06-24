@@ -82,7 +82,7 @@ class GameEngine(object):
             if player.item is not None:
                 player.use_item(self.ev_manager)
             else:
-                pass
+                player.buy(self.market_list)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, EventInitialize) or \
