@@ -39,10 +39,10 @@ player_number = 4
 player_radius = 15
 bag_capacity = 100**20
 max_manual_player_num = 4
-player_normal_speed = 3
+player_normal_speed = 10
 init_insurance = 50
-player_speed_decreasing_rate = player_normal_speed / price_max / 3
-player_speed_min = 1
+player_speed_decreasing_rate = player_normal_speed / price_max / 10
+player_speed_min = 5
 
 # pet
 pet_normal_speed = 1
