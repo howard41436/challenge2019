@@ -170,6 +170,11 @@ class GraphicalView(object):
             image.convert()
             self.screen.blit(image, base.center-[50,50])
             num += 1
+    
+    def draw_market(self):
+        for market in self.model.market_list:
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, market.position, (10, 10))
+
 
 #    def draw_pet(self):
 #        for pet in self.model.pet_list:
@@ -177,10 +182,6 @@ class GraphicalView(object):
 #            radius = pet.radius
 #          color = pet.color
 #            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
-
-    def draw_market(self):
-        for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, market.position, (10, 10))
     
     def render_play(self):
         """
