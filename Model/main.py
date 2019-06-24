@@ -97,7 +97,14 @@ class GameEngine(object):
             self.item_status['Magnet Attract'] = event
         elif isinstance(event, EventMagnetAttractStop):
             self.item_status['Magnet Attract'] = event
-
+        elif isinstance(event, EventInvincibleStart):
+            self.item_status['Invincible'] = event
+            player = player_list[event.player_index]
+            player.is_invincible = True
+        elif isinstance(event,EventInvincibleStop):
+            self.item_status['Invincible'] = None
+            player_list[event.player_index].is_invincible = False
+            # TODO: overlap if there're more than one invincible item
 
     def init_player(self):
         # set AI Names List
@@ -207,4 +214,3 @@ class GameEngine(object):
         while self.running:
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
-

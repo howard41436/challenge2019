@@ -22,6 +22,7 @@ class Player(object):
         self.pet = None
         self.init_equipments(equipments)
         self.item = None
+        self.is_invincible = False
 
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
@@ -55,6 +56,8 @@ class Player(object):
         collide = []
         sum_of_all = 0
         for player in player_list:
+            if player.is_invincible:
+                continue
             if (player.position - self.position).length() <= self.radius + player.radius:
                 collide.append(player)
                 sum_of_all += max(player.value - player.insurance_value, 0)
@@ -89,5 +92,4 @@ class Player(object):
         self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
-        self.check_collide(players)
-
+        self.check_collide(players) if not self.is_invincible else pass
