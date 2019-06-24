@@ -25,11 +25,13 @@ dir_mapping = [
 ]
 
 # oil_const
+curve_a = 100000
+curve_b = 100
 oil_probability = 1 / 60
 init_oil_number = 5
 oil_radius = 8
-price_max = 1000
-price_min = 10
+price_max = 1200
+price_min = 50
 price_scale = 50
 
 # player
@@ -39,7 +41,7 @@ bag_capacity = 100**20
 max_manual_player_num = 4
 player_normal_speed = 3
 init_insurance = 50
-player_speed_decreasing_rate = player_normal_speed / price_max
+player_speed_decreasing_rate = player_normal_speed / price_max / 3
 player_speed_min = 1
 
 # pet
