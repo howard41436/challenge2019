@@ -77,5 +77,6 @@ default_equipments = [
 ]
 
 # items
+item_names = {'The World', 'Magnet Attract'}
 the_world_duration = 60 * 5
 
