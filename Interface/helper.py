@@ -67,7 +67,7 @@ class Helper(object):
     # Get base data
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]
-    def get_base_center(self, player_id = self.index):
+    def get_base_center(self, player_id = None):
         return tuple(self.model.base_list[player_id].center)
 
     # Get game informations

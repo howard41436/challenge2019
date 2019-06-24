@@ -11,7 +11,7 @@ class TeamAI(BaseAI):
         self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
-        my_pos = self.helper.get_player_position(3)
+        my_pos = self.helper.player_radius
         oil_poses = self.helper.get_oils()
         oil_prices = self.helper.get_oils_price()
         best_pos = None
@@ -24,7 +24,7 @@ class TeamAI(BaseAI):
         return best_pos, my_pos
 
     def decide(self):
-        radius = self.helper.get_player_radius()
+        radius = self.helper.player_radius
         carry = self.helper.get_player_value()
         best_pos, my_pos = self.get_best_oil_position()
         home = self.helper.get_base_center()
