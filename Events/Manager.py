@@ -106,7 +106,7 @@ class EventTheWorldStop(BaseEvent):
     The duration of 'The world' ends
     '''
     def __init__(self, player):
-        self.name = "The World"
+        self.name = "The World Ends"
         self.player_index = player.index
     def __str__(self):
         return self.name
