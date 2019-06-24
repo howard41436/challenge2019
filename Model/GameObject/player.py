@@ -21,12 +21,17 @@ class Player(object):
         self.speed = model_const.player_normal_speed
         self.pet = None
         self.init_equipments(equipments)
+        self.item = None
 
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
         self.speed *= self.speed_multiplier 
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
+
+    def use_item(self):
+        if self.item is not None:
+            self.item.trigger()
 
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):

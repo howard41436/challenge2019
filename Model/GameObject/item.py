@@ -5,47 +5,31 @@ class Item(object):
     '''
     Base Item
     '''
-    def __init__(self, player):
-        self.duration = 0
-        self.position = Vec(player.position)
-        self.player_index = player.index
-
-class Communism(Item):
-    '''
-    Evenly distribute the sum of all the values in all the players' bases
-    '''
     def __init__(self):
-        pass
-
-    def trigger(self, player_list):
-        total = sum(player.value for player in player_list)
-        for player in player_list:
-            player.value = total / len(player_list)
-
+        self.duration = 0
+        self.position = None
+        self.player_index = None
 
 class GoHome(Item):
     '''
     Make all player move to their base
     '''
-    def __init__(self, player):
-        super().__init__(player)
+    def __init__(self):
+        super().__init__()
 
-    def trigger(self, player_list, base_list):
-        for player in player_list:
-            player.position.x = base_list[player.index].position.x
-            player.position.y = base_list[player.index].position.y
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventGoHome(player))
 
 class TheWorld(Item):
     '''
     Make all the other players not able to move for ? seconds
     '''
-    def __init__(self, player, ev_manager):
-        super().__init__(player)
-        self.duration = model_const.the_world_duration
-        self.ev_manager = ev_manager
+    def __init__(self):
+        super().__init__()
 
-    def trigger(self):
-        self.ev_manager.post(EventTheWorldStart(self))
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventTheWorldStart(self))
+        self.duration = model_const.the_world_duration
 
     def update(self):
         self.duration -= 1
@@ -56,16 +40,15 @@ class MagnetAttract(Item):
     '''
     Make all player attract to this player
     '''
-    def __init__(self, player, ev_manager):
-        super().__init__(player)
-        self.duration = model_const.magnet_attract_duration
-        self.ev_manager = ev_manager
+    def __init__(self):
+        super().__init__()
 
-    def trigger(self):
-        self.ev_manager.post(EventMagnetAttractStart())
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventMagnetAttractStart())
         self.duration = model_const.magnet_attract_duration
 
     def update(self):
         self.duration -= 1
         if self.duration == 0:
             self.ev_manger.pos(EventMagnetAttractStop())
+
