@@ -35,6 +35,7 @@ class GameEngine(object):
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
+        self.market_list = []
         self.item_status = {}
         self.turn_to = 0
         self.timer = 0
@@ -43,6 +44,7 @@ class GameEngine(object):
         self.init_pet()
         self.init_player()
         self.init_base()
+        self.init_markets()
 
         random.seed(time.time())
         
@@ -122,6 +124,9 @@ class GameEngine(object):
         self.pet_list = []
         for index in range(model_const.player_number):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
+
+    def init_markets(self):
+        self.market_list = [ Market(position) for position in model_const.market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
