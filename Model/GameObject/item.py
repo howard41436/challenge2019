@@ -31,10 +31,10 @@ class TheWorld(Item):
         ev_manager.post(EventTheWorldStart(player))
         self.duration = model_const.the_world_duration
 
-    def update(self):
+    def update(self, player, ev_manager):
         self.duration -= 1
         if self.duration == 0:
-            self.ev_manager.post(EventTheWorldStop(player))
+            ev_manager.post(EventTheWorldStop(player))
 
 class MagnetAttract(Item):
     '''
@@ -47,7 +47,22 @@ class MagnetAttract(Item):
         ev_manager.post(EventMagnetAttractStart(player))
         self.duration = model_const.magnet_attract_duration
 
-    def update(self):
+    def update(self, player, ev_manager):
         self.duration -= 1
         if self.duration == 0:
-            self.ev_manager.post(EventMagnetAttractStop(player))
+            ev_manager.post(EventMagnetAttractStop(player))
+
+class Invincible(Item):
+    '''
+    Make the player itself immune to collision
+    '''
+    def __init__(self):
+        super().__init__()
+    
+    def trigger(self, player, ev_manager):
+        ev.manager.post(EventInvincibleStart(player))
+        self.duration = model_const.invincible_duration
+    def update(self, player, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            ev_manager.post(EventInvincibleStop(player))
