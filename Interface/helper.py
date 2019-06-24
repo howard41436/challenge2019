@@ -74,6 +74,11 @@ class Helper(object):
         return self.model.timer
 
     # Extra functions
+    def get_nearest_player(self, player_id):
+        my_pos = self.get_player_position(player_id)
+        players = self.get_players_position()
+        return min(players.remove(my_pos), key=lambda player: (player - my_pos).magnitude())
+
     def get_nearest_oil(self, player_id):
         my_pos = self.get_player_position(player_id)
         oils = self.get_oils()
@@ -81,4 +86,5 @@ class Helper(object):
     
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
+
 
