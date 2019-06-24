@@ -83,15 +83,26 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(view_const.COLOR_BLACK)
+            self.screen.fill(view_const.COLOR_WHITE)
             # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Endgame', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
+            result = []
+            
+            titlefont = pg.font.Font(view_const.board_name_font, 70)
+            title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
+            self.screen.blit(title, (100, 15))
+            numfont = pg.font.Font(view_const.board_name_font, 30)
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+            def takeSecond(item): return item[1]
+            result.sort(key=takeSecond, reverse=True)
+            pos_x = 0
+            prize = 1
+            for player in result:
+                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(player[1])), True, view_const.COLOR_BLACK)
+                self.screen.blit(line, (100, 200 + pos_x))
+                pg.display.flip()
+                pos_x += 100
+                prize += 1
             # update surface
             pg.display.flip()
     
@@ -107,14 +118,23 @@ class GraphicalView(object):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
+            price = oil.price
             gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), view_const.COLOR_BLACK)
+                                  int(oil.radius), (0, 0, 0, 255*(price/1200)))
 
     def draw_base(self):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
+            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
+
+
+    def draw_pet(self):
+        for pet in self.model.pet_list:
+            pos = tuple(map(int, pet.position))
+            radius = pet.radius
+            color = pet.color
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
 
     def render_play(self):
         """
@@ -130,6 +150,7 @@ class GraphicalView(object):
         self.draw_player()
         self.draw_oil()
         self.draw_base()
+        self.draw_pet()
 
         pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
         pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
@@ -141,17 +162,17 @@ class GraphicalView(object):
         i = 0
         for player in self.model.player_list:
             name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,3)), True, view_const.COLOR_BLACK)
+            value = numfont.render(str(round(player.value,1)), True, view_const.COLOR_BLACK)
             self.screen.blit(name,(850, 170+i*160))
             self.screen.blit(value,(850, 240+i*160))
             i += 1
         i = 0
         for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,3)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum,(1000, 240+i*160))
+            value_sum =	numfont.render(str(round(base.value_sum,1)), True, view_const.COLOR_BLACK)
+            self.screen.blit(value_sum,(1050, 240+i*160))
             i += 1
 
-        time = timefont.render(str(round(self.model.timer/60, 0)), True, view_const.COLOR_BLACK)
+        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         self.screen.blit(time,(950, 35))
 
         self.screen.blit(s,(0,0))
@@ -185,7 +206,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_END:
             self.last_update = model.STATE_END
             result = []
-            boardfont = pg.font.SysFont("Ubuntu", 30)
+            numfont = pg.font.Font(view_const.board_name_font, 30)
 
             for player in seld.model.player_list:
                 result.append((player.name, player.value_sum))

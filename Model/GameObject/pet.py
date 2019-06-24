@@ -32,8 +32,7 @@ class Pet(object):
         self.status = new_status
     
     def check_collide_with_base(self, base):
-        if base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and \
-            base.center[1] - base.length / 2 <= self.position[1] <= base.center[1] + base.length / 2:
+        if self.status == 2 and Vec.magnitude(self.position - base.center) <= self.radius:
             self.status = 0
             base.value_sum += self.carry_now
             self.carry_now = 0
@@ -45,7 +44,7 @@ class Pet(object):
             # do nothing
             pass
         else:
-            target = (player_list[self.owner_index].position if status == 1 \
-                      else base_list[self.owner_index].position)
+            target = (player_list[self.owner_index].position if self.status == 1 \
+                      else base_list[self.owner_index].center)
             self.position += Vec.normalize(target - self.position) * self.speed
 

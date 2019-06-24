@@ -83,6 +83,10 @@ class GameEngine(object):
             item_status['The World'] = event
         elif isinstance(event, EventTheWorldStop):
             item_status['The World'] = None
+        elif isinstance(event, EventMagnetAttractStart):
+            item_status['Magnet Attract'] = event
+        elif isinstance(event, EventMagnetAttractStop):
+            item_status['Magnet Attract'] = event
 
 
     def init_player(self):
@@ -126,18 +130,31 @@ class GameEngine(object):
 
     def update_objects(self):
         # Update player_list
+        for key, item in item_status:
+            item.update()
+        
         for player in self.player_list:
-            player.update(self.oil_list, self.base_list, self.player_list)
+            if item_status['Magnet Attract'] == None:
+                player.update(self.oil_list, self.base_list, self.player_list)
+            else:
+                event = item_status['Magnet Attract']
+                target_player = self.player_list[event.player_index]
+                player.duration = Vec2.normalize(target_player.position - player.position)
+                player.update(self.oil_list, self.base_list, self.player_list)
 
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
-        if self.timer % 2400 == 1200:
+        if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
+        
+        for pet in self.pet_list:
+            pet.update(self.player_list, self.base_list)
 
         for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
+
+        for key, item in item_status:
+            item.update()
 
         self.timer -= 1
         if self.timer == 0:
