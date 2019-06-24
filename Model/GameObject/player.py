@@ -5,7 +5,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, equipments=[0, 0, 0]):
+    def __init__(self, name, index, equipments = [0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.bag = 0
@@ -13,7 +13,7 @@ class Player(object):
         self.position = Vec(model_const.base_center[self.index])
         self.color = [ random.randint(0, 255) for _ in range(3) ]
         self.value = 0
-        self.is_AI = False
+        self.is_AI = is_AI
         self.direction = Vec(0, 0)
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil

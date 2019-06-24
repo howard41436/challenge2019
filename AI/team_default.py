@@ -23,6 +23,4 @@ class TeamAI(BaseAI):
         return best_pos
 
     def decide(self):
-        if not random.randint(0, 9) % 10:
-            self.last_dir = random.randint(1, 8)
-        return self.last_dir
+        return random.randint(1, 8)
