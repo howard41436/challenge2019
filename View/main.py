@@ -89,7 +89,7 @@ class GraphicalView(object):
             
             titlefont = pg.font.Font(view_const.board_name_font, 70)
             title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-            self.screen.blit(title, (100, 15))
+            self.screen.blit(title, (400, 15))
             numfont = pg.font.Font(view_const.board_name_font, 30)
             for base in self.model.base_list:
                 result.append([self.model.player_list[base.owner_index].name, base.value_sum])
@@ -99,7 +99,7 @@ class GraphicalView(object):
             prize = 1
             for player in result:
                 line = numfont.render(str(prize)+". "+(player[0] + ":" + str(player[1])), True, view_const.COLOR_BLACK)
-                self.screen.blit(line, (100, 200 + pos_x))
+                self.screen.blit(line, (400, 200 + pos_x))
                 pg.display.flip()
                 pos_x += 100
                 prize += 1
