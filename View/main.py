@@ -129,10 +129,7 @@ class GraphicalView(object):
                 image = pg.image.load("View/image/player_blue_down.png")
             elif direction == 8 :        
                 image = pg.image.load("View/image/player_blue_down.png")        
-            rect = image.get_rect()
-            rect.center = (pos)
             image.convert()
-
             self.screen.blit(image, pos)
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
@@ -141,8 +138,20 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
+            if price < 400 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_brown.png"),(5*radius, 5*radius))
+            elif price >= 400 and price < 600 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_gray.png"),(5*radius, 5*radius))
+            elif price >= 600 and price < 800 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_pink.png"),(5*radius, 5*radius))
+            elif price >= 800 and price < 1200 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_purple.png"),(5*radius, 5*radius))
+            image.convert()
+            self.screen.blit(image, pos)
+            """
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
+            """
 
     def draw_base(self):
         for base in self.model.base_list:
@@ -169,9 +178,9 @@ class GraphicalView(object):
         self.screen.fill(view_const.COLOR_WHITE)
 
         #draw player
-        self.draw_player()
         self.draw_oil()
         self.draw_base()
+        self.draw_player()
     #    self.draw_pet()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
