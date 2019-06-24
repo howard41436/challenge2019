@@ -11,22 +11,27 @@ class TeamAI(BaseAI):
         self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
-        my_pos = self.helper.get_my_data().position
-        oils = self.helper.get_all_oil_data()
+        my_pos = self.helper.get_player_position(3)
+        oils = self.helper.get_oils_item()
         best_pos = None
         best_cp = -1
-        for pos, price in oils:
-            cp = price / (my_pos - pos).length()
+        for oil in oils:
+            cp = oil.price / (Vec(my_pos) - Vec(oil.position)).length()
             if cp > best_cp:
                 cp = best_cp
-                best_pos = pos
+                best_pos = oil.position
         return best_pos, my_pos
 
     def decide(self):
-        radius = self.helper.get_my_data().radius
+        radius = self.helper.get_player_radius()
+        carry = self.helper.get_player_value(3)
         best_pos, my_pos = self.get_best_oil_position()
-        home = self.helper.get_base_position()
-        if 
+        home = self.helper.get_base_center(3)
+        if carry > 2000:
+            if home[1] - my_pos[1] < -radius: return DIR_U
+            if home[0] - my_pos[0] > radius: return DIR_R
+            if home[0] - my_pos[0] < -radius: return DIR_L
+            if home[1] - my_pos[1] > radius: return DIR_D
         if best_pos[1] - my_pos[1] < -radius: return DIR_U
         if best_pos[0] - my_pos[0] > radius: return DIR_R
         if best_pos[0] - my_pos[0] < -radius: return DIR_L
