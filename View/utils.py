@@ -11,3 +11,17 @@ class PureText():
 
     def draw(self, screen):
         screen.blit(self.text_surface, self.pos_rect)
+
+def scaled_surface(surface, scale):
+    '''
+    example:
+    image = scaled_surface(image, 0.3)
+    '''
+    return pg.transform.smoothscale(surface, (int(scale * surface.get_width()), int(scale * surface.get_height())))
+
+def change_opacity(surface, alpha):
+    '''
+    The non-inplace version of pygame.Surface.set_alpha()
+    '''
+    surface.set_alpha(alpha)
+    return surface

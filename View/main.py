@@ -6,6 +6,7 @@ import os
 
 import Model.const       as model_const
 import View.const        as view_const
+import View.animations   as view_Animation
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
 from pygame.math import Vector2 as Vec
@@ -29,6 +30,8 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
+
+        self.animations = []
     
     def notify(self, event):
         """
@@ -56,6 +59,8 @@ class GraphicalView(object):
         elif isinstance(event, EventInitialize) or\
              isinstance(event, EventRestart):
             self.initialize()
+        elif isinstance(event, EventEqualize):
+            self.animations.append( view_Animation.Animation_equalize(center=event.position) )
     
     def render_menu(self):
         """
@@ -177,6 +182,13 @@ class GraphicalView(object):
         # draw backgound
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
+
+        # draw animation
+        for ani in self.animations:
+            if ani.expired:
+                self.animations.remove(ani)
+            else:
+                ani.draw(self.screen)
 
         #draw player
         self.draw_player()
