@@ -28,7 +28,7 @@ class Pet(object):
             player.value -= delta
             self.status = 2
     
-    def change_status(new_status):
+    def change_status(self, new_status):
         self.status = new_status
     
     def check_collide_with_base(self, base):
