@@ -30,9 +30,9 @@ class Player(object):
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
-                if self.bag + oil.price <= model_const.bag_capacity:
-                    self.bag += oil.price
-                    self.value += oil.price
+                if self.bag + oil.price * self.oil_multiplier <= model_const.bag_capacity:
+                    self.bag += oil.price * self.oil_multiplier
+                    self.value += oil.price * self.oil_multiplier
                     oils.remove(oil)
 
     def store_price(self, bases):
