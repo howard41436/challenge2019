@@ -216,9 +216,15 @@ class GraphicalView(object):
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-            s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-            # write some word
+            s.fill((255, 255, 255, 128)); self.screen.blit(s, (0,0))
+            
+            # draw pause botton
+            pg.draw.circle(s, view_const.COLOR_BLACK, (640,400), 300)
+            pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
+            pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
+            self.screen.blit(s,(0,0))
+            """
+            #write some word
             somewords = self.smallfont.render(
                         'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
@@ -226,6 +232,7 @@ class GraphicalView(object):
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
             pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
+            """
 
             # update surface
             pg.display.flip()
