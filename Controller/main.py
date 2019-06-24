@@ -79,10 +79,8 @@ class Control(object):
             # player control
             for player in self.model.players:
                 if not player.is_AI:
-                    if event.key == self.control_keys[player.index][4]: # buy
+                    if event.key == self.control_keys[player.index][4]: # item
                         self.ev_manager.post(EventBuy(player.index))
-                    elif event.key == self.control_keys[player.index][5]: # use
-                        self.ev_manager.post(EventUseItem(player.index))
 
         # player direction control
         for player in self.model.players:
