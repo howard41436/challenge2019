@@ -45,7 +45,8 @@ player_speed_decreasing_rate = player_normal_speed / price_max / 10
 player_speed_min = player_normal_speed / 3
 
 # pet
-pet_normal_speed = 1
+pet_normal_speed = 3
+pet_radius = 4
 
 # base
 
