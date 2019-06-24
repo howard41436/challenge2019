@@ -78,6 +78,13 @@ default_equipments = [
 ]
 
 # items
+market_positions = [
+    (300, 300),
+    (300, 500),
+    (500, 300),
+    (500, 500)
+]
+market_generate_item_probability = 1 / 1200
 item_names = {'The World', 'Magnet Attract'}
 the_world_duration = 60 * 5
 
