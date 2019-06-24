@@ -10,6 +10,7 @@ class Player_data(object):
         # TODO: Get player score
         self.value = player.value
         self.speed = player.speed
+        self.radius = player.radius
         self.position = player.position
 
 class Helper(object):
