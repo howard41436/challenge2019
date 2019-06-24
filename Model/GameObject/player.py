@@ -92,4 +92,7 @@ class Player(object):
         self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
-        self.check_collide(players) if not self.is_invincible else pass
+        if self.is_invincible:
+            pass
+        else:
+            self.check_collide(players)
