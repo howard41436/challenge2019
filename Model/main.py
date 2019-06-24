@@ -73,6 +73,9 @@ class GameEngine(object):
         elif isinstance(event, EventInitialize) or \
             isinstance(event, EventRestart):
             pass  # self.initialize()
+        elif isinstance(event, EventTheWorldStart):
+            active_player = event.player_index
+
 
     def init_player(self):
         # set AI Names List

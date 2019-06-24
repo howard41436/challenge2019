@@ -90,6 +90,27 @@ class EventBuy(BaseEvent):
     def __str__(self):
         return f"{self.name} => player_index = {player}"
 
+class EventTheWorldStart(BaseEvent):
+    '''
+    A player trigger 'The World'(time stop)
+    '''
+    def __init__(self, player):
+        self.name = f"Player {player.index} triggers The World"
+        self.position = Vec(player.position)
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventTheWorldStop(BaseEvent):
+    '''
+    The duration of 'The world' ends
+    '''
+    def __init__(self, player):
+        self.name = "The World"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
