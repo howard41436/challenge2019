@@ -118,11 +118,13 @@ class GameEngine(object):
         for player in self.player_list:
             player.update(self.oil_list, self.base_list, self.player_list)
 
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
-        if self.timer % 2400 == 1200:
+        if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
+                print(pet.status)
+        
+        for pet in self.pet_list:
+            pet.update(self.player_list, self.base_list)
 
         for oil in self.oil_list:
             oil.update()
