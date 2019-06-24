@@ -20,14 +20,14 @@ class Helper(object):
 
     # Get player data
     def get_players_position(self):
-        return [Vec(player.position) for player in self.model.player_list]
+        return [tuple(player.position) for player in self.model.player_list]
     def get_player_position(self, player_id):
-        return Vec(self.model.player_list[player_id].position)
+        return tuple(self.model.player_list[player_id].position)
 
     def get_players_direction(self):
-        return [Vec(player.direction) for player in self.model.player_list]
+        return [tuple(player.direction) for player in self.model.player_list]
     def get_player_direction(self, player_id):
-        return Vec(self.model.player_list[player_id].direction)
+        return tuple(self.model.player_list[player_id].direction)
 
     def get_players_value(self):
         return [player.value for player in self.model.player_list]
@@ -53,13 +53,13 @@ class Helper(object):
 
     # Get oil data
     def get_oils(self):
-        return [Vec(oil.position) for oil in self.model.oil_list]
+        return [tuple(oil.position) for oil in self.model.oil_list]
 
     # Get base data
     def get_bases_center(self):
-        return [Vec(base.center) for base in self.model.base_list]
+        return [tuple(base.center) for base in self.model.base_list]
     def get_base_center(self, player_id):
-        return Vec(self.model.base_list[player_id])
+        return tuple(self.model.base_list[player_id])
         
     # Get game informations
     def get_timer(self):
