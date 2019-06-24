@@ -79,7 +79,7 @@ class GameEngine(object):
             else:
                 self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
-            player = player_list[event.player_index]
+            player = self.player_list[event.player_index]
             if player.item is not None:
                 player.use_item(self.ev_manager)
             else:
