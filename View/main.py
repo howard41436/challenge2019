@@ -113,7 +113,6 @@ class GraphicalView(object):
             pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
             radius = player.radius
             color = player.color
-
             direction = 1 #player.direction_no   #1 to 8
             if direction == 1 :        
                 image = pg.transform.scale(pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),(view_const.player_height, view_const.player_width))
@@ -173,7 +172,7 @@ class GraphicalView(object):
     
     def draw_market(self):
         for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, market.position, (10, 10))
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [10, 10]))
 
 
 #    def draw_pet(self):
