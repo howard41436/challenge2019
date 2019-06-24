@@ -62,6 +62,18 @@ class Player(object):
             player.value += sum_of_all / len(collide)
             player.bag = sum_of_all / len(collide)
 
+    def check_market(self, market_list):
+        for market in market_list:
+            if (market.position - self.position).length() <= self.radius + market_radius:
+                return market
+        return None
+
+    def buy(self, market_list):
+        market = self.check_market(market_list)
+        if market:
+            self.item = market.item
+            market.sell()
+
     def update_speed(self):
         self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
 
