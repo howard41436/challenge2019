@@ -80,12 +80,12 @@ class EventMove(BaseEvent):
     def __str__(self):
         return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
 
-class EventBuy(BaseEvent):
+class EventTriggerItem(BaseEvent):
     """
-    Buy event.
+    Buy/Use item.
     """
     def __init__(self, player):
-        self.name = "Buy event"
+        self.name = "Trigger item event"
         self.player_index = player
     def __str__(self):
         return f"{self.name} => player_index = {player}"
