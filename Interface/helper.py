@@ -63,9 +63,11 @@ class Helper(object):
     # Get oil data
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
-    def get_oils_distance_from_center(self):
-        game_center = Vec(view_const.game_size[0] / 2, view_const.game_size[1] / 2)
-        return [(Vec(oil.position) - game_center)).length() for oil in self.model.oil_list]
+    def get_oils_distance_to_center(self):
+        return [get_distance_to_center(oil) for oil in self.get_oils()]
+    def get_oils_by_distance_from_center(self):
+        return sort(self.get_oils(), key=lambda p: get_distance_to_center(p))
+
     # Get base data
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]
@@ -92,5 +94,12 @@ class Helper(object):
     
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
+
+    # Useful (?) functions
+    def get_distance(self, p1, p2):
+        return (Vec(p1) - Vec(p2)).magnitude()
+
+    def get_distance_to_center(self, p1):
+        return self.get_distance(p1, Vec(self.game_size) / 2)
 
 
