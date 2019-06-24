@@ -66,11 +66,13 @@ class Invincible(Item):
     '''
     def __init__(self):
         super().__init__()
-    
     def trigger(self, player, ev_manager):
-        ev.manager.post(EventInvincibleStart(player))
+        ev_manager.post(EventInvincibleStart(player))
+        player.is_invisible = True
         self.duration = model_const.invincible_duration
     def update(self, player, ev_manager):
         self.duration -= 1
         if self.duration == 0:
+            # TODO: overlap
+            player.is_invisible = False
             ev_manager.post(EventInvincibleStop(player))
