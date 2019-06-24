@@ -66,8 +66,19 @@ class Helper(object):
     # Get base data
     def get_bases_center(self):
         return [Vec(base.center) for base in self.model.base_list]
+    def get_base_center(self, player_id):
+        return Vec(self.model.base_list[player_id])
         
     # Get game informations
     def get_timer(self):
         return self.model.timer
+
+    # Extra functions
+    def get_nearest_oil(self, player_id):
+        my_pos = self.get_player_position(player_id)
+        oils = self.get_oils()
+        return min(oils, key=lambda oil: (oil - my_pos).magnitude())
+    
+    def get_most_valuable_player(self):
+        return max(range(4), key=lambda i: self.get_player_value(i))
 
