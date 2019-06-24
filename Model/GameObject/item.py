@@ -1,26 +1,68 @@
 import Model.const as model_const
+from pygame.math import Vector2 as Vec
 
 class Item(object):
+    '''
+    Base Item
+    '''
     def __init__(self):
-        pass
-
-class Communism(Item):
-    def __init__(self):
-        pass
-
-    def trigger(self, player_list):
-        sum = 0
-        for player in player_list:
-            sum += player.value
-        for player in player_list:
-            player.value = sum / len(player_list)
+        self.duration = 0
+        self.position = None
+        self.player_index = None
 
 class GoHome(Item):
+    '''
+    Make all player move to their base
+    '''
     def __init__(self):
-        pass
+        super().__init__()
 
-    def trigger(self, player_list, base_list):
-        for player in player_list:
-            player.position.x = base_list[ player.index ].position.x
-            player.position.y = base_list[ player.index ].position.y
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventGoHome(player))
 
+class TheWorld(Item):
+    '''
+    Make all the other players not able to move for ? seconds
+    '''
+    def __init__(self):
+        super().__init__()
+
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventTheWorldStart(player))
+        self.duration = model_const.the_world_duration
+
+    def update(self, player, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            ev_manager.post(EventTheWorldStop(player))
+
+class MagnetAttract(Item):
+    '''
+    Make all player attract to this player
+    '''
+    def __init__(self):
+        super().__init__()
+
+    def trigger(self, player, ev_manager):
+        ev_manager.post(EventMagnetAttractStart(player))
+        self.duration = model_const.magnet_attract_duration
+
+    def update(self, player, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            ev_manager.post(EventMagnetAttractStop(player))
+
+class Invincible(Item):
+    '''
+    Make the player itself immune to collision
+    '''
+    def __init__(self):
+        super().__init__()
+    
+    def trigger(self, player, ev_manager):
+        ev.manager.post(EventInvincibleStart(player))
+        self.duration = model_const.invincible_duration
+    def update(self, player, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            ev_manager.post(EventInvincibleStop(player))

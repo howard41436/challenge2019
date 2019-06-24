@@ -2,11 +2,16 @@ import pygame as pg
 import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
+import os
 
 import Model.const       as model_const
 import View.const        as view_const
+import View.animations   as view_Animation
+import View.utils        as view_utils
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
+from pygame.math import Vector2 as Vec
+
 
 class GraphicalView(object):
     """
@@ -27,6 +32,8 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
+
+        self.animations = []
     
     def notify(self, event):
         """
@@ -54,6 +61,8 @@ class GraphicalView(object):
         elif isinstance(event, EventInitialize) or\
              isinstance(event, EventRestart):
             self.initialize()
+        elif isinstance(event, EventEqualize):
+            self.animations.append( view_Animation.Animation_equalize(center=event.position) )
     
     def render_menu(self):
         """
@@ -83,39 +92,86 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(view_const.COLOR_BLACK)
+            self.screen.fill(view_const.COLOR_WHITE)
             # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Endgame', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
+            result = []
+            
+            titlefont = pg.font.Font(view_const.board_name_font, 70)
+            title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
+            self.screen.blit(title, (400, 15))
+            numfont = pg.font.Font(view_const.board_name_font, 30)
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+            def takeSecond(item): return item[1]
+            result.sort(key=takeSecond, reverse=True)
+            pos_x = 0
+            prize = 1
+            for player in result:
+                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(int(player[1]))), True, view_const.COLOR_BLACK)
+                self.screen.blit(line, (400, 200 + pos_x))
+                pg.display.flip()
+                pos_x += 100
+                prize += 1
             # update surface
             pg.display.flip()
     
     def draw_player(self):
         for player in self.model.player_list:
-            pos = tuple(map(int, player.position))
-            radius = player.radius
-            color = player.color
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(radius), player.color)
+            # pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
+            # radius = player.radius
+            # color = player.color
+                
+            image = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),
+                0.15
+            )
+
+            self.screen.blit(image, image.get_rect(center=player.position))
+            #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
+            price = oil.price
+            if price < 400 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_brown.png"),(5*radius, 5*radius))
+            elif price >= 400 and price < 600 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_gray.png"),(5*radius, 5*radius))
+            elif price >= 600 and price < 800 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_pink.png"),(5*radius, 5*radius))
+            elif price >= 800 and price < 1200 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_purple.png"),(5*radius, 5*radius))
+            image.convert()
+            self.screen.blit(image, pos)
+            """
             gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), view_const.COLOR_BLACK)
+                                  int(oil.radius), (0, 0, 0, 255*(price/1200)))
+            """
 
     def draw_base(self):
+        num = 1
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
+            image = pg.image.load(os.path.join('View','image','base_0'+str(int(num))+'.png'))
+            image = pg.transform.scale(image,(95,95))
+            image.convert()
+            self.screen.blit(image, base.center-[50,50])
+            num += 1
+    
+    def draw_market(self):
+        for market in self.model.market_list:
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [10, 10]))
 
+
+    def draw_pet(self):
+        for pet in self.model.pet_list:
+            pos = tuple(map(int, pet.position))
+            radius = pet.radius
+            color = pet.color
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
+    
     def render_play(self):
         """
         Render the game play.
@@ -126,35 +182,44 @@ class GraphicalView(object):
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
 
+        # draw animation
+        for ani in self.animations:
+            if ani.expired:
+                self.animations.remove(ani)
+            else:
+                ani.draw(self.screen)
+
         #draw player
-        self.draw_player()
         self.draw_oil()
         self.draw_base()
+        self.draw_player()
+        self.draw_market()
+        self.draw_pet()
 
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
+        pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
+        pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
         namefont = pg.font.Font(view_const.board_name_font, 40)
         numfont = pg.font.Font(view_const.board_name_font, 30)
         timefont = pg.font.Font(view_const.board_name_font, 60)
-        for i in range(0,4,1):
-            pg.draw.rect(s,view_const.COLOR_BLACK,[800,157+i*160,480,5])
+        for i in range(0, 4, 1):
+            pg.draw.rect(s, view_const.COLOR_BLACK, [800, 157+i*160, 480, 5])
         i = 0
         for player in self.model.player_list:
             name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,3)), True, view_const.COLOR_BLACK)
-            self.screen.blit(name,(850, 170+i*160))
-            self.screen.blit(value,(850, 240+i*160))
+            value = numfont.render(str(round(player.value,1)), True, view_const.COLOR_BLACK)
+            self.screen.blit(name, (850, 170+i*160))
+            self.screen.blit(value, (850, 240+i*160))
             i += 1
         i = 0
         for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,3)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum,(1000, 240+i*160))
+            value_sum =	numfont.render(str(round(base.value_sum,1)), True, view_const.COLOR_BLACK)
+            self.screen.blit(value_sum, (1050, 240+i*160))
             i += 1
 
-        time = timefont.render(str(round(self.model.timer/60, 0)), True, view_const.COLOR_BLACK)
-        self.screen.blit(time,(950, 35))
+        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        self.screen.blit(time, (950, 35))
 
-        self.screen.blit(s,(0,0))
+        self.screen.blit(s, (0, 0))
         # update surface
         pg.display.flip()
         
@@ -167,9 +232,15 @@ class GraphicalView(object):
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-            s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-            # write some word
+            s.fill((255, 255, 255, 128)); self.screen.blit(s, (0,0))
+            
+            # draw pause botton
+            pg.draw.circle(s, view_const.COLOR_BLACK, (640,400), 300)
+            pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
+            pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
+            self.screen.blit(s,(0,0))
+            """
+            #write some word
             somewords = self.smallfont.render(
                         'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
@@ -177,6 +248,7 @@ class GraphicalView(object):
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
             pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
+            """
 
             # update surface
             pg.display.flip()
@@ -185,7 +257,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_END:
             self.last_update = model.STATE_END
             result = []
-            boardfont = pg.font.SysFont("Ubuntu", 30)
+            numfont = pg.font.Font(view_const.board_name_font, 30)
 
             for player in seld.model.player_list:
                 result.append((player.name, player.value_sum))
