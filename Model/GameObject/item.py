@@ -28,13 +28,13 @@ class TheWorld(Item):
         super().__init__()
 
     def trigger(self, player, ev_manager):
-        ev_manager.post(EventTheWorldStart(self))
+        ev_manager.post(EventTheWorldStart(player))
         self.duration = model_const.the_world_duration
 
     def update(self):
         self.duration -= 1
         if self.duration == 0:
-            self.ev_manager.post(EventTheWorldStop(self))
+            self.ev_manager.post(EventTheWorldStop(player))
 
 class MagnetAttract(Item):
     '''
@@ -44,11 +44,11 @@ class MagnetAttract(Item):
         super().__init__()
 
     def trigger(self, player, ev_manager):
-        ev_manager.post(EventMagnetAttractStart())
+        ev_manager.post(EventMagnetAttractStart(player))
         self.duration = model_const.magnet_attract_duration
 
     def update(self):
         self.duration -= 1
         if self.duration == 0:
-            self.ev_manger.pos(EventMagnetAttractStop())
+            self.ev_manger.post(EventMagnetAttractStop(player))
 
