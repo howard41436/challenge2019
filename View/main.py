@@ -151,7 +151,7 @@ class GraphicalView(object):
             self.screen.blit(value_sum,(1000, 240+i*160))
             i += 1
 
-        time = timefont.render(str(round(self.model.timer/60, 0)), True, view_const.COLOR_BLACK)
+        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         self.screen.blit(time,(950, 35))
 
         self.screen.blit(s,(0,0))
