@@ -50,5 +50,4 @@ class MagnetAttract(Item):
     def update(self):
         self.duration -= 1
         if self.duration == 0:
-            self.ev_manger.post(EventMagnetAttractStop(player))
-
+            self.ev_manager.post(EventMagnetAttractStop(player))
