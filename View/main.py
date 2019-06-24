@@ -6,7 +6,7 @@ import os
 
 import Model.const       as model_const
 import View.const        as view_const
-import View.animations   as view_Animation
+import View.animations   as view_animation
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
 from pygame.math import Vector2 as Vec
