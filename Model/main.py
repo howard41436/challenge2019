@@ -37,7 +37,6 @@ class GameEngine(object):
         self.oil_list = []
         self.base_list = []
         self.market_list = []
-        self.item_status = {}
         self.turn_to = 0
         self.timer = 0
 
