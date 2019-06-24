@@ -16,7 +16,7 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = -1
         for pos, price in oils:
-            cp = price / Vec.magnitude(my_pos - pos)
+            cp = price / (my_pos - pos).length()
             if cp > best_cp:
                 cp = best_cp
                 best_pos = pos
