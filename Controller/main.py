@@ -92,7 +92,7 @@ class Control(object):
                         self.ev_manager.post(EventBuy(player.index))
 
         # player direction control
-        for player in self.model.player_list:
+        for player in self.model.player_list: 
             if not player.is_AI:
                 dir_keys = self.control_keys[player.index][0:4]
                 now_pressing = self.get_key_pressing(dir_keys)
@@ -120,6 +120,5 @@ class Control(object):
 
         now_manual_index = 0
         for index, AI_name in enumerate(self.model.AI_names):
-            if AI_name == "~":
-                self.control_keys[index] = ctrl_const.manual_player_keys[now_manual_index]
-                now_manual_index += 1
+            self.control_keys[index] = ctrl_const.manual_player_keys[now_manual_index]
+            now_manual_index += 1
