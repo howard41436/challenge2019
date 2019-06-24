@@ -116,6 +116,13 @@ class GraphicalView(object):
             length = base.length
             pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
 
+    def draw_pet(self):
+        for pet in self.model.pet_list:
+            pos = tuple(map(int, pet.position))
+            radius = pet.radius
+            color = pet.color
+            gfxdraw.filled_circle(self.screen, *pos, int(radious), color)
+
     def render_play(self):
         """
         Render the game play.
