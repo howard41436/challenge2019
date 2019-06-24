@@ -65,7 +65,7 @@ class Helper(object):
         return [tuple(oil.position) for oil in self.model.oil_list]
     def get_oils_distance_from_center(self):
         game_center = Vec(view_const.game_size[0] / 2, view_const.game_size[1] / 2)
-        return [(Vec(oil.position) - game_center)).length() for oil in self.model.oil_list]
+        return [((Vec(oil.position) - game_center)).length() for oil in self.model.oil_list]
     # Get base data
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]

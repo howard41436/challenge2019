@@ -22,7 +22,7 @@ class Pet(object):
         self.speed = model_const.pet_normal_speed
     
     def check_collide_with_player(self, player):
-        if Vec.magnitude(self.position - player.position) <= player.radius + self.radius:
+        if Vec(self.position - player.position).length() <= player.radius + self.radius:
             delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta
@@ -32,7 +32,7 @@ class Pet(object):
         self.status = new_status
     
     def check_collide_with_base(self, base):
-        if self.status == 2 and Vec.magnitude(self.position - base.center) <= self.radius:
+        if self.status == 2 and Vec(self.position - base.center).length() <= self.radius:
             self.status = 0
             base.value_sum += self.carry_now
             self.carry_now = 0
