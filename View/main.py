@@ -83,15 +83,26 @@ class GraphicalView(object):
             self.last_update = model.STATE_MENU
 
             # draw backgound
-            self.screen.fill(view_const.COLOR_BLACK)
+            self.screen.fill(view_const.COLOR_WHITE)
             # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Endgame', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
+            result = []
+            
+            titlefont = pg.font.Font(view_const.board_name_font, 70)
+            title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
+            self.screen.blit(title, (100, 15))
+            numfont = pg.font.Font(view_const.board_name_font, 30)
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+            def takeSecond(item): return item[1]
+            result.sort(key=takeSecond, reverse=True)
+            pos_x = 0
+            prize = 1
+            for player in result:
+                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(player[1])), True, view_const.COLOR_BLACK)
+                self.screen.blit(line, (100, 200 + pos_x))
+                pg.display.flip()
+                pos_x += 100
+                prize += 1
             # update surface
             pg.display.flip()
     
@@ -115,7 +126,8 @@ class GraphicalView(object):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
+            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
+
 
     def draw_pet(self):
         for pet in self.model.pet_list:
@@ -139,7 +151,7 @@ class GraphicalView(object):
         self.draw_player()
         self.draw_oil()
         self.draw_base()
-
+        #self.draw_pet()
         pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
         pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
         namefont = pg.font.Font(view_const.board_name_font, 40)
@@ -194,7 +206,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_END:
             self.last_update = model.STATE_END
             result = []
-            boardfont = pg.font.SysFont("Ubuntu", 30)
+            numfont = pg.font.Font(view_const.board_name_font, 30)
 
             for player in seld.model.player_list:
                 result.append((player.name, player.value_sum))
