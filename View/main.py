@@ -122,7 +122,8 @@ class GraphicalView(object):
             pos = tuple(map(int, pet.position))
             radius = pet.radius
             color = pet.color
-            gfxdraw.filled_circle(self.screen, *pos, int(radious), color)
+            gfxdraw.filled_circle(self.screen, *pos, 
+                                  int(radious), color)
 
     def render_play(self):
         """
