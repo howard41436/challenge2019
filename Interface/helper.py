@@ -40,7 +40,7 @@ class Helper(object):
 
     def get_players_value(self):
         return [player.value for player in self.model.player_list]
-    def get_player_value(self, player_id):
+    def get_player_value(self, player_id = self.index):
         return self.model.player_list[player_id].value
 
     def get_players_bag(self):
@@ -63,12 +63,14 @@ class Helper(object):
     # Get oil data
     def get_oils(self):
         return [Vec(oil.position) for oil in self.model.oil_list]
+    def get_oils_price(self):
+        return [oil.price for oil in self.model.oil_list]
 
     # Get base data
     def get_bases_center(self):
         return [Vec(base.center) for base in self.model.base_list]
-    def get_base_center(self, player_id):
-        return Vec(self.model.base_list[player_id])
+    def get_base_center(self, player_id = self.index):
+        return Vec(self.model.base_list[player_id].center)
 
     # Get game informations
     def get_timer(self):
