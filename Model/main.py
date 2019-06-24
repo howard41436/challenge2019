@@ -33,6 +33,7 @@ class GameEngine(object):
         self.state = StateMachine()
         self.AI_names = AI_names
         self.player_list = []
+        self.pet_list = []
         self.oil_list = []
         self.base_list = []
         self.market_list = []
@@ -41,6 +42,7 @@ class GameEngine(object):
         self.timer = 0
 
         self.init_oil()
+        self.init_pet()
         self.init_player()
         self.init_base()
         self.init_markets()
@@ -132,6 +134,11 @@ class GameEngine(object):
             else:
                 Tmp_P = Player(self.AI_names[index], index)
             self.player_list.append(Tmp_P)
+
+    def init_pet(self):
+        self.pet_list = []
+        for index in range(model_const.player_number):
+			self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
         self.market_list = [ Market(position) for position in model_const.market_positions ]
