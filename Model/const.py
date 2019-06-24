@@ -60,7 +60,7 @@ base_center = [
 ]
 
 
-# item
+# equipments
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
@@ -75,3 +75,7 @@ default_equipments = [
     [0, 0, 0, 0],
     [0, 0, 0, 0]
 ]
+
+# items
+the_world_duration = 60 * 5
+
