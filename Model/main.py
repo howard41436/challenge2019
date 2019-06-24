@@ -77,6 +77,12 @@ class GameEngine(object):
                     self.set_player_direction(event.player_index, event.direction)
             else:
                 self.set_player_direction(event.player_index, event.direction)
+        elif isinstance(event, EventTriggerItem):
+            player = player_list[event.player_index]
+            if player.item is not None:
+                player.use_item(self.ev_manager)
+            else:
+                pass
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, EventInitialize) or \

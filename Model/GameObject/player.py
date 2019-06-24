@@ -29,9 +29,10 @@ class Player(object):
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
 
-    def use_item(self):
+    def use_item(self, ev_manager):
         if self.item is not None:
-            self.item.trigger()
+            self.item.trigger(self, ev_manager)
+            self.item = None
 
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):
