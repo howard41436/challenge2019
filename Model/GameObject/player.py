@@ -18,10 +18,12 @@ class Player(object):
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
+        self.pet = None
         self.init_equipments(equipments)
 
     def init_equipments(self, equipments):
-        self.speed *= model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
+        self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
+        self.speed *= self.speed_multiplier
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
 
@@ -55,12 +57,12 @@ class Player(object):
             player.bag = sum_of_all / len(collide)
 
     def update_speed(self):
-        self.speed = max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
+        self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
 
     def update(self, oils, bases, players):
         self.update_speed()
         new_x = self.position[0] + self.direction[0] * self.speed
-        new_y = self.position[1] + self.direction[1] * self.speed 
+        new_y = self.position[1] + self.direction[1] * self.speed
         if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
             self.direction[0] = 0
         if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:

@@ -1,10 +1,11 @@
 import Model.const as model_const
 from pygame.math import Vector2 as Vec
+import random
 
 class Pet(object):
     def __init__(self, owner_index, position):
         self.owner_index = owner_index
-        self.carry_max = model_const.pat_carry_max
+        self.carry_max = model_const.pet_carry_max
         self.carry_now = 0
         self.position = Vec(position)
         self.radius = model_const.pet_radius
@@ -18,17 +19,20 @@ class Pet(object):
         1 for chasing the player
         2 for going base
         """
-        self.speed = model_const.pat_normal_speed
+        self.speed = model_const.pet_normal_speed
     
     def check_collide_with_player(self, player):
         if Vec.magnitude(self.position - player.position) <= player.radius + self.radius:
-            delta = min(carry_max - carry_now, player.value)
+            delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta
             self.status = 2
     
+    def change_status(self, new_status):
+        self.status = new_status
+    
     def check_collide_with_base(self, base):
-        if base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and
+        if base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and \
             base.center[1] - base.length / 2 <= self.position[1] <= base.center[1] + base.length / 2:
             self.status = 0
             base.value_sum += self.carry_now
@@ -37,7 +41,7 @@ class Pet(object):
     def update(self, player_list, base_list):
         self.check_collide_with_player(player_list[self.owner_index])
         self.check_collide_with_base(base_list[self.owner_index])
-        if self.stauts == 0:
+        if self.status == 0:
             # do nothing
             pass
         else:

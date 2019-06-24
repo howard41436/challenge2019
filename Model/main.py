@@ -4,6 +4,7 @@ from Model.StateMachine import *
 from Model.GameObject.player import *
 from Model.GameObject.oil import *
 from Model.GameObject.base import *
+from Model.GameObject.pet import *
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -31,12 +32,14 @@ class GameEngine(object):
         self.state = StateMachine()
         self.AI_names = AI_names
         self.player_list = []
+        self.pet_list = []
         self.oil_list = []
         self.base_list = []
         self.turn_to = 0
         self.timer = 0
 
         self.init_oil()
+        self.init_pet()
         self.init_player()
         self.init_base()
 
@@ -100,6 +103,11 @@ class GameEngine(object):
             else:
                 Tmp_P = Player(self.AI_names[index], index, is_AI = True)
             self.player_list.append(Tmp_P)
+            
+    def init_pet(self):
+        self.pet_list = []
+        for index in range(model_const.player_number):
+            self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
@@ -110,9 +118,17 @@ class GameEngine(object):
         # Update player_list
         for player in self.player_list:
             player.update(self.oil_list, self.base_list, self.player_list)
+
+        for pet in self.pet_list:
+            pet.update(self.player_list, self.base_list)
+        if self.timer % 2400 == 1200:
+            for pet in self.pet_list:
+                pet.change_status(1)
+
         for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
+
         self.timer -= 1
         if self.timer == 0:
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
