@@ -121,7 +121,6 @@ class GameEngine(object):
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
-                print(pet.status)
         
         for pet in self.pet_list:
             pet.update(self.player_list, self.base_list)

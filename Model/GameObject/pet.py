@@ -32,8 +32,7 @@ class Pet(object):
         self.status = new_status
     
     def check_collide_with_base(self, base):
-        if self.status == 2 and base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and \
-            base.center[1] - base.length / 2 <= self.position[1] <= base.center[1] + base.length / 2:
+        if self.status == 2 and Vec.magnitude(self.position - base.center) <= self.radius:
             self.status = 0
             base.value_sum += self.carry_now
             self.carry_now = 0
