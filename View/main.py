@@ -107,8 +107,9 @@ class GraphicalView(object):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
+            price = oil.price
             gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), view_const.COLOR_BLACK)
+                                  int(oil.radius), (0, 0, 0, 255*(price/1200)))
 
     def draw_base(self):
         for base in self.model.base_list:
