@@ -2,6 +2,7 @@ import pygame as pg
 import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
+import os
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -112,6 +113,7 @@ class GraphicalView(object):
             pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
             radius = player.radius
             color = player.color
+
             direction = 1 #player.direction_no   #1 to 8
             if direction == 1 :        
                 image = pg.transform.scale(pg.image.load("View/image/player_blue_down.png"),(view_const.player_height, view_const.player_width))
@@ -145,11 +147,15 @@ class GraphicalView(object):
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
 
     def draw_base(self):
+        num = 1
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
-
+            image = pg.image.load(os.path.join('View','image','base_0'+str(int(num))+'.png'))
+            image = pg.transform.scale(image,(95,95))
+            image.convert()
+            self.screen.blit(image, base.center-[50,50])
+            num += 1
 
  #   def draw_pet(self):
  #       for pet in self.model.pet_list:
