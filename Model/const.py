@@ -47,6 +47,7 @@ player_speed_min = player_normal_speed / 3
 # pet
 pet_normal_speed = 3
 pet_radius = 4
+pet_carry_max = 1000
 
 # base
 
