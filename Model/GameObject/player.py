@@ -34,7 +34,6 @@ class Player(object):
     def use_item(self, ev_manager):
         if self.item is not None:
             self.item.trigger(self, ev_manager)
-            self.item = None
 
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):
@@ -83,6 +82,8 @@ class Player(object):
         self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
 
     def update(self, oils, bases, players):
+        if self.item is not None and self.item.active:
+            self.item.update()
         self.update_speed()
         if not self.freeze:
             new_x = self.position[0] + self.direction[0] * self.speed

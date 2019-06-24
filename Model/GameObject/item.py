@@ -6,6 +6,7 @@ class Item(object):
     Base Item
     '''
     def __init__(self):
+        self.active = False  # taking effect or not
         self.duration = 0
         self.position = None
         self.player_index = None
@@ -30,6 +31,7 @@ class TheWorld(Item):
     def trigger(self, player_index, ev_manager, player_list):
         ev_manager.post(EventTheWorldStart(player_list[player_index]))
         self.duration = model_const.the_world_duration
+        self.active = True
         for player in player_list:
             if player.index != player_index:
                 player.freeze = True
@@ -41,6 +43,8 @@ class TheWorld(Item):
 
     def close(self, ev_manager, player_list):
         ev_manager.post(EventTheWorldStop(player))
+        self.active = False
+        player[self.player_index].item = None
         for player in player_list:
             player.freeze = False
 

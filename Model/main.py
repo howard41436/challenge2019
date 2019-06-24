@@ -121,10 +121,6 @@ class GameEngine(object):
     def init_markets(self):
         self.market_list = [ Market(position) for position in model_const.market_positions ]
 
-    def init_item(self):
-        for name in model_const.item_names:
-            self.item_status[name] = None
-
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
@@ -154,10 +150,6 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
-        for key, item in self.item_status.items():
-            if item is not None:
-                self.item_status[key].update()
-        
         self.timer -= 1
         if self.timer == 0:
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
