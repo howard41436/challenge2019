@@ -127,6 +127,8 @@ class GameEngine(object):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
+            if direction > 0:
+                player.direction_no = direction
 
     def update_objects(self):
         # Update player_list
