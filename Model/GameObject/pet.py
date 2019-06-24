@@ -27,6 +27,9 @@ class Pet(object):
             player.value -= delta
             self.status = 2
     
+    def change_status(new_status):
+        self.status = new_status
+    
     def check_collide_with_base(self, base):
         if base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and
             base.center[1] - base.length / 2 <= self.position[1] <= base.center[1] + base.length / 2:
