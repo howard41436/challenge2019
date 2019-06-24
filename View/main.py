@@ -116,21 +116,26 @@ class GraphicalView(object):
 
             direction = 1 #player.direction_no   #1 to 8
             if direction == 1 :        
-                image = pg.transform.scale(pg.image.load("View/image/player_blue_down.png"),(view_const.player_height, view_const.player_width))
+                image = pg.transform.scale(pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),(view_const.player_height, view_const.player_width))
             elif direction == 2 :        
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 3 :        
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 4 :        
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 5 :         
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 6 :         
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 7 :         
-                image = pg.image.load("View/image/player_blue_down.png")
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 8 :        
-                image = pg.image.load("View/image/player_blue_down.png")        
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+                
+            image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+
+            rect = image.get_rect()
+            rect.center = (pos)
             image.convert()
             self.screen.blit(image, pos)
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
@@ -166,13 +171,17 @@ class GraphicalView(object):
             self.screen.blit(image, base.center-[50,50])
             num += 1
 
- #   def draw_pet(self):
- #       for pet in self.model.pet_list:
- #           pos = tuple(map(int, pet.position))
- #           radius = pet.radius
+#    def draw_pet(self):
+#        for pet in self.model.pet_list:
+#            pos = tuple(map(int, pet.position))
+#            radius = pet.radius
 #          color = pet.color
 #            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
 
+    def draw_market(self):
+        for market in self.model.market_list:
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, market.position, (10, 10))
+    
     def render_play(self):
         """
         Render the game play.
@@ -187,6 +196,7 @@ class GraphicalView(object):
         self.draw_oil()
         self.draw_base()
         self.draw_player()
+        self.draw_market()
     #    self.draw_pet()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
