@@ -8,6 +8,7 @@ class Item(object):
     def __init__(self, player):
         self.duration = 0
         self.position = Vec(player.position)
+        self.player_index = player.index
 
 class Communism(Item):
     '''

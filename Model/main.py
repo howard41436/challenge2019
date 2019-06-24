@@ -153,6 +153,9 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
+        for key, item in item_status:
+            item.update()
+
         self.timer -= 1
         if self.timer == 0:
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
