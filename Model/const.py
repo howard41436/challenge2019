@@ -43,6 +43,7 @@ player_normal_speed = 9
 init_insurance = 50
 player_speed_decreasing_rate = player_normal_speed / price_max / 10
 player_speed_min = player_normal_speed / 3
+player_initial_direction_no = [4, 6, 2, 8]
 
 # pet
 pet_normal_speed = 3
@@ -84,5 +85,6 @@ market_positions = [
     (500, 500)
 ]
 market_generate_item_probability = 1 / 1200
+item_names = {'The World', 'Magnet Attract'}
 the_world_duration = 60 * 5
 

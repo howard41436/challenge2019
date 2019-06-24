@@ -45,6 +45,7 @@ class GameEngine(object):
         self.init_player()
         self.init_base()
         self.init_markets()
+        self.init_item()
 
         random.seed(time.time())
         
@@ -70,11 +71,11 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
-            if item_status['The World'] is not None:
-                the_world = item_status['The World']
-                if event.player_index == the_world.player_index
+            if self.item_status['The World'] is not None:
+                the_world = self.item_status['The World']
+                if event.player_index == the_world.player_index:
                     self.set_player_direction(event.player_index, event.direction)
-            else
+            else:
                 self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventQuit):
             self.running = False
@@ -82,13 +83,13 @@ class GameEngine(object):
             isinstance(event, EventRestart):
             pass  # self.initialize()
         elif isinstance(event, EventTheWorldStart):
-            item_status['The World'] = event
+            self.item_status['The World'] = event
         elif isinstance(event, EventTheWorldStop):
-            item_status['The World'] = None
+            self.item_status['The World'] = None
         elif isinstance(event, EventMagnetAttractStart):
-            item_status['Magnet Attract'] = event
+            self.item_status['Magnet Attract'] = event
         elif isinstance(event, EventMagnetAttractStop):
-            item_status['Magnet Attract'] = event
+            self.item_status['Magnet Attract'] = event
 
 
     def init_player(self):
@@ -128,21 +129,24 @@ class GameEngine(object):
     def init_markets(self):
         self.market_list = [ Market(position) for position in model_const.market_positions ]
 
+    def init_item(self):
+        for name in model_const.item_names:
+            self.item_status[name] = None
+
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
+            if direction > 0:
+                player.direction_no = direction
 
     def update_objects(self):
         # Update player_list
-        for key, item in item_status:
-            item.update()
-        
         for player in self.player_list:
-            if item_status['Magnet Attract'] == None:
+            if self.item_status['Magnet Attract'] == None:
                 player.update(self.oil_list, self.base_list, self.player_list)
             else:
-                event = item_status['Magnet Attract']
+                event = self.item_status['Magnet Attract']
                 target_player = self.player_list[event.player_index]
                 player.duration = Vec2.normalize(target_player.position - player.position)
                 player.update(self.oil_list, self.base_list, self.player_list)
@@ -158,9 +162,10 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
-        for key, item in item_status:
-            item.update()
-
+        for key, item in self.item_status.items():
+            if item is not None:
+                self.item_status[key].update()
+        
         self.timer -= 1
         if self.timer == 0:
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
