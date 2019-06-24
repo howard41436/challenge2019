@@ -23,6 +23,7 @@ class Player(object):
         self.init_equipments(equipments)
         self.item = None
         self.is_invincible = False
+        self.freeze = False
 
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]

@@ -89,22 +89,6 @@ class GameEngine(object):
         elif isinstance(event, EventInitialize) or \
             isinstance(event, EventRestart):
             pass  # self.initialize()
-        elif isinstance(event, EventTheWorldStart):
-            self.item_status['The World'] = event
-        elif isinstance(event, EventTheWorldStop):
-            self.item_status['The World'] = None
-        elif isinstance(event, EventMagnetAttractStart):
-            self.item_status['Magnet Attract'] = event
-        elif isinstance(event, EventMagnetAttractStop):
-            self.item_status['Magnet Attract'] = event
-        elif isinstance(event, EventInvincibleStart):
-            self.item_status['Invincible'] = event
-            player = player_list[event.player_index]
-            player.is_invincible = True
-        elif isinstance(event,EventInvincibleStop):
-            self.item_status['Invincible'] = None
-            player_list[event.player_index].is_invincible = False
-            # TODO: overlap if there're more than one invincible item
 
     def init_player(self):
         # set AI Names List

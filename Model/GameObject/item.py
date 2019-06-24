@@ -27,14 +27,22 @@ class TheWorld(Item):
     def __init__(self):
         super().__init__()
 
-    def trigger(self, player, ev_manager):
-        ev_manager.post(EventTheWorldStart(player))
+    def trigger(self, player_index, ev_manager, player_list):
+        ev_manager.post(EventTheWorldStart(player_list[player_index]))
         self.duration = model_const.the_world_duration
+        for player in player_list:
+            if player.index != player_index:
+                player.freeze = True
 
     def update(self, player, ev_manager):
         self.duration -= 1
         if self.duration == 0:
-            ev_manager.post(EventTheWorldStop(player))
+            self.close()
+
+    def close(self, ev_manager, player_list):
+        ev_manager.post(EventTheWorldStop(player))
+        for player in player_list:
+            player.freeze = False
 
 class MagnetAttract(Item):
     '''
