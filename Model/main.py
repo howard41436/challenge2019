@@ -5,6 +5,7 @@ from Model.GameObject.player import *
 from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
+from Model.GameObject.market import *
 
 import Model.const       as model_const
 import View.const        as view_const
