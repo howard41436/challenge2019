@@ -80,15 +80,77 @@ class EventMove(BaseEvent):
     def __str__(self):
         return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
 
-class EventBuy(BaseEvent):
+class EventTriggerItem(BaseEvent):
     """
-    Buy event.
+    Buy/Use item.
     """
     def __init__(self, player):
-        self.name = "Buy event"
+        self.name = "Trigger item event"
         self.player_index = player
     def __str__(self):
         return f"{self.name} => player_index = {player}"
+
+class EventTheWorldStart(BaseEvent):
+    '''
+    A player trigger 'The World'(time stop)
+    '''
+    def __init__(self, player):
+        self.name = f"Player {player.index} triggers The World"
+        self.position = Vec(player.position)
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventTheWorldStop(BaseEvent):
+    '''
+    The duration of 'The world' ends
+    '''
+    def __init__(self, player):
+        self.name = "The World Ends"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventMagnetAttractStart(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' starts
+    '''
+    def __init__(self, player):
+        self.name = "Magnet Attract Start"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventMagnetAttractStop(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' ends
+    '''
+    def __init__(self, player):
+        self.name = "Magnet AttractEnd"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventInvincibleStart(BaseEvent):
+    '''
+    A player trigger 'Invincible'
+    '''
+    def __init__(self, player):
+        self.name = "Invincible Start"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventInvincibleStop(BaseEvent):
+    '''
+    The duration of 'Invincible' ends
+    '''
+    def __init__(self, player):
+        self.name = "Invincible End"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
 
 class EventManager(object):
     """

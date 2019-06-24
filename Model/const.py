@@ -43,6 +43,7 @@ player_normal_speed = 9
 init_insurance = 50
 player_speed_decreasing_rate = player_normal_speed / price_max / 10
 player_speed_min = player_normal_speed / 3
+player_initial_direction_no = [4, 6, 2, 8]
 
 # pet
 pet_normal_speed = 3
@@ -60,7 +61,7 @@ base_center = [
 ]
 
 
-# item
+# equipments
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
@@ -75,3 +76,16 @@ default_equipments = [
     [0, 0, 0, 0],
     [0, 0, 0, 0]
 ]
+
+# items
+market_positions = [
+    (300, 300),
+    (300, 500),
+    (500, 300),
+    (500, 500)
+]
+market_radius = 20
+market_generate_item_probability = 1 / 1200
+item_names = {'The World', 'Magnet Attract'}
+the_world_duration = 60 * 5
+invincible_duration = 60 * 10
