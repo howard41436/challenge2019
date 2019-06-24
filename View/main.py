@@ -134,8 +134,7 @@ class GraphicalView(object):
             pos = tuple(map(int, pet.position))
             radius = pet.radius
             color = pet.color
-            gfxdraw.filled_circle(self.screen, *pos, 
-                                  int(radious), color)
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
 
     def render_play(self):
         """
@@ -151,7 +150,8 @@ class GraphicalView(object):
         self.draw_player()
         self.draw_oil()
         self.draw_base()
-        #self.draw_pet()
+        self.draw_pet()
+
         pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
         pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
         namefont = pg.font.Font(view_const.board_name_font, 40)
