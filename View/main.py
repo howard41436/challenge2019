@@ -98,7 +98,7 @@ class GraphicalView(object):
             pos_x = 0
             prize = 1
             for player in result:
-                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(player[1])), True, view_const.COLOR_BLACK)
+                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(int(player[1]))), True, view_const.COLOR_BLACK)
                 self.screen.blit(line, (400, 200 + pos_x))
                 pg.display.flip()
                 pos_x += 100
