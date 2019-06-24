@@ -175,12 +175,12 @@ class GraphicalView(object):
             pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [10, 10]))
 
 
-#    def draw_pet(self):
-#        for pet in self.model.pet_list:
-#            pos = tuple(map(int, pet.position))
-#            radius = pet.radius
-#          color = pet.color
-#            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
+    def draw_pet(self):
+        for pet in self.model.pet_list:
+            pos = tuple(map(int, pet.position))
+            radius = pet.radius
+            color = pet.color
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
     
     def render_play(self):
         """
@@ -197,7 +197,7 @@ class GraphicalView(object):
         self.draw_base()
         self.draw_player()
         self.draw_market()
-    #    self.draw_pet()
+        self.draw_pet()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
