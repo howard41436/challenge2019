@@ -23,7 +23,7 @@ class Player(object):
         self.init_equipments(equipments)
         self.item = None
         self.is_invincible = False
-        self.freeze = False
+        self.freeze = False   # If one of the other players is use 'The World', then self is freeze
 
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
@@ -84,16 +84,15 @@ class Player(object):
 
     def update(self, oils, bases, players):
         self.update_speed()
-        new_x = self.position[0] + self.direction[0] * self.speed
-        new_y = self.position[1] + self.direction[1] * self.speed 
-        if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
-            self.direction[0] = 0
-        if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
-            self.direction[1] = 0
-        self.position += Vec(self.direction) * self.speed
+        if not self.freeze:
+            new_x = self.position[0] + self.direction[0] * self.speed
+            new_y = self.position[1] + self.direction[1] * self.speed
+            if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
+                self.direction[0] = 0
+            if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
+                self.direction[1] = 0
+            self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
-        if self.is_invincible:
-            pass
-        else:
+        if not self.is_invincible:
             self.check_collide(players)

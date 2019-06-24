@@ -72,12 +72,7 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
-            if self.item_status['The World'] is not None:
-                the_world = self.item_status['The World']
-                if event.player_index == the_world.player_index:
-                    self.set_player_direction(event.player_index, event.direction)
-            else:
-                self.set_player_direction(event.player_index, event.direction)
+            self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
             player = self.player_list[event.player_index]
             if player.item is not None:
