@@ -51,3 +51,20 @@ class TheWorld(Item):
         if self.duration == 0:
             self.ev_manager.post(EventTheWorldStop(self))
 
+class MagnetAttract(Item):
+    '''
+    Make all player attract to this player
+    '''
+    def __init__(self, player, ev_manager):
+        super().__init__(player)
+        self.duration = model_const.magnet_attract_duration
+        self.ev_manager = ev_manager
+
+    def trigger(self):
+        self.ev_manager.post(EventMagnetAttractStart())
+        self.duration = model_const.magnet_attract_duration
+
+    def update(self):
+        self.duration -= 1
+        if self.duration == 0:
+            self.ev_manger.pos(EventMagnetAttractStop())
