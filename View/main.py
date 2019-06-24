@@ -118,7 +118,6 @@ class GraphicalView(object):
             pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
             radius = player.radius
             color = player.color
-
             direction = 1 #player.direction_no   #1 to 8
             if direction == 1 :        
                 image = pg.transform.scale(pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),(view_const.player_height, view_const.player_width))
@@ -135,11 +134,13 @@ class GraphicalView(object):
             elif direction == 7 :         
                 image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
             elif direction == 8 :        
-                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))        
+                image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+                
+            image = pg.image.load(os.path.join('View', 'image', 'player_blue_down.png'))
+
             rect = image.get_rect()
             rect.center = (pos)
             image.convert()
-
             self.screen.blit(image, pos)
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
@@ -148,8 +149,20 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
+            if price < 400 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_brown.png"),(5*radius, 5*radius))
+            elif price >= 400 and price < 600 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_gray.png"),(5*radius, 5*radius))
+            elif price >= 600 and price < 800 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_pink.png"),(5*radius, 5*radius))
+            elif price >= 800 and price < 1200 :
+                image = pg.transform.scale(pg.image.load("View/image/oil_purple.png"),(5*radius, 5*radius))
+            image.convert()
+            self.screen.blit(image, pos)
+            """
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
+            """
 
     def draw_base(self):
         num = 1
@@ -161,17 +174,18 @@ class GraphicalView(object):
             image.convert()
             self.screen.blit(image, base.center-[50,50])
             num += 1
-
-#    def draw_pet(self):
-#        for pet in self.model.pet_list:
-#            pos = tuple(map(int, pet.position))
-#            radius = pet.radius
-#          color = pet.color
-#            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
-
+    
     def draw_market(self):
         for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, market.position, (10, 10))
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [10, 10]))
+
+
+    def draw_pet(self):
+        for pet in self.model.pet_list:
+            pos = tuple(map(int, pet.position))
+            radius = pet.radius
+            color = pet.color
+            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
     
     def render_play(self):
         """
@@ -191,11 +205,11 @@ class GraphicalView(object):
                 ani.draw(self.screen)
 
         #draw player
-        self.draw_player()
         self.draw_oil()
         self.draw_base()
+        self.draw_player()
         self.draw_market()
-    #    self.draw_pet()
+        self.draw_pet()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
@@ -233,9 +247,15 @@ class GraphicalView(object):
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-            s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-            # write some word
+            s.fill((255, 255, 255, 128)); self.screen.blit(s, (0,0))
+            
+            # draw pause botton
+            pg.draw.circle(s, view_const.COLOR_BLACK, (640,400), 300)
+            pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
+            pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
+            self.screen.blit(s,(0,0))
+            """
+            #write some word
             somewords = self.smallfont.render(
                         'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
@@ -243,6 +263,7 @@ class GraphicalView(object):
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
             pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
+            """
 
             # update surface
             pg.display.flip()
