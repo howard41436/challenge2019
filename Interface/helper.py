@@ -69,7 +69,7 @@ class Helper(object):
         return [tuple(base.center) for base in self.model.base_list]
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
-        return tuple(self.model.base_list[player_id])
+        return tuple(self.model.base_list[player_id].center)
         
     # Get game informations
     def get_timer(self):
