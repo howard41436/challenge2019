@@ -8,6 +8,7 @@ class Pet(object):
         self.carry_now = 0
         self.position = Vec(position)
         self.radius = model_const.pet_radius
+        self.color = [ random.randint(0, 255) for _ in range(3) ]
         """
         Pet is a circle
         """
