@@ -100,13 +100,32 @@ class GraphicalView(object):
             pos = tuple(map(int, player.position))
             radius = player.radius
             color = player.color
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(radius), player.color)
+            direction = player.direction_no   #1 to 8
+            if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()
+            else if direction =           
+                image = pygame.image.load()        
+            image.convert()
+            screen.blit(image, *pos)
+            #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):
         for oil in self.model.oil_list:
             pos = tuple(map(int, oil.position))
             radius = oil.radius
+            price_class = price
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), view_const.COLOR_BLACK)
 
