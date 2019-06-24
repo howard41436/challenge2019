@@ -111,6 +111,26 @@ class EventTheWorldStop(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventMagnetAttractStart(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' starts
+    '''
+    def __init__(self, player):
+        self.name = "Magnet Attract Start"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventMagnetAttractStop(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' ends
+    '''
+    def __init__(self, player):
+        self.name = "Magnet AttractEnd"
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.

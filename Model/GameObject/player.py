@@ -15,6 +15,7 @@ class Player(object):
         self.value = 0
         self.is_AI = False
         self.direction = Vec(0, 0)
+        self.direction_no = model_const.player_initial_direction_no[index]
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
