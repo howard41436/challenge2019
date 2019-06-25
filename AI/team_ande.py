@@ -15,14 +15,18 @@ class TeamAI(BaseAI):
         oils = self.helper.get_oils()
         best_pos = None
         best_cp = -1
+        attack_cp, victim_id, victim_pos = self.attack()
         for pos in oils:
             price = ( self.helper.get_distance_to_center(pos) ** (-1/2) )
             cp = price / (self.helper.get_distance(pos, my_pos) ** 2 * self.helper.get_distance(pos, self.helper.get_base_center()) ** (1/2)) 
             if cp > best_cp:
-                cp = best_cp 
+                best_cp = cp 
                 best_pos = pos 
-        return Vec(best_pos) - Vec(my_pos)
-
+        if attack_cp > best_cp:
+            return Vec(victim_pos) - Vec(my_pos)
+        else:
+            return Vec(best_pos) - Vec(my_pos)
+        
     def go_home(self):
         my_pos = self.helper.get_player_position()
         nearest_player_id = self.helper.get_nearest_player()
@@ -34,6 +38,22 @@ class TeamAI(BaseAI):
             return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
         else:
             return self.direction(Vec(self.helper.get_base_center()) - Vec(my_pos))
+
+    def attack(self):
+        my_pos = self.helper.get_player_position()
+        players_pos = self.helper.get_players_position()
+        players_value = self.helper.get_players_value()
+        victim_id = None
+        victim_pos = None
+        cp = 0
+        for i in range(len(players_pos)):
+            if self.helper.player_id == i:
+                continue
+            if (players_value[i] - self.helper.get_player_value()) / 2*self.helper.get_distance(players_pos[i], my_pos) ** 2 > cp:
+                cp = players_value[i] / 2*self.helper.get_distance(players_pos[i], my_pos) ** 2
+                victim_id = i
+                victim_pos = players_pos[i]
+        return (cp, victim_id, victim_pos)
 
     def avoid(self, player_id):
         my_pos = self.helper.get_player_position()
