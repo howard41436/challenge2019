@@ -96,7 +96,7 @@ class EventTheWorldStart(BaseEvent):
     '''
     def __init__(self, player):
         self.name = f"Player {player.index} triggers The World"
-        self.position = Vec(player.position)
+        self.position = tuple(player.position)
         self.player_index = player.index
     def __str__(self):
         return self.name
