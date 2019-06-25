@@ -2,7 +2,7 @@ import pygame as pg
 import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
-import os
+import os, math
 
 import Model.GameObject.item as model_item
 import Model.const       as model_const
@@ -73,6 +73,10 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_equalize(center=event.position))
         elif isinstance(event, EventIGoHome):
             self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=player.position))
     
     def render_menu(self):
         """
@@ -132,6 +136,8 @@ class GraphicalView(object):
             # color = player.color
                 
             image = self.player_image
+            angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
+            image = pg.transform.rotate(image, angle)
 
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
@@ -141,7 +147,7 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
-            """
+            
             if price < 400 :
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
             elif 600 > price >= 400:
@@ -152,10 +158,10 @@ class GraphicalView(object):
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
-            """
+            
         
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), (0, 0, 0, 255*(price/1200)))
+            # gfxdraw.filled_circle(self.screen, *pos,
+            #                       int(oil.radius), (0, 0, 0, 255*(price/1200)))
             
 
     def draw_base(self):
