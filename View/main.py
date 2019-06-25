@@ -190,6 +190,8 @@ class GraphicalView(object):
         for pet in self.model.pet_list:
             image = self.pet_image
             image.convert()
+            angle = math.atan2(pet.direction.x, pet.direction.y) / math.pi * 180
+            image = pg.transform.rotate(image, angle)
             self.screen.blit(image, image.get_rect(center=pet.position))
     
     def render_play(self):
