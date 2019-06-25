@@ -164,6 +164,22 @@ class EventRadiationOil(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventRadiusNotMoveStart(BaseEvent):
+    def __init__(self, player):
+        self.name = "RadiusNotMove Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventRadiusNotMoveStop(BaseEvent):
+    def __init__(self, player):
+        self.name = "RadiusNotMove End"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
 class EventInvincibleStart(BaseEvent):
     '''
     A player trigger 'Invincible'
