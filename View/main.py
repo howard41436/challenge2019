@@ -150,15 +150,13 @@ class GraphicalView(object):
             """
 
     def draw_base(self):
-        num = 1
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            image = pg.image.load(os.path.join('View','image','base_0{}.png'.format(int(num))))
+            image = pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') )
             image = pg.transform.scale(image,(95,95))
             image.convert()
             self.screen.blit(image, base.center-[50,50])
-            num += 1
     
     def draw_market(self):
         for market in self.model.market_list:
@@ -170,7 +168,9 @@ class GraphicalView(object):
             pos = tuple(map(int, pet.position))
             radius = pet.radius
             color = pet.color
-            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
+            image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
+            image.convert()
+            self.screen.blit(image, pos)
     
     def render_play(self):
         """
@@ -192,9 +192,9 @@ class GraphicalView(object):
         #draw player
         self.draw_oil()
         self.draw_base()
-        self.draw_player()
         self.draw_market()
         self.draw_pet()
+        self.draw_player()
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
