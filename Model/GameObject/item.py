@@ -55,7 +55,7 @@ class TheWorld(Item):
             if player.index != self.player_index:
                 player.freeze = True
 
-    def update(self, player, ev_manager):
+    def update(self, ev_manager):
         self.duration -= 1
         if self.duration == 0:
             self.close(ev_manager)
@@ -76,23 +76,21 @@ class MagnetAttract(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventMagnetAttract(player_list[player_index]))
-        self.duration = model_const.the_world_duration
+        self.duration = model_const.magnet_attract_duration
         self.active = True
-        for player in player_list:
-            if player.index != player_index:
-                player.freeze = True
 
-    def update(self, player, ev_manager):
+    def update(self, ev_manager):
         self.duration -= 1
+        for player in self.player_list:
+            target = self.player_list[self.player_index].position
+            player.direction = Vec.normalize(target - player.position)
         if self.duration == 0:
             self.close()
 
     def close(self, ev_manager, player_list):
-        ev_manager.post(EventTheWorldStop(player))
+        ev_manager.post(EventMagnetAttractStop(player))
         self.active = False
         player[self.player_index].item = None
-        for player in player_list:
-            player.freeze = False
 
 class Invincible(Item):
     '''
