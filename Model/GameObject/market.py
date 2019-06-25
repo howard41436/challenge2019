@@ -6,7 +6,7 @@ import Model.GameObject.item as Item
 import random
 
 class Market(object):
-    item_list = [Item.IGoHome, Item.OtherGoHome, Item.TheWorld, Item.MagnetAttract, Item.RadiationOil, Item.MagnetAttract]
+    item_list = [getattr(Item, item_name) for item_name, is_activate in model_const.item_activate.items() if is_activate == True]
     def __init__(self, position):
         self.position = Vec(position)
         self.item = None
