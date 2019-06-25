@@ -43,6 +43,21 @@ class TeamAI(BaseAI):
                 record = i
         return record
 
+    def attack(self, carry, my_pos):
+        players_value = self.helper.get_players_value()
+        players_speed = self.helper.get_players_speed()
+        players_position = self.helper.get_players_position()
+        my_speed = self.helper.get_player_speed()
+        maximum = 0
+        target = -1
+        for i in range(4):
+            if self.helper.player_id == i:
+                continue
+            cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed)))
+            if 0 < maximum <= cp:
+                maximum = cp
+                target = i
+        return maximum, players_position[i]
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
@@ -52,9 +67,13 @@ class TeamAI(BaseAI):
         home_cp = 1e-5 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)
-        print(home_cp, best_cp)
+
         if home_cp > best_cp:
+            best_cp = home_cp
             dest = home
+        attack_cp, target = self.attack(carry, my_pos)
+        if best_cp >= attack_cp:
+            dest = target - my_pos
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
