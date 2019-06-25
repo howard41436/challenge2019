@@ -25,6 +25,7 @@ class IGoHome(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.price = model_const.item_price['IGoHome']
 
+
     def trigger(self, ev_manager):
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
@@ -54,6 +55,7 @@ class TheWorld(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
+        self.price = model_const.item_price['TheWorld']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))

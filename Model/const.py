@@ -65,16 +65,20 @@ base_center = [
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
+pet_carry_max_up_idx = 3
+pet_speed_up_idx = 4
 
 speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
+pet_carry_max_up_multiplier = 1.5
+pet_speed_multiplier = 1.2
 
 default_equipments = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 # items
@@ -94,6 +98,7 @@ item_price = {
     'TheWorld': 87,
     'MagnetAttract': 87,
     'RadiationOil': 87,
+    'ShuffleBases': 123,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -105,9 +110,10 @@ radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 
 item_activate = {
-    'IGoHome': True,
+    'IGoHome': False,
     'OtherGoHome': False,
-    'TheWorld': True,
+    'TheWorld': False,
     'MagnetAttract': False,
     'RadiationOil': False,
+    'ShuffleBases': True,
 }
