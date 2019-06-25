@@ -62,7 +62,9 @@ class GraphicalView(object):
              isinstance(event, EventRestart):
             self.initialize()
         elif isinstance(event, EventEqualize):
-            self.animations.append( view_Animation.Animation_equalize(center=event.position) )
+            self.animations.append(view_Animation.Animation_equalize(center=event.position))
+        elif isinstance(event, EventsIGoHome):
+            self.animations.append(view_Animation.Animation_gohome(center=event.position))
     
     def render_menu(self):
         """

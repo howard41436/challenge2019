@@ -104,5 +104,15 @@ class Animation_equalize(Animation_raster):
 
     def __init__(self, **pos):
         super().__init__(1, **pos)
-            
+
+class Animation_gohome(Animation_raster):
+    frames = [
+        view_utils.scaled_surface(
+            pg.game.load(os.path.join(view_const.IMAGE_PATH, 'gohome.png')),
+            1/20 * i
+        )
+        for i in range(1, 20)
+    ]
+    def __init__(self, **pos):
+        super().__init__(1, **pos)
 
