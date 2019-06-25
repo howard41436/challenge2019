@@ -73,6 +73,8 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_equalize(center=event.position))
         elif isinstance(event, EventIGoHome):
             self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventMagnetAttract):
+            self.animations.append(view_Animation.Animation_MagnetAttract(center=event.position))
     
     def render_menu(self):
         """
