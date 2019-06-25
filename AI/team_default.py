@@ -34,7 +34,7 @@ class TeamAI(BaseAI):
         togo = [DIR_U, DIR_RU, DIR_LU] if dest[1] - my_pos[1] < -radius else [DIR_D, DIR_RD, DIR_LD]
         if dest[0] - my_pos[0] > radius:
             togo = togo[1]
-        if dest[0] - my_pos[0] < -radius:
+        elif dest[0] - my_pos[0] < -radius:
             togo = togo[2]
         else:
             togo = togo[0]
