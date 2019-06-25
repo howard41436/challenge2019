@@ -135,7 +135,7 @@ class GraphicalView(object):
             radius = oil.radius
             price = oil.price
             if price < 400 :
-                image = pg.transform.scale(pg.image.load("View/image/oil_brown.png"),(5*radius, 5*radius))
+                image = pg.transform.scale(pg.image.load("View/image/oil_black.png"),(5*radius, 5*radius))
             elif price >= 400 and price < 600 :
                 image = pg.transform.scale(pg.image.load("View/image/oil_gray.png"),(5*radius, 5*radius))
             elif price >= 600 and price < 800 :
