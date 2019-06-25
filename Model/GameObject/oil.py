@@ -10,6 +10,7 @@ class Oil(object):
         self.position = pos
         self.price = price
         self.radius = model_const.oil_radius
+        self.level = None
 
     def update(self):
         pass
@@ -30,6 +31,16 @@ def calc_price(pos):
         )
     return price
 
+def level_determined(price):
+    if price <= 400:
+        self.level = 1
+    elif price <= 600:
+        self.level = 2
+    elif price <= 800:
+        self.level = 3
+    else:
+        self.level = 4
+
 def new_oil(): 
     R = random.random() * (view_const.game_size[0] / 2)
     theta = random.random() * 2 * np.pi
@@ -38,4 +49,5 @@ def new_oil():
 	R * math.sin(theta) + view_const.game_size[0] / 2
         )
     price = calc_price(pos)
+    level_determined(price)
     return Oil(pos, price) 
