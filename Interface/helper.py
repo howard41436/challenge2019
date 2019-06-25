@@ -61,12 +61,13 @@ class Helper(object):
     # Get pet data
 
     # Get oil data
+    
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
     def get_oils_distance_to_center(self):
-        return [get_distance_to_center(oil) for oil in self.get_oils()]
+        return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: get_distance_to_center(p))
+        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data
     def get_bases_center(self):
@@ -97,9 +98,9 @@ class Helper(object):
 
     # Useful (?) functions
     def get_distance(self, p1, p2):
-        return (Vec(p1) - Vec(p2)).magnitude()
-
+        return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
+    
 
 
