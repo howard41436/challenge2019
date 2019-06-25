@@ -105,13 +105,12 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = Player("manual", index, model_const.default_equipments[index])
+                Tmp_P = Player("manual", index, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index)
+                Tmp_P = Player("default", index, self.pet_list)
             else:
-                Tmp_P = Player(self.AI_names[index], index)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list)
             self.player_list.append(Tmp_P)
-            self.player_list[index].pet = self.pet_list[index]
             
     def init_pet(self):
         self.pet_list = []
