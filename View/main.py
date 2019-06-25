@@ -39,12 +39,25 @@ class GraphicalView(object):
 
         self.animations = []
 
-        self.player_image = view_utils.scaled_surface(
+        self.player_image1 = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.2
             )
+        self.player_image2 = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_red.png')),
+                0.2
+            )
+        self.player_image3 = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_green.png')),
+                0.2
+            )
+        self.player_image4 = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
+                0.2
+            )
+
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
         
         self.oil_image1 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.16)
         self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
@@ -142,17 +155,25 @@ class GraphicalView(object):
             pg.display.flip()
     
     def draw_player(self):
+        num = 1
         for player in self.model.player_list:
             # pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
             # radius = player.radius
             # color = player.color
-                
-            image = self.player_image
+            if num == 1:    
+                image = self.player_image1
+            elif num == 2:
+                image = self.player_image2
+            elif num == 3:
+                image = self.player_image3
+            elif num == 4:
+                image = self.player_image4
             angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
             image = pg.transform.rotate(image, angle)
             if player.freeze:
                 self.screen.blit(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5), player.position+[-15, -60])
             self.screen.blit(image, image.get_rect(center=player.position))
+            num += 1
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
     def draw_oil(self):
