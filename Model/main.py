@@ -143,6 +143,9 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
+        for market in self.market_list:
+            market.update(self.player_list, self.oil_list, self.base_list, None)
+
         self.timer -= 1
         if self.timer == 0:
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
