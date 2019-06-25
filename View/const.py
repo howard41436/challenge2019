@@ -1,9 +1,7 @@
-import Model.const as model_const
 # Window hyperparameters
 game_caption = "Challenge 2019"
 screen_size  = (1280, 800)
 game_size    = (800, 800)
-score_position = [ (800, 200 * i) for i in range(model_const.player_number) ]
 
 frame_per_sec = 60
 

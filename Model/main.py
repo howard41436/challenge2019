@@ -6,7 +6,7 @@ from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
 from Model.GameObject.market import *
-from Model.GameObject.score_board import ScoreBoard
+from Model.GameObject.scoreboard import Scoreboard
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -46,7 +46,8 @@ class GameEngine(object):
         self.init_player()
         self.init_base()
         self.init_markets()
-        self.score_board = ScoreBoard(self.player_list, self.base_list)
+
+        self.scoreboard = Scoreboard(self.player_list, self.base_list)
 
         random.seed(time.time())
         
@@ -133,12 +134,6 @@ class GameEngine(object):
         for player in self.player_list:
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
 
-        """
-        ScoreBoard test
-        """
-        if self.timer % 60 == 0:
-            print(self.score_board)
-
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
@@ -153,7 +148,7 @@ class GameEngine(object):
         for market in self.market_list:
             market.update(self.player_list, self.oil_list, self.base_list, None)
 
-        self.score_board.update()
+        self.scoreboard.update()
 
         self.timer -= 1
         if self.timer == 0:
