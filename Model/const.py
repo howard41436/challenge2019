@@ -65,16 +65,20 @@ base_center = [
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
+pet_carry_max_up_idx = 3
+pet_speed_up_idx = 4
 
 speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
+pet_carry_max_up_multiplier = 1.5
+pet_speed_multiplier = 1.2
 
 default_equipments = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 # items

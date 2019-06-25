@@ -5,7 +5,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, equipments=[0, 0, 0, 0]):
+    def __init__(self, name, index, equipments=[0, 0, 0, 0, 0]):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
@@ -30,6 +30,8 @@ class Player(object):
         self.speed *= self.speed_multiplier 
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
+        self.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
+        self.pet.speed *= model_const.pet_speed_multiplier ** equipments[model_const.pet_speed_up_idx]
 
     def use_item(self, ev_manager):
         if self.item is not None and not self.item.active:

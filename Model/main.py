@@ -111,6 +111,7 @@ class GameEngine(object):
             else:
                 Tmp_P = Player(self.AI_names[index], index)
             self.player_list.append(Tmp_P)
+            self.player_list[index].pet = self.pet_list[index]
             
     def init_pet(self):
         self.pet_list = []
