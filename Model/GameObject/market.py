@@ -6,12 +6,14 @@ import Model.GameObject.item as Item
 import random
 
 class Market(object):
+    item_list = [Item.IGoHome, Item.OtherGoHome, Item.TheWorld, Item.MagnetAttract, Item.RadiationOil, Item.MagnetAttract]
     def __init__(self, position):
         self.position = Vec(position)
         self.item = None
 
     def generate_item(self, player_list, oil_list, base_list, player_index):
-        self.item = Item.MagnetAttract(player_list, oil_list, base_list, player_index)
+        self.item = random.choice(self.item_list)()
+        # self.item = Item.MagnetAttract(player_list, oil_list, base_list, player_index)
 
     def sell(self):
         self.item = None 
