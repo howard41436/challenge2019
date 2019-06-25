@@ -123,7 +123,7 @@ class GraphicalView(object):
                 
             image = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
-                0.15
+                0.3
             )
 
             self.screen.blit(image, image.get_rect(center=player.position))
@@ -165,12 +165,9 @@ class GraphicalView(object):
 
     def draw_pet(self):
         for pet in self.model.pet_list:
-            pos = tuple(map(int, pet.position))
-            radius = pet.radius
-            color = pet.color
             image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
             image.convert()
-            self.screen.blit(image, pos)
+            self.screen.blit(image, image.get_rect(center=pet.position))
     
     def render_play(self):
         """
