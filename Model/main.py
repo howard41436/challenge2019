@@ -131,13 +131,7 @@ class GameEngine(object):
     def update_objects(self):
         # Update player_list
         for player in self.player_list:
-            if self.item_status['Magnet Attract'] == None:
-                player.update(self.oil_list, self.base_list, self.player_list)
-            else:
-                event = self.item_status['Magnet Attract']
-                target_player = self.player_list[event.player_index]
-                player.duration = Vec2.normalize(target_player.position - player.position)
-                player.update(self.oil_list, self.base_list, self.player_list)
+            player.update(self.oil_list, self.base_list, self.player_list)
 
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:
