@@ -41,7 +41,7 @@ class OtherGoHome(Item):
         self.price = model_const.item_price['OtherGoHome']
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
+        ev_manager.post(EventOtherGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index != player.index:
                 player.position = Vec(self.base_list[player.index].center)
