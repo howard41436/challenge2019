@@ -145,6 +145,12 @@ class EventMagnetAttractStop(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventRadiationOil(BaseEvent):
+    def __init__(self):
+        self.name = "Radiation Oil"
+    def __str__(self):
+        return self.name
+
 class EventInvincibleStart(BaseEvent):
     '''
     A player trigger 'Invincible'
