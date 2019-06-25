@@ -122,7 +122,7 @@ class GraphicalView(object):
             # color = player.color
                 
             image = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),
+                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.15
             )
 
@@ -136,11 +136,11 @@ class GraphicalView(object):
             price = oil.price
             if price < 400 :
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
-            elif price >= 400 and price < 600 :
+            elif 600 > price >= 400:
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.08)
-            elif price >= 600 and price < 800 :
+            elif 800 > price >= 600:
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.08)
-            elif price >= 800 and price < 1200 :
+            elif 1200 > price >= 800:
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
