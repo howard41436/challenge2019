@@ -98,7 +98,7 @@ class MagnetAttract(Item):
         for player in self.player_list:
             player.magnet_attract = False
 
-class RadiusOil(Item):
+class RadiationOil(Item):
     '''
     Make some's bases balue * multiplier (< 1 constant)
     '''
@@ -106,7 +106,7 @@ class RadiusOil(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
 
     def trigger(self,  ev_manager):
-        ev_manager.post(EventRadiusOil())
+        ev_manager.post(EventRadiationOil())
         position = self.player_list[ self.player_index  ]
         for base in self.base_list:
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
