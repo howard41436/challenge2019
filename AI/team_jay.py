@@ -19,7 +19,7 @@ class TeamAI(BaseAI):
         for i in range(len(oil_poses)):
             cp = (400-oil_prices[i])/((Vec(my_pos) - Vec(oil_poses[i])).length()**2)
             if cp > best_cp:
-                cp = best_cp
+                best_cp = cp
                 best_pos = oil_poses[i]
         return best_pos, my_pos, best_cp
 
@@ -29,13 +29,14 @@ class TeamAI(BaseAI):
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
-        #home_cp = carry 
-        if carry > 5000:
+        home_cp = carry / ((Vec(my_pos) - Vec(home)).length()**2 + 1)
+        if home_cp > best_cp:
+            print(home_cp, best_cp)
             dest = home
         togo = [DIR_U, DIR_RU, DIR_LU] if dest[1] - my_pos[1] < -radius else [DIR_D, DIR_RD, DIR_LD]
         if dest[0] - my_pos[0] > radius:
             togo = togo[1]
-        if dest[0] - my_pos[0] < -radius:
+        elif dest[0] - my_pos[0] < -radius:
             togo = togo[2]
         else:
             togo = togo[0]
