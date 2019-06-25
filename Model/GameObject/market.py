@@ -16,6 +16,6 @@ class Market(object):
         self.item = None 
 
     def update(self, player_list, oil_list, base_list, player_index):
-        if self.item == None and random.random() < view_const.market_generate_item_probability:
+        if self.item == None and random.random() < model_const.market_generate_item_probability:
             self.generate_item(player_list, oil_list, base_list, player_index)
 
