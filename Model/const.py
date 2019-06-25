@@ -86,7 +86,15 @@ market_positions = [
 ]
 market_radius = 20
 market_generate_item_probability = 1 / 1200
-item_names = {'The World', 'Magnet Attract'}
+market_generate_item_probability = 1 / 1
+
+item_price = {
+    'IGoHome': 87, 
+    'OtherGoHome': 87, 
+    'TheWorld': 87,
+    'MagnetAttract': 87,
+    'RadiationOil': 87,
+}
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
 magnet_attract_radius = 50

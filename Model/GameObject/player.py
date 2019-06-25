@@ -75,7 +75,8 @@ class Player(object):
 
     def buy(self, market_list):
         market = self.check_market(market_list)
-        if market and market.item is not None:
+        if market and market.item is not None and self.value >= market.item.price:
+            self.value -= market.item.price
             self.item = market.item
             self.item.player_index = self.index
             market.sell()
