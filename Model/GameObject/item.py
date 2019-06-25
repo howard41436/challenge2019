@@ -54,6 +54,7 @@ class TheWorld(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
+        self.price = model_const.item_price['TheWorld']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
@@ -129,10 +130,13 @@ class Invincible(Item):
     '''
     def __init__(self):
         super().__init__()
+        self.price = model_const.item_price['Invincible']
+
     def trigger(self, player, ev_manager):
         ev_manager.post(EventInvincibleStart(player))
         player.is_invisible = True
         self.duration = model_const.invincible_duration
+
     def update(self, player, ev_manager):
         self.duration -= 1
         if self.duration == 0:
@@ -147,6 +151,7 @@ class RadiusNotMove(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
+        self.price = model_const.item_price['RadiusNotMove']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
