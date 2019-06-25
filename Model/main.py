@@ -79,8 +79,7 @@ class GameEngine(object):
                 player.buy(self.market_list)
         elif isinstance(event, EventQuit):
             self.running = False
-        elif isinstance(event, EventInitialize) or \
-            isinstance(event, EventRestart):
+        elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
 
     def init_player(self):
