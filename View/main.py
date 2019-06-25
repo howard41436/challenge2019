@@ -145,7 +145,6 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
-            """
             if price < 400 :
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
             elif 600 > price >= 400:
@@ -156,9 +155,8 @@ class GraphicalView(object):
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
-            """
         
-            gfxdraw.filled_circle(self.screen, *pos,
+            # gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
             
 
