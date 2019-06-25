@@ -94,6 +94,7 @@ class EventIGoHome(BaseEvent):
     def __init__(self, player):
         self.name = "I Go Home"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -101,6 +102,7 @@ class EventOtherGoHome(BaseEvent):
     def __init__(self, player):
         self.name = "Other Go HOme"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -122,6 +124,7 @@ class EventTheWorldStop(BaseEvent):
     def __init__(self, player):
         self.name = "The World Ends"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -132,6 +135,7 @@ class EventMagnetAttractStart(BaseEvent):
     def __init__(self, player):
         self.name = "Magnet Attract Start"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -142,6 +146,7 @@ class EventMagnetAttractStop(BaseEvent):
     def __init__(self, player):
         self.name = "Magnet AttractEnd"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -158,6 +163,7 @@ class EventInvincibleStart(BaseEvent):
     def __init__(self, player):
         self.name = "Invincible Start"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -168,6 +174,7 @@ class EventInvincibleStop(BaseEvent):
     def __init__(self, player):
         self.name = "Invincible End"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
