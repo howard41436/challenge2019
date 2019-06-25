@@ -77,8 +77,8 @@ class MagnetAttract(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
-        self.duration = model_const.the_world_duration
+        ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
+        self.duration = model_const.the_magnet_attract_duration
         self.active = True
         for player in self.player_list:
             if player.index == self.player_index:
@@ -90,7 +90,7 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(player))
+        ev_manager.post(EventMagnetAttractStop(player))
         self.active = False
         player[self.player_index].item = None
         for player in self.player_list:
