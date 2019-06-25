@@ -86,6 +86,7 @@ market_positions = [
 ]
 market_radius = 20
 market_generate_item_probability = 1 / 1
+market_refresh_item_probability = 1 / 4800
 
 item_price = {
     'IGoHome': 87, 
