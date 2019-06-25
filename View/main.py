@@ -77,6 +77,7 @@ class GraphicalView(object):
             for player in self.model.player_list:
                 if player.index != event.player_index:
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
+
     
     def render_menu(self):
         """
@@ -84,7 +85,6 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-
             # draw backgound
             self.screen.fill(view_const.COLOR_BLACK)
             # write some word
@@ -138,7 +138,8 @@ class GraphicalView(object):
             image = self.player_image
             angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
             image = pg.transform.rotate(image, angle)
-
+            if player.freeze:
+                self.screen.blit(os.join.path(IMAGE_PATH, "freeze.png"))
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 
