@@ -45,7 +45,6 @@ class GameEngine(object):
         self.init_player()
         self.init_base()
         self.init_markets()
-        self.init_item()
 
         random.seed(time.time())
         
