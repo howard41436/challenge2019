@@ -91,7 +91,7 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         oils = self.get_oils()
-        return min(oils, key=lambda oil: (oil - my_pos).magnitude())
+        return min(oils, key=lambda oil: (Vec(oil) - Vec(my_pos)).length())
 
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
