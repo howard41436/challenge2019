@@ -34,6 +34,13 @@ class GraphicalView(object):
         self.last_update = 0
 
         self.animations = []
+
+        self.player_image = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
+                0.2
+            )
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
     
     def notify(self, event):
         """
@@ -121,10 +128,7 @@ class GraphicalView(object):
             # radius = player.radius
             # color = player.color
                 
-            image = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
-                0.3
-            )
+            image = self.player_image
 
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
@@ -134,6 +138,7 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
+            """
             if price < 400 :
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
             elif 600 > price >= 400:
@@ -145,17 +150,16 @@ class GraphicalView(object):
             image.convert()
             self.screen.blit(image, pos)
             """
+        
             gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
-            """
+            
 
     def draw_base(self):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            image = pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') )
-            image = pg.transform.scale(image,(95,95))
-            image.convert()
+            image = self.base_image
             self.screen.blit(image, base.center-[50,50])
     
     def draw_market(self):
@@ -165,7 +169,7 @@ class GraphicalView(object):
 
     def draw_pet(self):
         for pet in self.model.pet_list:
-            image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
+            image = self.pet_image
             image.convert()
             self.screen.blit(image, image.get_rect(center=pet.position))
     
