@@ -138,3 +138,14 @@ class Animation_othergohome(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
+class Animation_radiationOil(Animation_raster):
+    frames = [
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'locked.png')),
+            1/10 * i
+        )
+        for i in range(1, 10)
+    ]
+    def __init__(self, **pos):
+        super().__init__(1, **pos)
+
