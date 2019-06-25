@@ -50,6 +50,7 @@ class TheWorld(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.freeze_list = []
 
     def trigger(self, ev_manager):
         ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
@@ -58,6 +59,7 @@ class TheWorld(Item):
         for player in self.player_list:
             if player.index != self.player_index:
                 player.freeze = True
+                self.freeze_list.append(player)
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -68,7 +70,7 @@ class TheWorld(Item):
         ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
-        for player in self.player_list:
+        for player in self.freeze_list:
             player.freeze = False
 
 class MagnetAttract(Item):
@@ -131,3 +133,34 @@ class Invincible(Item):
             # TODO: overlap
             player.is_invisible = False
             ev_manager.post(EventInvincibleStop(player))
+
+class RadiusNotMove(Item):
+    '''
+    Make all the other players in the range of ? that can not move for ? seconds
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.freeze_list = []
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
+        self.duration = model_const.radius_not_move_duration
+        self.active = True
+        position = self.player_list[ self.player_index ].position
+        for player in self.player_list:
+            if player.index != self.player_index and \
+               Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
+                player.freeze = True
+                freeze_list.append(player)
+
+    def update(self, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].item = None
+        for player in self.freeze_list:
+            player.freeze = False
