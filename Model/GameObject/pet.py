@@ -10,6 +10,7 @@ class Pet(object):
         self.position = Vec(position)
         self.radius = model_const.pet_radius
         self.color = [ random.randint(0, 255) for _ in range(3) ]
+        self.direction = Vec(0, 0)
         """
         Pet is a circle
         """
@@ -42,9 +43,11 @@ class Pet(object):
         self.check_collide_with_base(base_list[self.owner_index])
         if self.status == 0:
             # do nothing
+            self.direction = Vec(0, 0)
             pass
         else:
             target = (player_list[self.owner_index].position if self.status == 1 \
                       else base_list[self.owner_index].center)
-            self.position += Vec.normalize(target - self.position) * self.speed
+            self.direction = Vec.normalize(target - self.position)
+            self.position += self.direction * self.speed
 

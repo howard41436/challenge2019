@@ -116,7 +116,7 @@ class EventIGoHome(BaseEvent):
 
 class EventOtherGoHome(BaseEvent):
     def __init__(self, player):
-        self.name = "Other Go HOme"
+        self.name = "Other Go Home"
         self.player_index = player.index
         self.position = tuple(player.position)
     def __str__(self):
