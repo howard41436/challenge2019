@@ -127,8 +127,8 @@ class Invincible(Item):
     '''
     Make the player itself immune to collision
     '''
-    def __init__(self):
-        super().__init__()
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
     def trigger(self, player, ev_manager):
         ev_manager.post(EventInvincibleStart(player))
         player.is_invisible = True
