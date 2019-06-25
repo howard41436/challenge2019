@@ -122,7 +122,7 @@ class GraphicalView(object):
             # color = player.color
                 
             image = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),
+                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.15
             )
 
@@ -154,7 +154,7 @@ class GraphicalView(object):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            image = pg.image.load(os.path.join('View','image','base_0'+str(int(num))+'.png'))
+            image = pg.image.load(os.path.join('View','image','base_0{}.png'.format(int(num))))
             image = pg.transform.scale(image,(95,95))
             image.convert()
             self.screen.blit(image, base.center-[50,50])
