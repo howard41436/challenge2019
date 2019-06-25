@@ -124,26 +124,6 @@ class RadiationOil(Item):
                 base.value_sum *= model_const.radius_oil_multiplier
         self.player_list[self.player_index].item = None
                
-'''
-class Invincible(Item):
-    Make the player itself immune to collision
-    def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['Invincible']
-
-    def trigger(self, ev_manager):
-        ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
-        self.player_list[self.player_index].is_invisible = True
-        self.duration = model_const.invincible_duration
-
-    def update(self, ev_manager):
-        self.duration -= 1
-        if self.duration == 0:
-            # TODO: overlap
-            player.is_invisible = False
-            self.player_list[self.player_index].item = None
-            ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
-'''
 class Invincible(Item):
     '''
     Make the player itself immune to collision
