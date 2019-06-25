@@ -74,6 +74,10 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+
+    # Get market data
+    def get_markets(self):
+        return [(tuple(market.position), market.item) for market in self.model.market_list]
         
     # Get game informations
     def get_timer(self):
@@ -89,11 +93,22 @@ class Helper(object):
     def get_nearest_oil(self, player_id = None):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
-        oils = self.get_oils()
-        return min(oils, key=lambda oil: (oil - my_pos).magnitude())
+        return min(self.get_oils(), key=lambda oil: self.get_distance(oil, my_pos))
     
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
+
+    def get_nearest_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        my_pos = self.get_player_position(player_id)
+        return min(self.get_markets(), key=lambda market: self.get_distance(market[0], my_pos))
+
+    def get_nearest_market_with_item(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        my_pos = self.get_player_position(player_id)
+        market_with_item = filter(lambda market: market[1] != None, self.get_markets())
+        return min(market_with_item, key=lambda market: self.get_distance(market[0], my_pos)) if market_with_item != [] else None
+
 
     # Useful (?) functions
     def get_distance(self, p1, p2):
