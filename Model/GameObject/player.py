@@ -25,6 +25,15 @@ class Player(object):
         self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False   # If one of the other players is use 'The World', then self is freeze
 
+    def get_name(self):
+        return self.name
+
+    def get_value(self):
+        return self.value
+
+    def get_item(self):
+        return self.item
+
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
         self.speed *= self.speed_multiplier 

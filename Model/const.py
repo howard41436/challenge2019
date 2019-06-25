@@ -121,3 +121,6 @@ item_activate = {
     'RadiationOil': True,
     'ShuffleBases': True,
 }
+
+# score
+score_position = [ (800, 200 * i) for i in range(model_const.player_number) ]
