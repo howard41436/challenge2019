@@ -47,6 +47,7 @@ class GraphicalView(object):
         self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
         self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
         self.oil_image4 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.16)
+        self.backgound_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 0.54)
 
     def notify(self, event):
         """
@@ -211,6 +212,9 @@ class GraphicalView(object):
         # draw backgound
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
+        image = self.backgound_image
+        image.convert()
+        self.screen.blit(image, [0, 0])
 
         # draw animation
         for ani in self.animations:
