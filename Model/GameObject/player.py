@@ -8,7 +8,6 @@ class Player(object):
     def __init__(self, name, index, equipments=[0, 0, 0, 0]):
         self.index = index
         self.name = name
-        self.bag = 0
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.color = [ random.randint(0, 255) for _ in range(3) ]
@@ -39,8 +38,7 @@ class Player(object):
     def pick_oil(self, oils):
         for i, oil in reversed(list(enumerate(oils))):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
-                if self.bag + oil.price * self.oil_multiplier <= model_const.bag_capacity:
-                    self.bag += oil.price * self.oil_multiplier
+                if self.value + oil.price * self.oil_multiplier <= model_const.bag_capacity:
                     self.value += oil.price * self.oil_multiplier
                     oils.remove(oil)
 
@@ -51,7 +49,6 @@ class Player(object):
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
             self.value = 0
-            self.bag = 0
 
     def check_collide(self, player_list):
         collide = []
@@ -82,7 +79,7 @@ class Player(object):
             market.sell()
 
     def update_speed(self):
-        self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.bag)
+        self.speed = self.speed_multiplier * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * self.value)
 
     def update(self, oils, bases, players, ev_manager):
         if self.item is not None and self.item.active:
