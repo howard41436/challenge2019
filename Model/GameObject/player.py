@@ -89,7 +89,7 @@ class Player(object):
         self.update_speed()
         if self.magnet_attract:
             for oil in self.oils:
-                if Vec.magnitude(oil.position - self.position) <= oil.radius + self.radius
+                if Vec.magnitude(oil.position - self.position) <= oil.radius + self.radius:
                     oil.update_position( Vec.normalize(self.position - oil.position)*model_const.magnet_attract_speed )
         if not self.freeze:
             new_x = self.position[0] + self.direction[0] * self.speed

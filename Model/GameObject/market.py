@@ -1,7 +1,8 @@
+from pygame.math import Vector2 as Vec
+
 import Model.const as model_const
 import View.const as view_const
 import Model.GameObject.item as Item
-from pygame.math import Vector2 as Vec
 import random
 
 class Market(object):
@@ -10,7 +11,7 @@ class Market(object):
         self.item = None
 
     def generate_item(self, player_list, oil_list, base_list, player_index):
-        self.item = Item.TheWorld(player_list, oil_list, base_list, player_index)
+        self.item = Item.OtherGoHome(player_list, oil_list, base_list, player_index)
 
     def sell(self):
         self.item = None 

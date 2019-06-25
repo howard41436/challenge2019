@@ -23,11 +23,12 @@ class IGoHome(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
 
-    def trigger(self,  ev_manager):
-        ev_manager.post(EventIGoHome(player))
+    def trigger(self, ev_manager):
+        ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index == player.index:
-                player.position = self.base_list[ player.index ].position
+                player.position = Vec(self.base_list[player.index].center)
+        self.player_list[self.player_index].item = None
 
 class OtherGoHome(Item):
     '''
@@ -36,11 +37,12 @@ class OtherGoHome(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
 
-    def trigger(self,  ev_manager):
-        ev_manager.post(EventOtherGoHome(player))
+    def trigger(self, ev_manager):
+        ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index != player.index:
-                player.position = self.base_list[ player.index ].position
+                player.position = Vec(self.base_list[player.index].center)
+        self.player_list[self.player_index].item = None
 
 class TheWorld(Item):
     '''

@@ -73,9 +73,9 @@ class EventMove(BaseEvent):
     """
     Move event.
     """
-    def __init__(self, player, direction):
+    def __init__(self, player_index, direction):
         self.name = "Move event"
-        self.player_index = player.player_index
+        self.player_index = player_index
         self.direction = direction
     def __str__(self):
         return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
@@ -84,23 +84,23 @@ class EventTriggerItem(BaseEvent):
     """
     Buy/Use item.
     """
-    def __init__(self, player):
+    def __init__(self, player_index):
         self.name = "Trigger item event"
-        self.player_index = player.player_index
+        self.player_index = player_index
     def __str__(self):
         return f"{self.name} => player_index = {player}"
 
 class EventIGoHome(BaseEvent):
     def __init__(self, player):
         self.name = "I Go Home"
-        self.player_index = player.player_index
+        self.player_index = player.index
     def __str__(self):
         return self.name
 
 class EventOtherGoHome(BaseEvent):
     def __init__(self, player):
         self.name = "Other Go HOme"
-        self.player_index = player.player_index
+        self.player_index = player.index
     def __str__(self):
         return self.name
 
