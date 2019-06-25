@@ -1,7 +1,15 @@
 """
 const of AI code use.
 """
-AI_DIR = [0, 1 ,2 ,3 ,4 ,5 ,6, 7, 8]
+DIR_stop = 0
+DIR_U    = 1
+DIR_RU   = 2
+DIR_R    = 3
+DIR_RD   = 4
+DIR_D    = 5
+DIR_LD   = 6
+DIR_L    = 7
+DIR_LU   = 8
 AI_dir_mapping = [
     [0, 0],             #steady
     [0, -1],             #up
