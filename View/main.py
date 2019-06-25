@@ -2,7 +2,7 @@ import pygame as pg
 import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
-import os
+import os, math
 
 import Model.GameObject.item as model_item
 import Model.const       as model_const
@@ -130,6 +130,8 @@ class GraphicalView(object):
             # color = player.color
                 
             image = self.player_image
+            angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
+            image = pg.transform.rotate(image, angle)
 
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
