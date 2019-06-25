@@ -73,6 +73,10 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_equalize(center=event.position))
         elif isinstance(event, EventIGoHome):
             self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=event.position))
     
     def render_menu(self):
         """
