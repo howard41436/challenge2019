@@ -161,13 +161,15 @@ class GraphicalView(object):
     
     def draw_market(self):
         for market in self.model.market_list:
-            if isinstance(market.item, model_item.GoHome):
+            if isinstance(market.item, model_item.IGoHome):
                 pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.MagnetAttract):
                 pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.Invincible):
                 pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.TheWorld):
+                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.OtherGoHome):
                 pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             else:
                 pg.draw.rect(self.screen, view_const.COLOR_OLIVE, pg.Rect(market.position, [20, 20]))
