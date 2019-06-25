@@ -204,6 +204,8 @@ class GraphicalView(object):
         # draw backgound
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
+        image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 0.54)
+        self.screen.blit(image, [0, 0])
 
         # draw animation
         for ani in self.animations:
