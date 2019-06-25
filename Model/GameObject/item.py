@@ -96,6 +96,22 @@ class MagnetAttract(Item):
         for player in self.player_list:
             player.magnet_attract = False
 
+class RadiusOil(Item):
+    '''
+    Make some's bases balue * multiplier (< 1 constant)
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+
+    def trigger(self,  ev_manager):
+        ev_manager.post(EventRadiusOil())
+        position = self.player_list[ self.player_index  ]
+        for base in self.base_list:
+            if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
+               base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
+                base.value_sum *= model_const.radius_oil_multiplier
+               
+
 class Invincible(Item):
     '''
     Make the player itself immune to collision

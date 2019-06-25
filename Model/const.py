@@ -92,3 +92,4 @@ magnet_attract_duration = 60 * 3
 magnet_attract_radius = 50
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
+radius_oil_multiplier = 0.8
