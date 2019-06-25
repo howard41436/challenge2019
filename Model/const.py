@@ -93,12 +93,14 @@ market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
 
 item_price = {
-    'IGoHome': 87, 
-    'OtherGoHome': 87, 
-    'TheWorld': 87,
-    'MagnetAttract': 87,
-    'RadiationOil': 87,
-    'ShuffleBases': 123,
+    'IGoHome': 100, 
+    'OtherGoHome': 200, 
+    'TheWorld': 300,
+    'MagnetAttract': 400,
+    'Invincible': 500,
+    'RadiusNotMove': 600,
+    'RadiationOil': 700,
+    'ShuffleBases': 800,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -110,10 +112,12 @@ radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 
 item_activate = {
-    'IGoHome': False,
-    'OtherGoHome': False,
+    'IGoHome': True,
+    'OtherGoHome': True,
     'TheWorld': True,
-    'MagnetAttract': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
 }
