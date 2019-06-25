@@ -76,6 +76,7 @@ class Player(object):
         market = self.check_market(market_list)
         if market:
             self.item = market.item
+            self.item.player_index = self.index
             market.sell()
 
     def update_speed(self):
