@@ -116,6 +116,17 @@ class Animation_gohome(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
+class Animation_MagnetAttract(Animation_raster):
+    frames = [
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'mag.png')),
+            1/3*(i%3)
+        )
+        for i in range(1,20)
+    ]
+    def __init__(self, **pos):
+        super().__init__(1,**pos)
+
 class Animation_othergohome(Animation_raster):
     frames = [
         view_utils.scaled_surface(
