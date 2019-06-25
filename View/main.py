@@ -42,7 +42,12 @@ class GraphicalView(object):
             )
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
-    
+        
+        self.oil_image1 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.16)
+        self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
+        self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
+        self.oil_image4 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.16)
+
     def notify(self, event):
         """
         Receive events posted to the message queue. 
@@ -150,13 +155,13 @@ class GraphicalView(object):
             price = oil.price
             
             if price < 400 :
-                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
+                image = self.oil_image1
             elif 600 > price >= 400:
-                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.08)
+                image = self.oil_image2
             elif 800 > price >= 600:
-                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.08)
+                image = self.oil_image3
             elif 1200 > price >= 800:
-                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
+                image = self.oil_image4
             image.convert()
             self.screen.blit(image, pos)
             
