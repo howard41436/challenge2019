@@ -123,7 +123,26 @@ class RadiationOil(Item):
                 base.value_sum *= model_const.radius_oil_multiplier
         self.player_list[self.player_index].item = None
                
+'''
+class Invincible(Item):
+    Make the player itself immune to collision
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['Invincible']
 
+    def trigger(self, ev_manager):
+        ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
+        self.player_list[self.player_index].is_invisible = True
+        self.duration = model_const.invincible_duration
+
+    def update(self, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            # TODO: overlap
+            player.is_invisible = False
+            self.player_list[self.player_index].item = None
+            ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+'''
 class Invincible(Item):
     '''
     Make the player itself immune to collision
@@ -133,16 +152,24 @@ class Invincible(Item):
         self.price = model_const.item_price['Invincible']
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventInvincibleStart(player))
-        player.is_invisible = True
+        ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
+        print("Invincible Start")
         self.duration = model_const.invincible_duration
+        self.active = True
+        self.player_list[self.player_index].is_invinsible = True
 
     def update(self, ev_manager):
         self.duration -= 1
         if self.duration == 0:
-            # TODO: overlap
-            player.is_invisible = False
-            ev_manager.post(EventInvincibleStop(player))
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        print("Invincible Stop")
+        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].item = None
+
 
 class RadiusNotMove(Item):
     '''
