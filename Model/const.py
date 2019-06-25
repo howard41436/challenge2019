@@ -124,3 +124,4 @@ item_activate = {
 
 # score
 score_position = [ (800, 200 * i) for i in range(model_const.player_number) ]
+rank_str = ['1st', '2nd', '3rd', '4th']
