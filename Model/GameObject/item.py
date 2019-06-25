@@ -106,9 +106,9 @@ class RadiationOil(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
 
-    def trigger(self,  ev_manager):
+    def trigger(self, ev_manager):
         ev_manager.post(EventRadiationOil())
-        position = self.player_list[ self.player_index  ]
+        position = self.player_list[self.player_index].position
         for base in self.base_list:
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
                base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
