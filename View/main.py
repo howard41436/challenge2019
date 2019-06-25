@@ -33,6 +33,9 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
+        pg.init(); pg.font.init()
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
 
         self.animations = []
 
@@ -47,7 +50,8 @@ class GraphicalView(object):
         self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
         self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
         self.oil_image4 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.16)
-        self.backgound_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 0.54)
+
+        self.backgound_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
 
     def notify(self, event):
         """
@@ -213,7 +217,6 @@ class GraphicalView(object):
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
         image = self.backgound_image
-        image.convert()
         self.screen.blit(image, [0, 0])
 
         # draw animation
@@ -316,9 +319,6 @@ class GraphicalView(object):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
-        pg.init(); pg.font.init()
-        pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
         self.smallfont = pg.font.Font(None, 40)
         self.is_initialized = True
