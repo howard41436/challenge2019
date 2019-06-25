@@ -139,7 +139,7 @@ class GraphicalView(object):
             angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
             image = pg.transform.rotate(image, angle)
             if player.freeze:
-                self.screen.blit(os.join.path(IMAGE_PATH, "freeze.png"))
+                self.screen.blit(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5), player.position+[-15, -60])
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
 

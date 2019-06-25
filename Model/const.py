@@ -110,9 +110,9 @@ radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 
 item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': False,
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
     'MagnetAttract': False,
     'RadiationOil': False,
     'ShuffleBases': False,
