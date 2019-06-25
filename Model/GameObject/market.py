@@ -13,7 +13,6 @@ class Market(object):
 
     def generate_item(self, player_list, oil_list, base_list, player_index):
         self.item = random.choice(self.item_list)(player_list, oil_list, base_list, player_index)
-        # self.item = Item.MagnetAttract(player_list, oil_list, base_list, player_index)
 
     def sell(self):
         self.item = None 

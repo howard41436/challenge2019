@@ -22,6 +22,7 @@ class IGoHome(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['IGoHome']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
@@ -36,6 +37,7 @@ class OtherGoHome(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['OtherGoHome']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
@@ -79,6 +81,7 @@ class MagnetAttract(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['MagnetAttract']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
@@ -107,6 +110,7 @@ class RadiationOil(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['RadiationOil']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventRadiationOil())
@@ -115,6 +119,7 @@ class RadiationOil(Item):
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
                base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
                 base.value_sum *= model_const.radius_oil_multiplier
+        self.player_list[self.player_index].item = None
                
 
 class Invincible(Item):
