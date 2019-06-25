@@ -98,6 +98,7 @@ item_price = {
     'TheWorld': 87,
     'MagnetAttract': 87,
     'RadiationOil': 87,
+    'ShuffleBases': 123,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -109,9 +110,10 @@ radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 
 item_activate = {
-    'IGoHome': True,
+    'IGoHome': False,
     'OtherGoHome': False,
-    'TheWorld': True,
+    'TheWorld': False,
     'MagnetAttract': False,
     'RadiationOil': False,
+    'ShuffleBases': True,
 }
