@@ -31,7 +31,6 @@ class TeamAI(BaseAI):
         dest = best_pos
         home_cp = carry / ((Vec(my_pos) - Vec(home)).length()**2 + 1)
         if home_cp > best_cp:
-            print(home_cp, best_cp)
             dest = home
         togo = [DIR_U, DIR_RU, DIR_LU] if dest[1] - my_pos[1] < -radius else [DIR_D, DIR_RD, DIR_LD]
         if dest[0] - my_pos[0] > radius:
