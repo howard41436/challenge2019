@@ -70,7 +70,13 @@ class GraphicalView(object):
              isinstance(event, EventRestart):
             self.initialize()
         elif isinstance(event, EventEqualize):
-            self.animations.append( view_Animation.Animation_equalize(center=event.position) )
+            self.animations.append(view_Animation.Animation_equalize(center=event.position))
+        elif isinstance(event, EventIGoHome):
+            self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=event.position))
     
     def render_menu(self):
         """
@@ -141,7 +147,6 @@ class GraphicalView(object):
             pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
-            """
             if price < 400 :
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
             elif 600 > price >= 400:
@@ -152,9 +157,8 @@ class GraphicalView(object):
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
-            """
         
-            gfxdraw.filled_circle(self.screen, *pos,
+            # gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
             
 
@@ -167,13 +171,15 @@ class GraphicalView(object):
     
     def draw_market(self):
         for market in self.model.market_list:
-            if isinstance(market.item, model_item.GoHome):
+            if isinstance(market.item, model_item.IGoHome):
                 pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.MagnetAttract):
                 pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.Invincible):
                 pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.TheWorld):
+                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.OtherGoHome):
                 pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             else:
                 pg.draw.rect(self.screen, view_const.COLOR_OLIVE, pg.Rect(market.position, [20, 20]))
