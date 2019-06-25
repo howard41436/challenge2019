@@ -130,7 +130,7 @@ class GameEngine(object):
     def update_objects(self):
         # Update player_list
         for player in self.player_list:
-            player.update(self.oil_list, self.base_list, self.player_list)
+            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
 
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:

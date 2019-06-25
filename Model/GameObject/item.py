@@ -1,5 +1,7 @@
-import Model.const as model_const
 from pygame.math import Vector2 as Vec
+
+import Model.const as model_const
+from Events.Manager import *
 
 class Item(object):
     '''
@@ -61,9 +63,9 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(player))
+        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
-        player[self.player_index].item = None
+        self.player_list[self.player_index].item = None
         for player in self.player_list:
             player.freeze = False
 
