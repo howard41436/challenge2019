@@ -132,12 +132,12 @@ class Invincible(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.price = model_const.item_price['Invincible']
 
-    def trigger(self, player, ev_manager):
+    def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(player))
         player.is_invisible = True
         self.duration = model_const.invincible_duration
 
-    def update(self, player, ev_manager):
+    def update(self, ev_manager):
         self.duration -= 1
         if self.duration == 0:
             # TODO: overlap
