@@ -113,7 +113,7 @@ item_activate = {
     'IGoHome': True,
     'OtherGoHome': True,
     'TheWorld': False,
-    'MagnetAttract': False,
+    'MagnetAttract': True,
     'RadiationOil': False,
     'ShuffleBases': False,
 }
