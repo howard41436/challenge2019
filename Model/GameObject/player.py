@@ -23,6 +23,7 @@ class Player(object):
         self.init_equipments(equipments)
         self.item = None
         self.is_invincible = False
+        self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False   # If one of the other players is use 'The World', then self is freeze
 
     def init_equipments(self, equipments):
@@ -86,6 +87,10 @@ class Player(object):
         if self.item is not None and self.item.active:
             self.item.update()
         self.update_speed()
+        if self.magnet_attract:
+            for oil in self.oils:
+                if Vec.magnitude(oil.position - self.position) <= oil.radius + self.radius
+                    oil.update_position( Vec.normalize(self.position - oil.position)*model_const.magnet_attract_speed )
         if not self.freeze:
             new_x = self.position[0] + self.direction[0] * self.speed
             new_y = self.position[1] + self.direction[1] * self.speed

@@ -69,28 +69,30 @@ class TheWorld(Item):
 
 class MagnetAttract(Item):
     '''
-    Make all player attract to this player
+    Make all oils attract to this player
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventMagnetAttract(player_list[player_index]))
-        self.duration = model_const.magnet_attract_duration
+        ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
+        self.duration = model_const.the_world_duration
         self.active = True
+        for player in self.player_list:
+            if player.index == self.player_index:
+                player.magnet_attract = True
 
     def update(self, ev_manager):
         self.duration -= 1
-        for player in self.player_list:
-            target = self.player_list[self.player_index].position
-            player.direction = Vec.normalize(target - player.position)
         if self.duration == 0:
-            self.close()
+            self.close(ev_manager)
 
-    def close(self, ev_manager, player_list):
-        ev_manager.post(EventMagnetAttractStop(player))
+    def close(self, ev_manager):
+        ev_manager.post(EventTheWorldStop(player))
         self.active = False
         player[self.player_index].item = None
+        for player in self.player_list:
+            player.magnet_attract = False
 
 class Invincible(Item):
     '''

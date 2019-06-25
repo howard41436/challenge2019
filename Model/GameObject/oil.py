@@ -11,6 +11,9 @@ class Oil(object):
         self.price = price
         self.radius = model_const.oil_radius
 
+    def update_position(self, new_position):
+        self.position = new_position
+    
     def update(self):
         pass
 
