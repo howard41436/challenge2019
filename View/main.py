@@ -102,6 +102,9 @@ class GraphicalView(object):
             for player in self.model.player_list:
                 if player.index != event.player_index:
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
+        elif isinstance(event, EventRadiationOil):
+            self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
 
     
     def render_menu(self):

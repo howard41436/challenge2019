@@ -116,7 +116,7 @@ class RadiationOil(Item):
         self.price = model_const.item_price['RadiationOil']
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventRadiationOil())
+        ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
