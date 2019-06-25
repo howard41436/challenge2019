@@ -8,7 +8,7 @@ class TeamAI(BaseAI):
         self.helper = helper
         self.skill = []
 
-        self.last_dir = random.randint(1, 😎
+        self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
         my_pos = self.helper.get_player_position()
@@ -42,6 +42,7 @@ class TeamAI(BaseAI):
                 maximum = (new).dot(Vec(direct[i]))
                 record = i
         return record
+
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
