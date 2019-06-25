@@ -5,21 +5,40 @@ class Item(object):
     '''
     Base Item
     '''
-    def __init__(self):
+    def __init__(self, player_list, oil_list, base_list, player_index):
         self.active = False  # taking effect or not
         self.duration = 0
         self.position = None
-        self.player_index = None
+        self.player_index = player_index
+        self.player_list = player_list
+        self.oil_list = oil_list
+        self.base_list = base_list
 
-class GoHome(Item):
+class IGoHome(Item):
     '''
-    Make all player move to their base
+    Make one player move to his/her base
     '''
-    def __init__(self):
-        super().__init__()
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
 
-    def trigger(self, player, ev_manager):
-        ev_manager.post(EventGoHome(player))
+    def trigger(self,  ev_manager):
+        ev_manager.post(EventIGoHome(player))
+        for player in self.player_list:
+            if self.player_index == player.index:
+                player.position = self.base_list[ player.index ].position
+
+class OtherGoHome(Item):
+    '''
+    Make other players move to their base
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+
+    def trigger(self,  ev_manager):
+        ev_manager.post(EventIGoHome(player))
+        for player in self.player_list:
+            if self.player_index != player.index:
+                player.position = self.base_list[ player.index ].position
 
 class TheWorld(Item):
     '''
