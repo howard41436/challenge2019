@@ -11,7 +11,7 @@ class Market(object):
         self.item = None
 
     def generate_item(self, player_list, oil_list, base_list, player_index):
-        self.item = Item.OtherGoHome(player_list, oil_list, base_list, player_index)
+        self.item = Item.MagnetAttract(player_list, oil_list, base_list, player_index)
 
     def sell(self):
         self.item = None 

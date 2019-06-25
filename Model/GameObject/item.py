@@ -80,7 +80,7 @@ class MagnetAttract(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
-        self.duration = model_const.the_magnet_attract_duration
+        self.duration = model_const.magnet_attract_duration
         self.active = True
         for player in self.player_list:
             if player.index == self.player_index:
@@ -92,11 +92,12 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventMagnetAttractStop(player))
+        ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
         self.active = False
-        player[self.player_index].item = None
+        self.player_list[self.player_index].item = None
         for player in self.player_list:
-            player.magnet_attract = False
+            if player.index == self.player_index:
+                player.magnet_attract = False
 
 class RadiusOil(Item):
     '''

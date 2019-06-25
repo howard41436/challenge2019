@@ -33,7 +33,7 @@ class Player(object):
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
 
     def use_item(self, ev_manager):
-        if self.item is not None:
+        if self.item is not None and not self.item.active:
             self.item.trigger(ev_manager)
 
     def pick_oil(self, oils):
@@ -85,12 +85,12 @@ class Player(object):
 
     def update(self, oils, bases, players, ev_manager):
         if self.item is not None and self.item.active:
-            self.item.update(self, ev_manager)
+            self.item.update(ev_manager)
         self.update_speed()
         if self.magnet_attract:
-            for oil in self.oils:
-                if Vec.magnitude(oil.position - self.position) <= oil.radius + self.radius:
-                    oil.update_position( Vec.normalize(self.position - oil.position)*model_const.magnet_attract_speed )
+            for oil in oils:
+                if Vec.magnitude(oil.position - self.position) <= oil.radius + model_const.magnet_attract_radius:
+                    oil.update_position(Vec.normalize(self.position - oil.position) * model_const.magnet_attract_speed)
         if not self.freeze:
             new_x = self.position[0] + self.direction[0] * self.speed
             new_y = self.position[1] + self.direction[1] * self.speed
