@@ -106,6 +106,14 @@ class EventOtherGoHome(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventShuffleBases(BaseEvent):
+    def __init__(self, player):
+        self.name = "Shuffle Bases"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
 class EventTheWorldStart(BaseEvent):
     '''
     A player trigger 'The World'(time stop)
