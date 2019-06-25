@@ -5,6 +5,7 @@ from Model.GameObject.player import *
 from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
+from Model.GameObject.market import *
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -35,6 +36,7 @@ class GameEngine(object):
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
+        self.market_list = []
         self.turn_to = 0
         self.timer = 0
 
@@ -42,6 +44,7 @@ class GameEngine(object):
         self.init_pet()
         self.init_player()
         self.init_base()
+        self.init_markets()
 
         random.seed(time.time())
         
@@ -68,6 +71,12 @@ class GameEngine(object):
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
             self.set_player_direction(event.player_index, event.direction)
+        elif isinstance(event, EventTriggerItem):
+            player = self.player_list[event.player_index]
+            if player.item is not None:
+                player.use_item(self.ev_manager)
+            else:
+                player.buy(self.market_list)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, EventInitialize) or \
@@ -108,25 +117,34 @@ class GameEngine(object):
         for index in range(model_const.player_number):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
+    def init_markets(self):
+        self.market_list = [ Market(position) for position in model_const.market_positions ]
+
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
+            if direction > 0:
+                player.direction_no = direction
 
     def update_objects(self):
         # Update player_list
         for player in self.player_list:
-            player.update(self.oil_list, self.base_list, self.player_list)
+            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
 
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
-        if self.timer % 2400 == 1200:
+        if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
+        
+        for pet in self.pet_list:
+            pet.update(self.player_list, self.base_list)
 
         for oil in self.oil_list:
             oil.update()
         self.try_create_oil()
+
+        for market in self.market_list:
+            market.update(self.player_list, self.oil_list, self.base_list, None)
 
         self.timer -= 1
         if self.timer == 0:
@@ -162,4 +180,3 @@ class GameEngine(object):
         while self.running:
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
-
