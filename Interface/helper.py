@@ -21,7 +21,6 @@ class Helper(object):
     # Get player data
     def get_self_id(self):
         return self.player_id
-
     def get_players_position(self):
         return [tuple(player.position) for player in self.model.player_list]
     def get_player_position(self, player_id = None):
@@ -61,7 +60,6 @@ class Helper(object):
     # Get pet data
 
     # Get oil data
-    
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
     def get_oils_distance_to_center(self):
@@ -69,7 +67,7 @@ class Helper(object):
     def get_oils_by_distance_from_center(self):
         return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
-    # Get base data
+    # Get base data 
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]
     def get_base_center(self, player_id = None):

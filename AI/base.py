@@ -1,7 +1,6 @@
 """
 const of AI code use.
 """
-
 """
 a base of AI.
 """
