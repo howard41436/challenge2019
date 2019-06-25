@@ -37,7 +37,7 @@ class OtherGoHome(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
 
     def trigger(self,  ev_manager):
-        ev_manager.post(EventIGoHome(player))
+        ev_manager.post(EventOtherGoHome(player))
         for player in self.player_list:
             if self.player_index != player.index:
                 player.position = self.base_list[ player.index ].position
