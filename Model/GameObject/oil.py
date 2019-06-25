@@ -11,14 +11,14 @@ class Oil(object):
         self.price = price
         self.radius = model_const.oil_radius
 
+    def update_position(self, new_position):
+        self.position += new_position
+    
     def update(self):
         pass
 
 def calc_price(pos):
-    game_center = Vec(
-        view_const.game_size[0] / 2,
-        view_const.game_size[1] / 2
-        )
+    game_center = Vec(view_const.game_size) / 2
     dist_from_center = (pos - game_center).length()
     mean = model_const.curve_a / (dist_from_center + model_const.curve_b)
     price = max(

@@ -73,9 +73,9 @@ class EventMove(BaseEvent):
     """
     Move event.
     """
-    def __init__(self, player, direction):
+    def __init__(self, player_index, direction):
         self.name = "Move event"
-        self.player_index = player
+        self.player_index = player_index
         self.direction = direction
     def __str__(self):
         return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
@@ -84,11 +84,12 @@ class EventTriggerItem(BaseEvent):
     """
     Buy/Use item.
     """
-    def __init__(self, player):
+    def __init__(self, player_index):
         self.name = "Trigger item event"
-        self.player_index = player
+        self.player_index = player_index
     def __str__(self):
         return f"{self.name} => player_index = {player}"
+
 
 class EventEqualize(BaseEvent):
     """
@@ -104,13 +105,40 @@ class EventEqualize(BaseEvent):
     def __str__(self):
         return f"{self.name} => collision_position = {self.position}"
         
+
+class EventIGoHome(BaseEvent):
+    def __init__(self, player):
+        self.name = "I Go Home"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventOtherGoHome(BaseEvent):
+    def __init__(self, player):
+        self.name = "Other Go Home"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+
+class EventShuffleBases(BaseEvent):
+    def __init__(self, player):
+        self.name = "Shuffle Bases"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+
 class EventTheWorldStart(BaseEvent):
     '''
     A player trigger 'The World'(time stop)
     '''
     def __init__(self, player):
         self.name = f"Player {player.index} triggers The World"
-        self.position = Vec(player.position)
+        self.position = tuple(player.position)
         self.player_index = player.index
     def __str__(self):
         return self.name
@@ -122,6 +150,7 @@ class EventTheWorldStop(BaseEvent):
     def __init__(self, player):
         self.name = "The World Ends"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -132,6 +161,7 @@ class EventMagnetAttractStart(BaseEvent):
     def __init__(self, player):
         self.name = "Magnet Attract Start"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -142,6 +172,13 @@ class EventMagnetAttractStop(BaseEvent):
     def __init__(self, player):
         self.name = "Magnet AttractEnd"
         self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventRadiationOil(BaseEvent):
+    def __init__(self):
+        self.name = "Radiation Oil"
     def __str__(self):
         return self.name
 
@@ -152,6 +189,7 @@ class EventInvincibleStart(BaseEvent):
     def __init__(self, player):
         self.name = "Invincible Start"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
@@ -162,6 +200,7 @@ class EventInvincibleStop(BaseEvent):
     def __init__(self, player):
         self.name = "Invincible End"
         self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 

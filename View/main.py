@@ -4,6 +4,7 @@ import Model.main as model
 from Events.Manager import *
 import os
 
+import Model.GameObject.item as model_item
 import Model.const       as model_const
 import View.const        as view_const
 import View.animations   as view_Animation
@@ -34,6 +35,13 @@ class GraphicalView(object):
         self.last_update = 0
 
         self.animations = []
+
+        self.player_image = view_utils.scaled_surface(
+                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
+                0.2
+            )
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
     
     def notify(self, event):
         """
@@ -62,7 +70,13 @@ class GraphicalView(object):
              isinstance(event, EventRestart):
             self.initialize()
         elif isinstance(event, EventEqualize):
-            self.animations.append( view_Animation.Animation_equalize(center=event.position) )
+            self.animations.append(view_Animation.Animation_equalize(center=event.position))
+        elif isinstance(event, EventIGoHome):
+            self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=event.position))
     
     def render_menu(self):
         """
@@ -121,10 +135,7 @@ class GraphicalView(object):
             # radius = player.radius
             # color = player.color
                 
-            image = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
-                0.3
-            )
+            image = self.player_image
 
             self.screen.blit(image, image.get_rect(center=player.position))
             #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
@@ -144,28 +155,36 @@ class GraphicalView(object):
                 image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
-            """
-            gfxdraw.filled_circle(self.screen, *pos,
+        
+            # gfxdraw.filled_circle(self.screen, *pos,
                                   int(oil.radius), (0, 0, 0, 255*(price/1200)))
-            """
+            
 
     def draw_base(self):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            image = pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') )
-            image = pg.transform.scale(image,(95,95))
-            image.convert()
+            image = self.base_image
             self.screen.blit(image, base.center-[50,50])
     
     def draw_market(self):
         for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
-
+            if isinstance(market.item, model_item.IGoHome):
+                pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.MagnetAttract):
+                pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.Invincible):
+                pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.TheWorld):
+                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.OtherGoHome):
+                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            else:
+                pg.draw.rect(self.screen, view_const.COLOR_OLIVE, pg.Rect(market.position, [20, 20]))
 
     def draw_pet(self):
         for pet in self.model.pet_list:
-            image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.15)
+            image = self.pet_image
             image.convert()
             self.screen.blit(image, image.get_rect(center=pet.position))
     
