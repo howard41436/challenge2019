@@ -16,21 +16,34 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = -1
         for pos in oils:
-            price = ( 1/self.helper.get_distance_to_center(pos) )
-            cp = price / (self.helper.get_distance(pos, my_pos) ** (1/2)) 
+            price = ( self.helper.get_distance_to_center(pos) ** (-1/2) )
+            cp = price / (self.helper.get_distance(pos, my_pos) ** 2 * self.helper.get_distance(pos, self.helper.get_base_center()) ** (1/2)) 
             if cp > best_cp:
-                cp = best_cp
+                cp = best_cp 
                 best_pos = pos 
         return Vec(best_pos) - Vec(my_pos)
 
     def go_home(self):
         my_pos = self.helper.get_player_position()
-        if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 1/2*self.helper.player_radius:
+        nearest_player_id = self.helper.get_nearest_player()
+        nearest_player_pos = self.helper.get_player_position(nearest_player_id)
+        if self.helper.get_distance(nearest_player_pos, my_pos) < 10*self.helper.player_radius and \
+            self.helper.get_player_bag(nearest_player_id) < self.helper.get_player_bag():
+            return self.direction(self.avoid(nearest_player_id))
+        elif self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 3*self.helper.player_radius:
             return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
         else:
             return self.direction(Vec(self.helper.get_base_center()) - Vec(my_pos))
 
+    def avoid(self, player_id):
+        my_pos = self.helper.get_player_position()
+        player_pos = self.helper.get_player_position(player_id)
+        vec1 = Vec(my_pos) - Vec(player_pos)
+        vec2 = Vec(self.helper.get_base_center()) - Vec(my_pos)
+        return (2*vec1 + vec2)
+
     def direction(self, pos_vec):
+        AI_move_dir = 0
         vec_dot = 0
         for dir_vec in AI_dir_mapping:
             if Vec(dir_vec).dot(pos_vec) > vec_dot:
@@ -39,21 +52,15 @@ class TeamAI(BaseAI):
         return AI_move_dir
 
     def decide(self):
-        AI_move_dir = 0
         best_oil_vec = self.get_best_oil_vec()
-        if self.helper.get_player_value() > 2000:
+        my_pos = self.helper.get_player_position()
+        if self.helper.get_player_value() / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) > 3:
             return self.go_home()
+        elif self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 4*self.helper.player_radius:
+            return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
         else:
             return self.direction(best_oil_vec)
     
-    """
-    def get_best_player_to_comminism(self):
-        myself = self.helper.get_my_data()
-        other = self.helper.get_all_player_data()
-        best_pos = None
-        best_cp = -1
-    """
-
 """
 const of AI code use.
 """
