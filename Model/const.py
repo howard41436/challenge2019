@@ -85,8 +85,8 @@ market_positions = [
     (500, 500)
 ]
 market_radius = 20
-market_generate_item_probability = 1 / 1200
 market_generate_item_probability = 1 / 1
+market_refresh_item_probability = 1 / 4800
 
 item_price = {
     'IGoHome': 87, 
@@ -103,3 +103,11 @@ invincible_duration = 60 * 10
 radius_oil_multiplier = 0.8
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
+
+item_activate = {
+    'IGoHome': True,
+    'OtherGoHome': False,
+    'TheWorld': True,
+    'MagnetAttract': False,
+    'RadiationOil': False,
+}

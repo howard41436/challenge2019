@@ -1,5 +1,6 @@
 from pygame.math import Vector2 as Vec
 
+import random
 import Model.const as model_const
 from Events.Manager import *
 
@@ -169,3 +170,32 @@ class RadiusNotMove(Item):
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
             player.freeze = False
+
+def get_disarrangement(n):
+    ls = [i for i in range(n)]
+    while True:
+        random.shuffle(ls)
+        flag = True
+        for i in range(n):
+            if i == ls[i]: 
+                flag = False
+                break
+        if flag:
+            break
+    return ls
+
+class ShuffleBases(Item):
+    '''
+    Make other players move to their base
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['ShuffleBases']
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
+        disarrangement = get_disarrangement(model_const.player_number)
+        for index in range(model_const.player_number):
+            self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
+            self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
+        self.player_list[self.player_index].item = None

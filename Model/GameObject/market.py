@@ -6,7 +6,7 @@ import Model.GameObject.item as Item
 import random
 
 class Market(object):
-    item_list = [Item.IGoHome, Item.OtherGoHome, Item.TheWorld, Item.MagnetAttract, Item.RadiationOil, Item.MagnetAttract]
+    item_list = [getattr(Item, item_name) for item_name, is_activate in model_const.item_activate.items() if is_activate == True]
     def __init__(self, position):
         self.position = Vec(position)
         self.item = None
@@ -18,6 +18,9 @@ class Market(object):
         self.item = None 
 
     def update(self, player_list, oil_list, base_list, player_index):
-        if self.item == None and random.random() < model_const.market_generate_item_probability:
+        if self.item is None and random.random() < model_const.market_generate_item_probability:
             self.generate_item(player_list, oil_list, base_list, player_index)
+        elif self.item is not None and random.random() < model_const.market_refresh_item_probability:
+            self.generate_item(player_list, oil_list, base_list, player_index)
+                
 
