@@ -159,8 +159,10 @@ class EventMagnetAttractStop(BaseEvent):
         return self.name
 
 class EventRadiationOil(BaseEvent):
-    def __init__(self):
+    def __init__(self, player):
         self.name = "Radiation Oil"
+        self.player_index = player.index
+        self.position = tuple(player.position)
     def __str__(self):
         return self.name
 
