@@ -178,7 +178,6 @@ class GraphicalView(object):
 
     def draw_oil(self):
         for oil in self.model.oil_list:
-            pos = tuple(map(int, oil.position))
             radius = oil.radius
             price = oil.price
             
@@ -191,7 +190,7 @@ class GraphicalView(object):
             elif 1200 > price >= 800:
                 image = self.oil_image4
             image.convert()
-            self.screen.blit(image, pos)
+            self.screen.blit(image, image.get_rect(center=oil.position))
             
         
             # gfxdraw.filled_circle(self.screen, *pos,
