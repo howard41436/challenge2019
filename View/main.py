@@ -122,7 +122,7 @@ class GraphicalView(object):
             # color = player.color
                 
             image = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue_down.png')),
+                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.15
             )
 
@@ -135,13 +135,13 @@ class GraphicalView(object):
             radius = oil.radius
             price = oil.price
             if price < 400 :
-                image = pg.transform.scale(pg.image.load("View/image/oil_black.png"),(5*radius, 5*radius))
-            elif price >= 400 and price < 600 :
-                image = pg.transform.scale(pg.image.load("View/image/oil_gray.png"),(5*radius, 5*radius))
-            elif price >= 600 and price < 800 :
-                image = pg.transform.scale(pg.image.load("View/image/oil_pink.png"),(5*radius, 5*radius))
-            elif price >= 800 and price < 1200 :
-                image = pg.transform.scale(pg.image.load("View/image/oil_purple.png"),(5*radius, 5*radius))
+                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.08)
+            elif 600 > price >= 400:
+                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.08)
+            elif 800 > price >= 600:
+                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.08)
+            elif 1200 > price >= 800:
+                image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.08)
             image.convert()
             self.screen.blit(image, pos)
             """
@@ -154,7 +154,7 @@ class GraphicalView(object):
         for base in self.model.base_list:
             center = base.center
             length = base.length
-            image = pg.image.load(os.path.join('View','image','base_0'+str(int(num))+'.png'))
+            image = pg.image.load(os.path.join('View','image','base_0{}.png'.format(int(num))))
             image = pg.transform.scale(image,(95,95))
             image.convert()
             self.screen.blit(image, base.center-[50,50])
@@ -162,7 +162,7 @@ class GraphicalView(object):
     
     def draw_market(self):
         for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [10, 10]))
+            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
 
 
     def draw_pet(self):
