@@ -4,6 +4,7 @@ import Model.main as model
 from Events.Manager import *
 import os
 
+import Model.GameObject.item as model_item
 import Model.const       as model_const
 import View.const        as view_const
 import View.animations   as view_Animation
@@ -162,8 +163,16 @@ class GraphicalView(object):
     
     def draw_market(self):
         for market in self.model.market_list:
-            pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
-
+            if isinstance(market.item, model_item.GoHome):
+                pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.MagnetAttract):
+                pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.Invincible):
+                pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.TheWorld):
+                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            else:
+                pg.draw.rect(self.screen, view_const.COLOR_OLIVE, pg.Rect(market.position, [20, 20]))
 
     def draw_pet(self):
         for pet in self.model.pet_list:
