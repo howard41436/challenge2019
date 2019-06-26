@@ -37,9 +37,11 @@ class GameEngine(object):
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
-        self.market_list = []
+        self.free_market_list = []
+        self.priced_market_list = []
         self.turn_to = 0
         self.timer = 0
+        self.fadacai = False
 
         self.init_oil()
         self.init_pet()
@@ -79,11 +81,15 @@ class GameEngine(object):
             if player.item is not None:
                 player.use_item(self.ev_manager)
             else:
-                player.buy(self.market_list)
+                player.buy(self.free_market_list + self.priced_market_list)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
+        elif isinstance(event, EventFaDaCaiStart):
+            self.fadacai = True
+        elif isinstance(event, EventFaDaCaiStop):
+            self.fadacai = False
 
     def init_player(self):
         # set AI Names List
@@ -120,7 +126,8 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.market_list = [ Market(position) for position in model_const.market_positions ]
+        self.free_market_list = [ Market(position, is_free=True) for position in model_const.free_market_positions ]
+        self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if direction > 0: print(direction) 
@@ -148,7 +155,7 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
-        for market in self.market_list:
+        for market in (self.free_market_list + self.priced_market_list):
             market.update(self.player_list, self.oil_list, self.base_list, None)
 
         self.scoreboard.update()
@@ -166,8 +173,12 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if random.random() < model_const.oil_probability:
-            self.create_oil()
+        if self.fadacai:
+            if random.random() < model_const.fadacai_oil_probability:
+                self.create_oil()
+        else:
+            if random.random() < model_const.oil_probability:
+                self.create_oil()
 
     def init_base(self) :
         # todo
