@@ -75,6 +75,6 @@ class View_oil(__Object_base):
             screen.blit(image, image.get_rect(center=_oil.position))
 
 
-def init_otherobjects():
+def init_staticobjects():
     View_players.init_convert()
     View_oil.init_convert()

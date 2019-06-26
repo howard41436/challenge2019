@@ -4,13 +4,13 @@ from Events.Manager import *
 import os, math
 
 import Model.GameObject.item as model_item
-import Model.const       as model_const
-import View.const        as view_const
-import View.animations   as view_Animation
-import View.utils        as view_utils
-import View.otherobjects as view_otherobjects
-import Controller.const  as ctrl_const
-import Interface.const   as ifa_const
+import Model.const           as model_const
+import View.const            as view_const
+import View.animations       as view_Animation
+import View.utils            as view_utils
+import View.staticobjects    as view_staticobjects
+import Controller.const      as ctrl_const
+import Interface.const       as ifa_const
 from pygame.math import Vector2 as Vec
 
 
@@ -37,13 +37,13 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
 
-        view_otherobjects.init_otherobjects()
+        view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
 
         self.animations = []
 
-        self.players = view_otherobjects.View_players(model)
-        self.oils = view_otherobjects.View_oil(model)
+        self.players = view_staticobjects.View_players(model)
+        self.oils = view_staticobjects.View_oil(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
