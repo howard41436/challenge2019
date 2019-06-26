@@ -142,9 +142,6 @@ class GameEngine(object):
                 player.direction_no = direction
 
     def update_objects(self):
-        '''
-        TODO: Za Warudo!
-        '''
         if self.za_warudo_id is not None:
             player = self.player_list[self.za_warudo_id]
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)

@@ -38,19 +38,16 @@ class View_players(__Object_base):
         )
         for _color in ('blue', 'green', 'red', 'orange')
     )
-    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
 
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
 
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
             image = pg.transform.rotate(self.images[_i], angle)
-            if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
