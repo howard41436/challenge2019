@@ -41,6 +41,8 @@ class Interface(object):
         for player in self.model.player_list:
             if player.is_AI:
                 AI_dir = self.player_AI[player.index].decide()
+                if AI_dir not in range(9):
+                    AI_dir = 0
                 self.ev_manager.post(EventMove(player.index, AI_dir))
         
     def initialize(self):
@@ -55,6 +57,7 @@ class Interface(object):
                 loadtmp = imp.load_source('', f"./AI/team_{player.name}.py")
             except:
                 self.load_msg(str(index), player.name, "AI can't load")
+                print(player.name)
                 player.name, player.is_AI, player.ai = "Error", False, None
                 continue
             self.load_msg(str(index), player.name, "Loading")
