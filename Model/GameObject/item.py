@@ -1,6 +1,7 @@
+import random
+
 from pygame.math import Vector2 as Vec
 
-import random
 import Model.const as model_const
 from Events.Manager import *
 
