@@ -126,7 +126,7 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.free_market_list = [ Market(position, is_free=True) for position in model_const.free_market_positions ]
+        # self.free_market_list = [ Market(position, is_free=True) for position in model_const.free_market_positions ]
         self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
