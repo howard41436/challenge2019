@@ -128,6 +128,7 @@ class GameEngine(object):
         self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
+        if direction > 0: print(direction) 
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
@@ -136,9 +137,11 @@ class GameEngine(object):
 
     def update_objects(self):
         # Update player_list
+        for oil in self.oil_list:
+            oil.update()
+        self.try_create_oil()
         for player in self.player_list:
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
-
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:
                 pet.change_status(1)
@@ -157,6 +160,7 @@ class GameEngine(object):
 
         self.timer -= 1
         if self.timer == 0:
+            print("End Game")
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
 
     def init_oil(self):

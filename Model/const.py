@@ -82,7 +82,7 @@ default_equipments = [
 ]
 
 priced_market_positions = [
-    (400, 400)
+    (376, 373.5)
 ]
 market_radius = 70
 market_generate_item_probability = 1 / 1

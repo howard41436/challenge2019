@@ -1,4 +1,6 @@
 # Window hyperparameters
+import os.path
+
 game_caption = "Challenge 2019"
 screen_size  = (1280, 800)
 game_size    = (800, 800)
@@ -72,23 +74,13 @@ itemGenerationTime        = 60
 # phrase5 : silouette becomes picture, and big picture appears
 # phrase6 : silouette and big picture accelerates and disappears
 
-skillCardCutInTimePhrases  = [10, 10, 20, 10, 20, 15]
-skillCardCutInTime         = sum(skillCardCutInTimePhrases)
-
-skillCardCutInTimesteps    = [skillCardCutInTime - sum(skillCardCutInTimePhrases[:idx])
-                              for idx in range(len(skillCardCutInTimePhrases))]
-
-skillCardCutInPicSize      = (225, 225)
-skillCardSmallScaleRate    = 1.0
-skillCardCutInPicSmallSize = tuple([int(x * skillCardSmallScaleRate) for x in skillCardCutInPicSize])
-skillCardLargeScaleRate    = 1.5
-skillCardCutInPicLargeSize = tuple([int(x * skillCardLargeScaleRate) for x in skillCardCutInPicSize])
-
 # Size
-thermometerBallSize = 80
-thermometerBarWidth = 40
+player_height = 100
+player_width = 100
 
 # Font
+board_name_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
+board_num_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
 
-board_name_font      ='Font/Noto/NotoSansCJK-Black.ttc'
-board_num_font ='Font/Noto/NotoSansCJK-Black.ttc'
+# Path
+IMAGE_PATH = os.path.join('View', 'image')

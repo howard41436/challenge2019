@@ -90,6 +90,22 @@ class EventTriggerItem(BaseEvent):
     def __str__(self):
         return f"{self.name} => player_index = {player}"
 
+
+class EventEqualize(BaseEvent):
+    """
+    Equalize event.
+    This event should be triggered when two player bump into each other.
+    """
+    def __init__(self, position):
+        """
+        position : tuple(x, y) or vec2(x, y) indicates the collision position
+        """
+        self.name = "Equalize event"
+        self.position = position
+    def __str__(self):
+        return f"{self.name} => collision_position = {self.position}"
+        
+
 class EventIGoHome(BaseEvent):
     def __init__(self, player):
         self.name = "I Go Home"
@@ -100,11 +116,12 @@ class EventIGoHome(BaseEvent):
 
 class EventOtherGoHome(BaseEvent):
     def __init__(self, player):
-        self.name = "Other Go HOme"
+        self.name = "Other Go Home"
         self.player_index = player.index
         self.position = tuple(player.position)
     def __str__(self):
         return self.name
+
 
 class EventShuffleBases(BaseEvent):
     def __init__(self, player):
@@ -113,6 +130,7 @@ class EventShuffleBases(BaseEvent):
         self.position = tuple(player.position)
     def __str__(self):
         return self.name
+
 
 class EventTheWorldStart(BaseEvent):
     '''

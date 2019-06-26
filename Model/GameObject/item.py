@@ -26,6 +26,7 @@ class IGoHome(Item):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.price = model_const.item_price['IGoHome']
 
+
     def trigger(self, ev_manager):
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
@@ -116,7 +117,7 @@ class RadiationOil(Item):
         self.price = model_const.item_price['RadiationOil']
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventRadiationOil())
+        ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
@@ -168,7 +169,7 @@ class RadiusNotMove(Item):
             if player.index != self.player_index and \
                Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
-                freeze_list.append(player)
+                self.freeze_list.append(player)
 
     def update(self, ev_manager):
         self.duration -= 1
