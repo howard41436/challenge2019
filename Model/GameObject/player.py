@@ -32,6 +32,9 @@ class Player(object):
     def get_name(self):
         return self.name
 
+    def get_color(self):
+        return self.color
+
     def get_value(self):
         return self.value
 
