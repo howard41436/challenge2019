@@ -94,6 +94,7 @@ class Control(object):
         # player direction control
         for player in self.model.player_list: 
             if not player.is_AI:
+                print(player.index, self.control_keys)
                 dir_keys = self.control_keys[player.index][0:4]
                 now_pressing = self.get_key_pressing(dir_keys)
                 dir_hash_value = self.get_dir_hash_value(now_pressing, dir_keys)

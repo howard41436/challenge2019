@@ -5,7 +5,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, equipments = [0, 0, 0], is_AI = False):
+    def __init__(self, name, index, pet, equipments = [0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
@@ -18,7 +18,7 @@ class Player(object):
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
-        self.pet = pet_list[index]
+        self.pet = pet
         self.init_equipments(equipments)
         self.item = None
         self.is_invincible = False

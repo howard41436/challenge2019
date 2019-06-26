@@ -91,13 +91,13 @@ class Helper(object):
         return [(tuple(market.position), market.item.name, market.item.price) for market in self.model.market_list]
 
     # Get item data
-    def get_player_item_data(self, player_id = None):
+    def get_player_item_name(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return None if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.name
 
     def get_player_item_is_active(self, player_id = None):
         if player_id == None: player_id = self.player_id
-        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.activate
+        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.active
 
     def get_player_item_duration(self, player_id = None):
         if player_id == None: player_id = self.player_id

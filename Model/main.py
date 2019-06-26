@@ -108,11 +108,11 @@ class GameEngine(object):
         for index in range(model_const.player_number):
             print(self.AI_names[index])
             if self.AI_names[index] in ["~" or "Error"]:
-                Tmp_P = Player("manual", index, model_const.default_equipments[index])
+                Tmp_P = Player("manual", index, self.pet_list[index], model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index, is_AI = True)
+                Tmp_P = Player("default", index, self.pet_list[index], is_AI = True)
             else:
-                Tmp_P = Player(self.AI_names[index], index, is_AI = True)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list[index], is_AI = True)
             self.player_list.append(Tmp_P)
             
     def init_pet(self):
