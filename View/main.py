@@ -57,12 +57,18 @@ class GraphicalView(object):
         self.player_image4 = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
                 0.2
-            )'''
+            )''' 
         self.players = view_otherobjects.View_players(model)
 
+
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
-        
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_robot_red.png')), 0.08)
+        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
+        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
+        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
+        self.clock = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
+        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
+        self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
         self.oil_image1 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.16)
         self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
         self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
@@ -202,18 +208,19 @@ class GraphicalView(object):
     def draw_market(self):
         for market in self.model.market_list:
             if isinstance(market.item, model_item.IGoHome):
-                pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.MagnetAttract):
-                pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.Invincible):
-                pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.TheWorld):
-                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+                image = self.clock             #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.OtherGoHome):
-                pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+                image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             else:
-                pg.draw.rect(self.screen, view_const.COLOR_OLIVE, pg.Rect(market.position, [20, 20]))
-
+                image = self.market
+            image.convert()
+            self.screen.blit(image, market.position)
     def draw_pet(self):
         for pet in self.model.pet_list:
             image = self.pet_image
