@@ -29,8 +29,10 @@ class TeamAI(BaseAI):
                 best_pos = pos 
         if attack_cp > best_cp and attack_cp > 0:
             return Vec(victim_pos) - Vec(my_pos)
-        else:
+        elif best_pos != None:
             return Vec(best_pos) - Vec(my_pos)
+        else:
+            return self.go_home()
         
     def go_home(self):
         my_pos = self.helper.get_player_position()
@@ -48,17 +50,21 @@ class TeamAI(BaseAI):
         my_pos = self.helper.get_player_position()
         players_pos = self.helper.get_players_position()
         players_value = self.helper.get_players_value()
+        players_speed = self.helper.get_players_speed()
+        my_speed = self.helper.get_player_speed()
         victim_id = None
         victim_pos = None
-        cp = 0
+        best_cp = 0
         for i in range(len(players_pos)):
             if self.helper.player_id == i:
                 continue
-            if (players_value[i] - self.helper.get_player_value()) / 2*self.helper.get_distance(players_pos[i], my_pos) ** 2 > cp:
-                cp = players_value[i] / 2*self.helper.get_distance(players_pos[i], my_pos) ** 2
-                victim_id = i
-                victim_pos = players_pos[i]
-        return (cp, victim_id, victim_pos)
+            if players_value[i] > self.helper.get_player_value() and players_speed[i] != my_speed:
+                cp = players_value[i] / 2*self.helper.get_distance(players_pos[i], my_pos) ** 2 / abs(players_speed[i] - my_speed)
+                if best_cp > cp:
+                    best_cp = cp
+                    victim_id = i
+                    victim_pos = players_pos[i]
+        return (best_cp, victim_id, victim_pos)
 
     def avoid(self, player_id):
         my_pos = self.helper.get_player_position()
