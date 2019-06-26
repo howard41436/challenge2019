@@ -170,7 +170,7 @@ class RadiusNotMove(Item):
             if player.index != self.player_index and \
                Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
-                freeze_list.append(player)
+                self.freeze_list.append(player)
 
     def update(self, ev_manager):
         self.duration -= 1
