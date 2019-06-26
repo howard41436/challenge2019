@@ -7,6 +7,9 @@ import View.const        as view_const
 
 
 '''
+* "Static" object means that it is rendered every tick!
+* The term "static" is designed compared to "animation", which is dynamic.
+
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!

@@ -171,50 +171,26 @@ class GraphicalView(object):
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
         # draw background
-        s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
-        image = self.background_image
-        self.screen.blit(image, [0, 0])
+        self.screen.blit(self.background_image, [0, 0])
 
         # draw animation
         for ani in self.animations:
-            if ani.expired:
-                self.animations.remove(ani)
-            else:
-                ani.draw(self.screen)
+            if ani.expired: self.animations.remove(ani)
+            else          : ani.draw(self.screen)
 
-        #draw player
+        # draw static objects
         self.oils.draw(self.screen)
         self.bases.draw(self.screen)
         self.draw_market()
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
 
-        pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
-        pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
-        namefont = pg.font.Font(view_const.board_name_font, 40)
-        numfont = pg.font.Font(view_const.board_name_font, 30)
         timefont = pg.font.Font(view_const.board_name_font, 60)
-        for i in range(0, 4, 1):
-            pg.draw.rect(s, view_const.COLOR_BLACK, [800, 157+i*160, 480, 5])
-        i = 0
-        for player in self.model.player_list:
-            name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(name, (850, 170+i*160))
-            self.screen.blit(value, (850, 240+i*160))
-            i += 1
-        i = 0
-        for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum, (1050, 240+i*160))
-            i += 1
 
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         self.screen.blit(time, (950, 35))
 
-        self.screen.blit(s, (0, 0))
-        # update surface
         pg.display.flip()
         
     def render_stop(self):
