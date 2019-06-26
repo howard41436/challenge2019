@@ -1,8 +1,11 @@
-import View.const      as view_const
-import Model.const     as model_const
+import random
 
 from pygame.math import Vector2 as Vec
-import random
+
+import View.const      as view_const
+import Model.const     as model_const
+from Events.Manager import *
+
 
 class Player(object):
     def __init__(self, name, index, pet_list, equipments=[0, 0, 0, 0, 0]):
@@ -24,6 +27,7 @@ class Player(object):
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False   # If one of the other players is use 'The World', then self is freeze
+        self.collide_list = [False] * 4
 
     def get_name(self):
         return self.name
@@ -70,12 +74,17 @@ class Player(object):
             if (player.position - self.position).length() <= self.radius + player.radius:
                 collide.append(player)
                 sum_of_all += max(player.value - player.insurance_value, 0)
-        if len(collide) > 0:
-            ev_manager.post(EventEqualize(Vec(self.position)))
+        new_collide_list = [False] * 4
         for player in collide:
             player.value = min(player.value, player.insurance_value)
             player.value += sum_of_all / len(collide)
             player.bag = sum_of_all / len(collide)
+            new_collide_list[player.index] = True
+        for idx in range(4):
+            if new_collide_list[idx] and not self.collide_list[idx] and idx > self.index:
+                ev_manager.post(EventEqualize((player_list[idx].position + self.position) / 2))
+        self.collide_list = new_collide_list
+        
 
     def check_market(self, market_list):
         for market in market_list:
