@@ -72,7 +72,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -100,7 +100,7 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.player_list:
@@ -134,7 +134,6 @@ class Invincible(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
-        print("Invincible Start")
         self.duration = model_const.invincible_duration
         self.active = True
         self.player_list[self.player_index].is_invinsible = True
@@ -145,8 +144,7 @@ class Invincible(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        print("Invincible Stop")
-        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].is_invinsible = False
         self.player_list[self.player_index].item = None
@@ -178,7 +176,7 @@ class RadiusNotMove(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -212,3 +210,27 @@ class ShuffleBases(Item):
             self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
             self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
         self.player_list[self.player_index].item = None
+
+class FaDaCai(Item):
+    '''
+    發大財(Only MasterAI can use this item)
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['FaDaCai']
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
+        self.duration = model_const.fadacai_duration
+        self.active = True
+
+    def update(self, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].item = None
+

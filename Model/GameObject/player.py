@@ -61,7 +61,7 @@ class Player(object):
             bases[self.index].change_value_sum(self.value)
             self.value = 0
 
-    def check_collide(self, player_list):
+    def check_collide(self, player_list, ev_manager):
         collide = []
         sum_of_all = 0
         for player in player_list:
@@ -70,6 +70,8 @@ class Player(object):
             if (player.position - self.position).length() <= self.radius + player.radius:
                 collide.append(player)
                 sum_of_all += max(player.value - player.insurance_value, 0)
+        if len(collide) > 0:
+            ev_manager.post(EventEqualize(Vec(self.position)))
         for player in collide:
             player.value = min(player.value, player.insurance_value)
             player.value += sum_of_all / len(collide)
@@ -111,4 +113,4 @@ class Player(object):
         self.pick_oil(oils)
         self.store_price(bases)
         if not self.is_invincible:
-            self.check_collide(players)
+            self.check_collide(players, ev_manager)

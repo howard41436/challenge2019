@@ -82,13 +82,16 @@ default_equipments = [
 ]
 
 # items
-market_positions = [
+free_market_positions = [
     (300, 300),
     (300, 500),
     (500, 300),
     (500, 500)
 ]
-market_radius = 20
+priced_market_positions = [
+    (400, 400)
+]
+market_radius = 70
 market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
 
@@ -101,6 +104,7 @@ item_price = {
     'RadiusNotMove': 600,
     'RadiationOil': 700,
     'ShuffleBases': 800,
+    'FaDaCai': 0,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -110,8 +114,10 @@ invincible_duration = 60 * 10
 radius_oil_multiplier = 0.8
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
+fadacai_duration = 60 * 5
+fadacai_oil_probability = 1 / 3
 
-item_activate = {
+priced_item_activate = {
     'IGoHome': True,
     'OtherGoHome': True,
     'TheWorld': True,
@@ -120,6 +126,18 @@ item_activate = {
     'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,
+    'FaDaCai': True,
+}
+free_item_activate = {
+    'IGoHome': True,
+    'OtherGoHome': True,
+    'TheWorld': True,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
+    'FaDaCai': True,
 }
 
 # score
