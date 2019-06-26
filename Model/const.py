@@ -101,6 +101,7 @@ item_price = {
     'RadiusNotMove': 600,
     'RadiationOil': 700,
     'ShuffleBases': 800,
+    'FaDaCai': 0,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -111,7 +112,7 @@ radius_oil_multiplier = 0.8
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 fadacai_duration = 60 * 5
-fadacai_oil_probability = 1 / 5
+fadacai_oil_probability = 1 / 3
 
 item_activate = {
     'IGoHome': True,

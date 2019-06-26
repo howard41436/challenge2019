@@ -218,6 +218,7 @@ class FaDaCai(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['FaDaCai']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
