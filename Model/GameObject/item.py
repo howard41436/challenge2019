@@ -137,7 +137,7 @@ class Invincible(Item):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
         self.duration = model_const.invincible_duration
         self.active = True
-        self.player_list[self.player_index].is_invinsible = True
+        self.player_list[self.player_index].is_invincible = True
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -147,7 +147,7 @@ class Invincible(Item):
     def close(self, ev_manager):
         # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
-        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].is_invincible = False
         self.player_list[self.player_index].item = None
 
 
