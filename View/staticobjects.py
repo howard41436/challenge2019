@@ -2,6 +2,7 @@ import pygame as pg
 import os.path
 import math
 
+import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
 
@@ -99,6 +100,14 @@ class View_pets(__Object_base):
 class View_scoreboard(__Object_base):
     def __init__(self, model):
         self.model = model
+        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.3)
+        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.3)
+        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.3)
+        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.3)
+        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.3)
+        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.3)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.3)
+        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.3)
 
     def draw(self, screen):
         namefont = pg.font.Font(view_const.board_name_font, 55)
@@ -109,6 +118,24 @@ class View_scoreboard(__Object_base):
             name = namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
             base_value = numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)
             player_value = numfont.render(f'Carried Value : {int(score.player.value)}', True, view_const.COLOR_BLACK)
+            item_image = None
+            if isinstance(score.player.item, model_item.IGoHome):
+                item_image = self.backbag
+            elif isinstance(score.player.item, model_item.MagnetAttract):
+                item_image = self.magnet
+            elif isinstance(score.player.item, model_item.Invincible):
+                item_image = self.star
+            elif isinstance(score.player.item, model_item.TheWorld):
+                item_image = self.timer
+            elif isinstance(score.player.item, model_item.OtherGoHome):
+                item_image = self.blackhole
+            elif isinstance(score.player.item, model_item.RadiationOil):
+                item_image = self.bomb
+            elif isinstance(score.player.item, model_item.RadiusNotMove):
+                item_image = self.staff
+            elif isinstance(score.player.item, model_item.ShuffleBases):
+                item_image = self.shuffle
+            if item_image: screen.blit(item_image, score.position+[340,5])
             screen.blit(name, score.position+[10,-5])
             screen.blit(base_value, score.position+[10,75])
             screen.blit(player_value, score.position+[10,115])
