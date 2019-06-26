@@ -89,7 +89,7 @@ free_market_positions = [
     (500, 500)
 ]
 priced_market_positions = [
-    (377.5, 373.5)
+    (376, 373.5)
 ]
 market_radius = 20
 market_generate_item_probability = 1 / 1
