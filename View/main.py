@@ -4,13 +4,13 @@ from Events.Manager import *
 import os, math
 
 import Model.GameObject.item as model_item
-import Model.const       as model_const
-import View.const        as view_const
-import View.animations   as view_Animation
-import View.utils        as view_utils
-import View.otherobjects as view_otherobjects
-import Controller.const  as ctrl_const
-import Interface.const   as ifa_const
+import Model.const           as model_const
+import View.const            as view_const
+import View.animations       as view_Animation
+import View.utils            as view_utils
+import View.staticobjects    as view_staticobjects
+import Controller.const      as ctrl_const
+import Interface.const       as ifa_const
 from pygame.math import Vector2 as Vec
 
 
@@ -37,11 +37,12 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
 
-        view_otherobjects.init_otherobjects()
+        view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
 
         self.animations = []
 
+<<<<<<< HEAD
         '''self.player_image1 = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.2
@@ -58,23 +59,22 @@ class GraphicalView(object):
                 pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
                 0.2
             )''' 
-        self.players = view_otherobjects.View_players(model)
-
+        self.players = view_staticobjects.View_players(model)
+        self.oils = view_staticobjects.View_oil(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_robot_red.png')), 0.08)
+
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
         self.clock = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
         self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
-        self.oil_image1 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.16)
-        self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
-        self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
-        self.oil_image4 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.16)
 
-        self.backgound_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
+
+        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
 
     def notify(self, event):
         """
@@ -123,7 +123,7 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            # draw backgound
+            # draw background
             self.screen.fill(view_const.COLOR_BLACK)
             # write some word
             somewords = self.smallfont.render(
@@ -143,7 +143,7 @@ class GraphicalView(object):
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
 
-            # draw backgound
+            # draw background
             self.screen.fill(view_const.COLOR_WHITE)
             # write some word
             result = []
@@ -166,39 +166,6 @@ class GraphicalView(object):
                 prize += 1
             # update surface
             pg.display.flip()
-    
-    '''def draw_player(self):
-        num = 1
-        for player in self.model.player_list:
-            if num == 1:    
-                image = self.player_image1
-            elif num == 2:
-                image = self.player_image2
-            elif num == 3:
-                image = self.player_image3
-            elif num == 4:
-                image = self.player_image4
-            angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
-            image = pg.transform.rotate(image, angle)
-            if player.freeze:
-                self.screen.blit(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5), player.position+[-15, -60])
-            self.screen.blit(image, image.get_rect(center=player.position))
-            num += 1'''
-
-    def draw_oil(self):
-        for oil in self.model.oil_list:
-            price = oil.price
-            
-            if price < 400 :
-                image = self.oil_image1
-            elif 600 > price >= 400:
-                image = self.oil_image2
-            elif 800 > price >= 600:
-                image = self.oil_image3
-            elif 1200 > price >= 800:
-                image = self.oil_image4
-            image.convert()
-            self.screen.blit(image, image.get_rect(center=oil.position))            
 
     def draw_base(self):
         for base in self.model.base_list:
@@ -235,10 +202,10 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
-        # draw backgound
+        # draw background
         s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
         self.screen.fill(view_const.COLOR_WHITE)
-        image = self.backgound_image
+        image = self.background_image
         self.screen.blit(image, [0, 0])
 
         # draw animation
@@ -249,11 +216,10 @@ class GraphicalView(object):
                 ani.draw(self.screen)
 
         #draw player
-        self.draw_oil()
+        self.oils.draw(self.screen)
         self.draw_base()
         self.draw_market()
         self.draw_pet()
-        '''self.draw_player()'''
         self.players.draw(self.screen)
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
@@ -319,7 +285,7 @@ class GraphicalView(object):
             result = []
             numfont = pg.font.Font(view_const.board_name_font, 30)
 
-            for player in seld.model.player_list:
+            for player in self.model.player_list:
                 result.append((player.name, player.value_sum))
             result.sort(key=takeSecond)
             self.screen.fill(view_const.COLOR_WHITE)
