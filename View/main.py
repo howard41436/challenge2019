@@ -1,5 +1,4 @@
 import pygame as pg
-import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
 import os, math
@@ -9,6 +8,7 @@ import Model.const       as model_const
 import View.const        as view_const
 import View.animations   as view_Animation
 import View.utils        as view_utils
+import View.otherobjects as view_otherobjects
 import Controller.const  as ctrl_const
 import Interface.const   as ifa_const
 from pygame.math import Vector2 as Vec
@@ -37,9 +37,12 @@ class GraphicalView(object):
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
 
+        view_otherobjects.init_otherobjects()
+        view_Animation.init_animation()
+
         self.animations = []
 
-        self.player_image1 = view_utils.scaled_surface(
+        '''self.player_image1 = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
                 0.2
             )
@@ -54,7 +57,8 @@ class GraphicalView(object):
         self.player_image4 = view_utils.scaled_surface(
                 pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
                 0.2
-            )
+            )'''
+        self.players = view_otherobjects.View_players(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
@@ -157,12 +161,9 @@ class GraphicalView(object):
             # update surface
             pg.display.flip()
     
-    def draw_player(self):
+    '''def draw_player(self):
         num = 1
         for player in self.model.player_list:
-            # pos = tuple(map(int, player.position-Vec(view_const.player_height / 2, view_const.player_width / 2)))
-            # radius = player.radius
-            # color = player.color
             if num == 1:    
                 image = self.player_image1
             elif num == 2:
@@ -176,12 +177,10 @@ class GraphicalView(object):
             if player.freeze:
                 self.screen.blit(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5), player.position+[-15, -60])
             self.screen.blit(image, image.get_rect(center=player.position))
-            num += 1
-            #gfxdraw.filled_circle(self.screen, *pos, int(radius), player.color)
+            num += 1'''
 
     def draw_oil(self):
         for oil in self.model.oil_list:
-            radius = oil.radius
             price = oil.price
             
             if price < 400 :
@@ -193,17 +192,10 @@ class GraphicalView(object):
             elif 1200 > price >= 800:
                 image = self.oil_image4
             image.convert()
-            self.screen.blit(image, image.get_rect(center=oil.position))
-            
-        
-            # gfxdraw.filled_circle(self.screen, *pos,
-            #                       int(oil.radius), (0, 0, 0, 255*(price/1200)))
-            
+            self.screen.blit(image, image.get_rect(center=oil.position))            
 
     def draw_base(self):
         for base in self.model.base_list:
-            center = base.center
-            length = base.length
             image = self.base_image
             self.screen.blit(image, base.center-[50,50])
     
@@ -254,7 +246,8 @@ class GraphicalView(object):
         self.draw_base()
         self.draw_market()
         self.draw_pet()
-        self.draw_player()
+        '''self.draw_player()'''
+        self.players.draw(self.screen)
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])

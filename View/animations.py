@@ -149,3 +149,7 @@ class Animation_radiationOil(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
+
+def init_animation():
+    print('init_animation() not yet implemented')
+    pass
