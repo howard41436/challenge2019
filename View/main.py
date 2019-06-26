@@ -42,37 +42,17 @@ class GraphicalView(object):
 
         self.animations = []
 
-<<<<<<< HEAD
-        '''self.player_image1 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
-                0.2
-            )
-        self.player_image2 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_red.png')),
-                0.2
-            )
-        self.player_image3 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_green.png')),
-                0.2
-            )
-        self.player_image4 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
-                0.2
-            )''' 
         self.players = view_staticobjects.View_players(model)
-        self.oils = view_staticobjects.View_oil(model)
-
-        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_robot_red.png')), 0.08)
-
+        self.oils = view_staticobjects.View_oils(model)
+        self.bases = view_staticobjects.View_bases(model)
+        self.pets = view_staticobjects.View_pets(model)
+        
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
         self.clock = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
         self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
-
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
 
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
 
@@ -166,11 +146,6 @@ class GraphicalView(object):
                 prize += 1
             # update surface
             pg.display.flip()
-
-    def draw_base(self):
-        for base in self.model.base_list:
-            image = self.base_image
-            self.screen.blit(image, base.center-[50,50])
     
     def draw_market(self):
         for market in self.model.market_list:
@@ -188,14 +163,7 @@ class GraphicalView(object):
                 image = self.market
             image.convert()
             self.screen.blit(image, market.position)
-    def draw_pet(self):
-        for pet in self.model.pet_list:
-            image = self.pet_image
-            image.convert()
-            angle = math.atan2(pet.direction.x, pet.direction.y) / math.pi * 180
-            image = pg.transform.rotate(image, angle)
-            self.screen.blit(image, image.get_rect(center=pet.position))
-    
+
     def render_play(self):
         """
         Render the game play.
@@ -217,9 +185,9 @@ class GraphicalView(object):
 
         #draw player
         self.oils.draw(self.screen)
-        self.draw_base()
+        self.bases.draw(self.screen)
         self.draw_market()
-        self.draw_pet()
+        self.pets.draw(self.screen)
         self.players.draw(self.screen)
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])

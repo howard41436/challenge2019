@@ -22,10 +22,13 @@ class __Object_base():
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
+    
+    def __init__(self, model):
+        self.model = model
 
 
 class View_players(__Object_base):
-    images_player = tuple(
+    images = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_{_color}.png')),
             0.2
@@ -36,45 +39,55 @@ class View_players(__Object_base):
 
     @classmethod
     def init_convert(cls):
-        cls.images_player = tuple( _image.convert_alpha() for _image in cls.images_player )
+        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
-
-    def __init__(self, model):
-        self.model = model
 
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = math.atan2(players[_i].direction.x, players[_i].direction.y) / math.pi * 180
-            image = pg.transform.rotate(self.images_player[_i], angle)
+            image = pg.transform.rotate(self.images[_i], angle)
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
-class View_oil(__Object_base):
-    images_oil = tuple(
+class View_oils(__Object_base):
+    images = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'oil_{_color}.png')), 0.16
         )
         for _color in ('black', 'gray', 'pink', 'purple')
     )
-
-    @classmethod
-    def init_convert(cls):
-        cls.images_oil = tuple( _image.convert_alpha() for _image in cls.images_oil )
-    
-    def __init__(self, model):
-        self.model = model
     
     def draw(self, screen):
         for _oil in self.model.oil_list:
-            if _oil.price < 400          : image = self.images_oil[0]
-            elif 600 > _oil.price >= 400 : image = self.images_oil[1]
-            elif 800 > _oil.price >= 600 : image = self.images_oil[2]
-            elif 1200 > _oil.price >= 800: image = self.images_oil[3]
+            if _oil.price < 400          : image = self.images[0]
+            elif 600 > _oil.price >= 400 : image = self.images[1]
+            elif 800 > _oil.price >= 600 : image = self.images[2]
+            elif 1200 > _oil.price >= 800: image = self.images[3]
             screen.blit(image, image.get_rect(center=_oil.position))
+
+
+class View_bases(__Object_base):
+    images = ( view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3), )
+
+    def draw(self, screen):
+        for _base in self.model.base_list:
+            screen.blit(self.images[0], self.images[0].get_rect(center=_base.center))
+
+
+class View_pets(__Object_base):
+    images = ( view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'pet_bug.png') ), 0.2), )
+
+    def draw(self, screen):
+        for _pet in self.model.pet_list:
+            angle = math.atan2(_pet.direction.x, _pet.direction.y) / math.pi * 180
+            image = pg.transform.rotate(self.images[0], angle)
+            screen.blit(image, image.get_rect(center=_pet.position))
 
 
 def init_staticobjects():
     View_players.init_convert()
-    View_oil.init_convert()
+    View_oils.init_convert()
+    View_bases.init_convert()
+    View_pets.init_convert()
