@@ -58,9 +58,9 @@ class GraphicalView(object):
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
-        self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
+        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.08)
+        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
 
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
@@ -155,8 +155,8 @@ class GraphicalView(object):
             # update surface
             pg.display.flip()
     
-    def draw_market(self):
-        for market in self.model.market_list:
+    def draw_priced_market(self):
+        for market in self.model.priced_market_list:
             if isinstance(market.item, model_item.IGoHome):
                 image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.MagnetAttract):
@@ -168,7 +168,7 @@ class GraphicalView(object):
             elif isinstance(market.item, model_item.OtherGoHome):
                 image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             else:
-                image = self.market
+                image = self.blackhole
             image.convert()
             self.screen.blit(image, market.position)
 
@@ -181,6 +181,7 @@ class GraphicalView(object):
         # draw background
         self.screen.fill(view_const.COLOR_WHITE)
         self.screen.blit(self.background_image, [0, 0])
+        self.screen.blit(self.priced_market, [325, 325])
 
         # draw animation
         for ani in self.animations:
@@ -190,7 +191,7 @@ class GraphicalView(object):
         # draw static objects
         self.oils.draw(self.screen)
         self.bases.draw(self.screen)
-        self.draw_market()
+        self.draw_priced_market()
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
         self.scoreboard.draw(self.screen)
