@@ -51,6 +51,30 @@ class View_players(__Object_base):
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
+class View_oil(__Object_base):
+    images_oil = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'oil_{_color}.png')), 0.16
+        )
+        for _color in ('black', 'gray', 'pink', 'purple')
+    )
+
+    @classmethod
+    def init_convert(cls):
+        cls.images_oil = tuple( _image.convert_alpha() for _image in cls.images_oil )
+    
+    def __init__(self, model):
+        self.model = model
+    
+    def draw(self, screen):
+        for _oil in self.model.oil_list:
+            if _oil.price < 400          : image = self.images_oil[0]
+            elif 600 > _oil.price >= 400 : image = self.images_oil[1]
+            elif 800 > _oil.price >= 600 : image = self.images_oil[2]
+            elif 1200 > _oil.price >= 800: image = self.images_oil[3]
+            screen.blit(image, image.get_rect(center=_oil.position))
+
 
 def init_otherobjects():
     View_players.init_convert()
+    View_oil.init_convert()

@@ -42,32 +42,12 @@ class GraphicalView(object):
 
         self.animations = []
 
-        '''self.player_image1 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_blue.png')),
-                0.2
-            )
-        self.player_image2 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_red.png')),
-                0.2
-            )
-        self.player_image3 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_green.png')),
-                0.2
-            )
-        self.player_image4 = view_utils.scaled_surface(
-                pg.image.load(os.path.join('View', 'image', 'player_orange.png')),
-                0.2
-            )'''
         self.players = view_otherobjects.View_players(model)
+        self.oils = view_otherobjects.View_oil(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
         
-        self.oil_image1 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_black.png')), 0.16)
-        self.oil_image2 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_gray.png')), 0.16)
-        self.oil_image3 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_pink.png')), 0.16)
-        self.oil_image4 = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'oil_purple.png')), 0.16)
-
         self.backgound_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
 
     def notify(self, event):
@@ -160,39 +140,6 @@ class GraphicalView(object):
                 prize += 1
             # update surface
             pg.display.flip()
-    
-    '''def draw_player(self):
-        num = 1
-        for player in self.model.player_list:
-            if num == 1:    
-                image = self.player_image1
-            elif num == 2:
-                image = self.player_image2
-            elif num == 3:
-                image = self.player_image3
-            elif num == 4:
-                image = self.player_image4
-            angle = math.atan2(player.direction.x, player.direction.y) / math.pi * 180
-            image = pg.transform.rotate(image, angle)
-            if player.freeze:
-                self.screen.blit(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5), player.position+[-15, -60])
-            self.screen.blit(image, image.get_rect(center=player.position))
-            num += 1'''
-
-    def draw_oil(self):
-        for oil in self.model.oil_list:
-            price = oil.price
-            
-            if price < 400 :
-                image = self.oil_image1
-            elif 600 > price >= 400:
-                image = self.oil_image2
-            elif 800 > price >= 600:
-                image = self.oil_image3
-            elif 1200 > price >= 800:
-                image = self.oil_image4
-            image.convert()
-            self.screen.blit(image, image.get_rect(center=oil.position))            
 
     def draw_base(self):
         for base in self.model.base_list:
@@ -242,11 +189,10 @@ class GraphicalView(object):
                 ani.draw(self.screen)
 
         #draw player
-        self.draw_oil()
+        self.oils.draw(self.screen)
         self.draw_base()
         self.draw_market()
         self.draw_pet()
-        '''self.draw_player()'''
         self.players.draw(self.screen)
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
