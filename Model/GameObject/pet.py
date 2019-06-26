@@ -23,7 +23,7 @@ class Pet(object):
         self.speed = model_const.pet_normal_speed
     
     def check_collide_with_player(self, player):
-        if Vec.magnitude(self.position - player.position) <= player.radius + self.radius:
+        if (self.position - player.position).length() <= player.radius + self.radius:
             delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta

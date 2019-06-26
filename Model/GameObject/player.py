@@ -5,14 +5,14 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Player(object):
-    def __init__(self, name, index, pet_list, equipments=[0, 0, 0, 0, 0]):
+    def __init__(self, name, index, equipments = [0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.color = [ random.randint(0, 255) for _ in range(3) ]
         self.value = 0
-        self.is_AI = False
+        self.is_AI = is_AI
         self.direction = Vec(0, 0)
         self.direction_no = model_const.player_initial_direction_no[index]
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
@@ -36,7 +36,7 @@ class Player(object):
 
     def init_equipments(self, equipments):
         self.speed_multiplier = model_const.speed_multiplier ** equipments[model_const.speed_up_idx]
-        self.speed *= self.speed_multiplier 
+        self.speed *= self.speed_multiplier
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
         self.pet.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
@@ -96,18 +96,13 @@ class Player(object):
         if self.item is not None and self.item.active:
             self.item.update(ev_manager)
         self.update_speed()
-        if self.magnet_attract:
-            for oil in oils:
-                if Vec.magnitude(oil.position - self.position) <= oil.radius + model_const.magnet_attract_radius:
-                    oil.update_position(Vec.normalize(self.position - oil.position) * model_const.magnet_attract_speed)
-        if not self.freeze:
-            new_x = self.position[0] + self.direction[0] * self.speed
-            new_y = self.position[1] + self.direction[1] * self.speed
-            if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
-                self.direction[0] = 0
-            if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
-                self.direction[1] = 0
-            self.position += Vec(self.direction) * self.speed
+        new_x = self.position[0] + self.direction[0] * self.speed
+        new_y = self.position[1] + self.direction[1] * self.speed
+        if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
+            self.direction[0] = 0
+        if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
+            self.direction[1] = 0
+        self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
         if not self.is_invincible:
