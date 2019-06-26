@@ -75,10 +75,10 @@ pet_carry_max_up_multiplier = 1.5
 pet_speed_multiplier = 1.2
 
 default_equipments = [
-    [2, 1, 1, 0, 1],
-    [0, 2, 10, 2, 0],
-    [1, 0, 2, 0, 0],
-    [0, 1, 0, 2, 3]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 # items

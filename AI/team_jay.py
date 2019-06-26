@@ -53,7 +53,7 @@ class TeamAI(BaseAI):
         for i in range(4):
             if self.helper.player_id == i:
                 continue
-            cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed)))
+            cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed +1)))
             if 0 < maximum <= cp:
                 maximum = cp
                 target = i
@@ -71,9 +71,9 @@ class TeamAI(BaseAI):
         if home_cp > best_cp:
             best_cp = home_cp
             dest = home
-        attack_cp, target = self.attack(carry, my_pos)
-        if best_cp >= attack_cp:
-            dest = target - my_pos
+        #attack_cp, target = self.attack(carry, my_pos)
+        #if best_cp >= attack_cp:
+        #    dest = (target[0] - my_pos[0], target[1] - my_pos[1])
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
