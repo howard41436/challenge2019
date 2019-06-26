@@ -78,6 +78,10 @@ class Helper(object):
     # Get market data
     def get_markets(self):
         return [(tuple(market.position), market.item) for market in self.model.market_list]
+
+    # Get item data
+    def get_items_data(self):
+        pass
         
     # Get game informations
     def get_timer(self):
