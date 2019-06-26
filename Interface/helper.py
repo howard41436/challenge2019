@@ -63,7 +63,7 @@ class Helper(object):
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
     def get_oils_level(self):
-        return [tuple(oil.level) for oil in self.model.oil_list]
+        return [oil.level for oil in self.model.oil_list]
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
@@ -99,7 +99,10 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         oils = self.get_oils()
-        return min(oils, key=lambda oil: (Vec(oil) - Vec(my_pos)).length())
+        if len(oils) == 0:
+            return None
+        else:
+            return min(oils, key=lambda oil: (Vec(oil) - Vec(my_pos)).length())
 
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
