@@ -1,12 +1,19 @@
 import pygame as pg
-import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
+import os, math
 
-import Model.const       as model_const
-import View.const        as view_const
-import Controller.const  as ctrl_const
-import Interface.const   as ifa_const
+
+import Model.GameObject.item as model_item
+import Model.const           as model_const
+import View.const            as view_const
+import View.animations       as view_Animation
+import View.utils            as view_utils
+import View.staticobjects    as view_staticobjects
+import Controller.const      as ctrl_const
+import Interface.const       as ifa_const
+from pygame.math import Vector2 as Vec
+
 
 class GraphicalView(object):
     """
@@ -27,7 +34,39 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-    
+        pg.init(); pg.font.init()
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
+
+        view_staticobjects.init_staticobjects()
+        view_Animation.init_animation()
+
+        self.animations = []
+
+        self.players = view_staticobjects.View_players(model)
+
+        self.oils = view_staticobjects.View_oils(model)
+        self.bases = view_staticobjects.View_bases(model)
+        self.pets = view_staticobjects.View_pets(model)
+
+        self.scoreboard = view_staticobjects.View_scoreboard(model)
+
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
+
+        
+        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
+        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
+        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
+        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
+        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
+        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.12)
+        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
+        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
+        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
+
     def notify(self, event):
         """
         Receive events posted to the message queue. 
@@ -54,6 +93,20 @@ class GraphicalView(object):
         elif isinstance(event, EventInitialize) or\
              isinstance(event, EventRestart):
             self.initialize()
+        elif isinstance(event, EventEqualize):
+            self.animations.append(view_Animation.Animation_equalize(center=event.position))
+        elif isinstance(event, EventIGoHome):
+            self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventMagnetAttractStart):
+            self.animations.append(view_Animation.Animation_magnetattract(event.player_index, self.model))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=player.position))
+        elif isinstance(event, EventRadiationOil):
+            self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
+
     
     def render_menu(self):
         """
@@ -61,8 +114,7 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-
-            # draw backgound
+            # draw background
             self.screen.fill(view_const.COLOR_BLACK)
             # write some word
             somewords = self.smallfont.render(
@@ -82,14 +134,14 @@ class GraphicalView(object):
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
 
-            # draw backgound
+            # draw background
             self.screen.fill(view_const.COLOR_WHITE)
             # write some word
             result = []
             
             titlefont = pg.font.Font(view_const.board_name_font, 70)
             title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-            self.screen.blit(title, (100, 15))
+            self.screen.blit(title, (400, 15))
             numfont = pg.font.Font(view_const.board_name_font, 30)
             for base in self.model.base_list:
                 result.append([self.model.player_list[base.owner_index].name, base.value_sum])
@@ -98,43 +150,36 @@ class GraphicalView(object):
             pos_x = 0
             prize = 1
             for player in result:
-                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(player[1])), True, view_const.COLOR_BLACK)
-                self.screen.blit(line, (100, 200 + pos_x))
+                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(int(player[1]))), True, view_const.COLOR_BLACK)
+                self.screen.blit(line, (400, 200 + pos_x))
                 pg.display.flip()
                 pos_x += 100
                 prize += 1
             # update surface
             pg.display.flip()
     
-    def draw_player(self):
-        for player in self.model.player_list:
-            pos = tuple(map(int, player.position))
-            radius = player.radius
-            color = player.color
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(radius), player.color)
-
-    def draw_oil(self):
-        for oil in self.model.oil_list:
-            pos = tuple(map(int, oil.position))
-            radius = oil.radius
-            price = oil.price
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), (0, 0, 0, 255*(price/1200)))
-
-    def draw_base(self):
-        for base in self.model.base_list:
-            center = base.center
-            length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)
-
-
-    def draw_pet(self):
-        for pet in self.model.pet_list:
-            pos = tuple(map(int, pet.position))
-            radius = pet.radius
-            color = pet.color
-            gfxdraw.filled_circle(self.screen, *pos, int(radius), color)
+    def draw_priced_market(self):
+        for market in self.model.priced_market_list:
+            if isinstance(market.item, model_item.IGoHome):
+                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.MagnetAttract):
+                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.Invincible):
+                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.TheWorld):
+                image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.OtherGoHome):
+                image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.RadiationOil):
+                image = self.bomb
+            elif isinstance(market.item, model_item.RadiusNotMove):
+                image = self.staff
+            elif isinstance(market.item, model_item.ShuffleBases):
+                image = self.shuffle
+            else :
+                image = self.marketcenter
+            image.convert()
+            self.screen.blit(image, market.position)
 
     def render_play(self):
         """
@@ -142,41 +187,31 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
-        # draw backgound
-        s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
+        # draw background
         self.screen.fill(view_const.COLOR_WHITE)
+        self.screen.blit(self.background_image, [0, 0])
+        self.screen.blit(self.priced_market, [322, 328])
 
-        #draw player
-        self.draw_player()
-        self.draw_oil()
-        self.draw_base()
-        self.draw_pet()
+        # draw animation
+        for ani in self.animations:
+            if ani.expired: self.animations.remove(ani)
+            else          : ani.draw(self.screen)
 
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
-        namefont = pg.font.Font(view_const.board_name_font, 40)
-        numfont = pg.font.Font(view_const.board_name_font, 30)
+        # draw static objects
+        self.oils.draw(self.screen)
+        self.bases.draw(self.screen)
+        self.draw_priced_market()
+        self.pets.draw(self.screen)
+        self.players.draw(self.screen)
+        self.scoreboard.draw(self.screen)
+
+
         timefont = pg.font.Font(view_const.board_name_font, 60)
-        for i in range(0,4,1):
-            pg.draw.rect(s,view_const.COLOR_BLACK,[800,157+i*160,480,5])
-        i = 0
-        for player in self.model.player_list:
-            name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(name,(850, 170+i*160))
-            self.screen.blit(value,(850, 240+i*160))
-            i += 1
-        i = 0
-        for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum,(1050, 240+i*160))
-            i += 1
+
 
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
-        self.screen.blit(time,(950, 35))
+        self.screen.blit(time, (950, 35))
 
-        self.screen.blit(s,(0,0))
-        # update surface
         pg.display.flip()
         
     def render_stop(self):
@@ -188,9 +223,15 @@ class GraphicalView(object):
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-            s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-            # write some word
+            s.fill((255, 255, 255, 128)); self.screen.blit(s, (0,0))
+            
+            # draw pause botton
+            pg.draw.circle(s, view_const.COLOR_BLACK, (640,400), 300)
+            pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
+            pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
+            self.screen.blit(s,(0,0))
+            """
+            #write some word
             somewords = self.smallfont.render(
                         'the game is paused. space, escape to return the game.', 
                         True, (0, 255, 0))
@@ -198,6 +239,7 @@ class GraphicalView(object):
             pos_x = (view_const.screen_size[0] - SurfaceX)/2
             pos_y = (view_const.screen_size[1] - SurfaceY)/2
             self.screen.blit(somewords, (pos_x, pos_y))
+            """
 
             # update surface
             pg.display.flip()
@@ -231,9 +273,6 @@ class GraphicalView(object):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
-        pg.init(); pg.font.init()
-        pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
         self.clock = pg.time.Clock()
         self.smallfont = pg.font.Font(None, 40)
         self.is_initialized = True
