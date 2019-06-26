@@ -93,7 +93,7 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         players = self.get_players_position()
-        return min(players.remove(my_pos), key=lambda player: (player - my_pos).magnitude())
+        return min(players.remove(my_pos), key=lambda player: (Vec(player) - Vec(my_pos)).magnitude())
 
     def get_nearest_oil(self, player_id = None):
         if player_id == None: player_id = self.player_id
