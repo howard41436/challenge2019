@@ -226,6 +226,20 @@ class EventFaDaCaiStop(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventEqualize(BaseEvent):
+    """
+    Equalize event.
+    This event should be triggered when two player bump into each other.
+    """
+    def __init__(self, position):
+        """
+        position : tuple(x, y) or vec2(x, y) indicates the collision position
+        """
+        self.name = "Equalize event"
+        self.position = position
+    def __str__(self):
+        return f"{self.name} => collision_position = {self.position}"
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
