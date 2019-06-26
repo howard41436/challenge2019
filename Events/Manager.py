@@ -204,6 +204,27 @@ class EventInvincibleStop(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventFaDaCaiStart(BaseEvent):
+    '''
+    A player trigger 'FaDaCai'
+    '''
+    def __init__(self, player):
+        self.name = "FaDaCai Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventFaDaCaiStop(BaseEvent):
+    '''
+    The duration of 'FaDaCai' ends
+    '''
+    def __init__(self, player):
+        self.name = "FaDaCai End"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
 
 class EventManager(object):
     """

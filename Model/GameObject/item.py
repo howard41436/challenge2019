@@ -211,3 +211,26 @@ class ShuffleBases(Item):
             self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
             self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
         self.player_list[self.player_index].item = None
+
+class FaDaCai(Item):
+    '''
+    發大財(Only MasterAI can use this item)
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
+        self.duration = model_const.fadacai_duration
+        self.active = True
+
+    def update(self, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].item = None
+

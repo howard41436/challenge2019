@@ -40,6 +40,7 @@ class GameEngine(object):
         self.market_list = []
         self.turn_to = 0
         self.timer = 0
+        self.fadacai = False
 
         self.init_oil()
         self.init_pet()
@@ -84,6 +85,10 @@ class GameEngine(object):
             self.running = False
         elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
+        elif isinstance(event, EventFaDaCaiStart):
+            self.fadacai = True
+        elif isinstance(event, EventFaDaCaiStop):
+            self.fadacai = False
 
     def init_player(self):
         # set AI Names List
@@ -162,8 +167,12 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if random.random() < model_const.oil_probability:
-            self.create_oil()
+        if self.fadacai:
+            if random.random() < model_const.fadacai_oil_probability:
+                self.create_oil()
+        else:
+            if random.random() < model_const.oil_probability:
+                self.create_oil()
 
     def init_base(self) :
         # todo
