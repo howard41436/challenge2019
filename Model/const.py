@@ -128,17 +128,6 @@ priced_item_activate = {
     'ShuffleBases': True,
     'FaDaCai': True,
 }
-free_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
-    'FaDaCai': True,
-}
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
