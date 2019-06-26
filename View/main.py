@@ -45,8 +45,7 @@ class GraphicalView(object):
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
-
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
+        self.pets = view_staticobjects.View_pets(model)
         
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
@@ -165,14 +164,6 @@ class GraphicalView(object):
             image.convert()
             self.screen.blit(image, market.position)
 
-    def draw_pet(self):
-        for pet in self.model.pet_list:
-            image = self.pet_image
-            image.convert()
-            angle = math.atan2(pet.direction.x, pet.direction.y) / math.pi * 180
-            image = pg.transform.rotate(image, angle)
-            self.screen.blit(image, image.get_rect(center=pet.position))
-    
     def render_play(self):
         """
         Render the game play.
@@ -196,7 +187,7 @@ class GraphicalView(object):
         self.oils.draw(self.screen)
         self.bases.draw(self.screen)
         self.draw_market()
-        self.draw_pet()
+        self.pets.draw(self.screen)
         self.players.draw(self.screen)
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
