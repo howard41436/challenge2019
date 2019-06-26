@@ -51,7 +51,7 @@ class View_players(__Object_base):
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
-class View_oil(__Object_base):
+class View_oils(__Object_base):
     images_oil = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'oil_{_color}.png')), 0.16
@@ -75,6 +75,18 @@ class View_oil(__Object_base):
             screen.blit(image, image.get_rect(center=_oil.position))
 
 
+class View_bases(__Object_base):
+    images = ( view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3), )
+    
+    def __init__(self, model):
+        self.model = model
+    
+    def draw(self, screen):
+        for _base in self.model.base_list:
+            screen.blit(self.images[0], self.images[0].get_rect(center=_base.center))
+
+
 def init_staticobjects():
     View_players.init_convert()
-    View_oil.init_convert()
+    View_oils.init_convert()
+    View_bases.init_convert()
