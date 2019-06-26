@@ -13,6 +13,9 @@ class Score(object):
         self.acceleration = Vec((0, 0)) 
         self.timer = 0
 
+    def get_id(self):
+        return self.player.index
+
     def get_position(self):
         return self.position
 

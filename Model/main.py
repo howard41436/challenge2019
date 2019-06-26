@@ -34,6 +34,7 @@ class GameEngine(object):
         self.state = StateMachine()
         self.AI_names = AI_names
         self.player_list = []
+        self.colors = model_const.colors
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
