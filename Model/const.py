@@ -65,27 +65,82 @@ base_center = [
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
+pet_carry_max_up_idx = 3
+pet_speed_up_idx = 4
 
 speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
+pet_carry_max_up_multiplier = 1.5
+pet_speed_multiplier = 1.2
 
 default_equipments = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 # items
-market_positions = [
+free_market_positions = [
     (300, 300),
     (300, 500),
     (500, 300),
     (500, 500)
 ]
-market_radius = 20
-market_generate_item_probability = 1 / 1200
-item_names = {'The World', 'Magnet Attract'}
+priced_market_positions = [
+    (400, 400)
+]
+market_radius = 70
+market_generate_item_probability = 1 / 1
+market_refresh_item_probability = 1 / 4800
+
+item_price = {
+    'IGoHome': 100, 
+    'OtherGoHome': 200, 
+    'TheWorld': 300,
+    'MagnetAttract': 400,
+    'Invincible': 500,
+    'RadiusNotMove': 600,
+    'RadiationOil': 700,
+    'ShuffleBases': 800,
+    'FaDaCai': 0,
+}
 the_world_duration = 60 * 5
+magnet_attract_duration = 60 * 3
+magnet_attract_radius = 50
+magnet_attract_speed = 5
 invincible_duration = 60 * 10
+radius_oil_multiplier = 0.8
+radius_not_move_radius = 100
+radius_not_move_duration = 60 * 5
+fadacai_duration = 60 * 5
+fadacai_oil_probability = 1 / 3
+
+priced_item_activate = {
+    'IGoHome': True,
+    'OtherGoHome': True,
+    'TheWorld': True,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
+    'FaDaCai': True,
+}
+free_item_activate = {
+    'IGoHome': True,
+    'OtherGoHome': True,
+    'TheWorld': True,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
+    'FaDaCai': True,
+}
+
+# score
+score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
+rank_str = ['1st', '2nd', '3rd', '4th']
+swap_duration = 60

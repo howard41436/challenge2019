@@ -262,7 +262,7 @@ class GraphicalView(object):
             result = []
             numfont = pg.font.Font(view_const.board_name_font, 30)
 
-            for player in seld.model.player_list:
+            for player in self.model.player_list:
                 result.append((player.name, player.value_sum))
             result.sort(key=takeSecond)
             self.screen.fill(view_const.COLOR_WHITE)

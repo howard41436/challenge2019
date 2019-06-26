@@ -6,6 +6,7 @@ from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
 from Model.GameObject.market import *
+from Model.GameObject.scoreboard import Scoreboard
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -36,17 +37,19 @@ class GameEngine(object):
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
-        self.market_list = []
-        self.item_status = {}
+        self.free_market_list = []
+        self.priced_market_list = []
         self.turn_to = 0
         self.timer = 0
+        self.fadacai = False
 
         self.init_oil()
         self.init_pet()
         self.init_player()
         self.init_base()
         self.init_markets()
-        self.init_item()
+
+        self.scoreboard = Scoreboard(self.player_list, self.base_list)
 
         random.seed(time.time())
         
@@ -72,39 +75,21 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
-            if self.item_status['The World'] is not None:
-                the_world = self.item_status['The World']
-                if event.player_index == the_world.player_index:
-                    self.set_player_direction(event.player_index, event.direction)
-            else:
-                self.set_player_direction(event.player_index, event.direction)
+            self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
             player = self.player_list[event.player_index]
             if player.item is not None:
                 player.use_item(self.ev_manager)
             else:
-                player.buy(self.market_list)
+                player.buy(self.free_market_list + self.priced_market_list)
         elif isinstance(event, EventQuit):
             self.running = False
-        elif isinstance(event, EventInitialize) or \
-            isinstance(event, EventRestart):
+        elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
-        elif isinstance(event, EventTheWorldStart):
-            self.item_status['The World'] = event
-        elif isinstance(event, EventTheWorldStop):
-            self.item_status['The World'] = None
-        elif isinstance(event, EventMagnetAttractStart):
-            self.item_status['Magnet Attract'] = event
-        elif isinstance(event, EventMagnetAttractStop):
-            self.item_status['Magnet Attract'] = event
-        elif isinstance(event, EventInvincibleStart):
-            self.item_status['Invincible'] = event
-            player = player_list[event.player_index]
-            player.is_invincible = True
-        elif isinstance(event,EventInvincibleStop):
-            self.item_status['Invincible'] = None
-            player_list[event.player_index].is_invincible = False
-            # TODO: overlap if there're more than one invincible item
+        elif isinstance(event, EventFaDaCaiStart):
+            self.fadacai = True
+        elif isinstance(event, EventFaDaCaiStop):
+            self.fadacai = False
 
     def init_player(self):
         # set AI Names List
@@ -128,11 +113,11 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = Player("manual", index, model_const.default_equipments[index])
+                Tmp_P = Player("manual", index, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index)
+                Tmp_P = Player("default", index, self.pet_list)
             else:
-                Tmp_P = Player(self.AI_names[index], index)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list)
             self.player_list.append(Tmp_P)
 
     def init_pet(self):
@@ -141,11 +126,8 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.market_list = [ Market(position) for position in model_const.market_positions ]
-
-    def init_item(self):
-        for name in model_const.item_names:
-            self.item_status[name] = None
+        self.free_market_list = [ Market(position, is_free=True) for position in model_const.free_market_positions ]
+        self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if direction > 0: print(direction) 
@@ -161,16 +143,7 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
         for player in self.player_list:
-            player.update(self.oil_list, self.base_list, self.player_list)
-            """
-            if self.item_status['Magnet Attract'] == None:
-                player.update(self.oil_list, self.base_list, self.player_list)
-            else:
-                event = self.item_status['Magnet Attract']
-                target_player = self.player_list[event.player_index]
-                player.duration = Vec2.normalize(target_player.position - player.position)
-                player.update(self.oil_list, self.base_list, self.player_list)
-            """
+            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
 
         if self.timer % 2400 == 1000:
             for pet in self.pet_list:
@@ -183,10 +156,11 @@ class GameEngine(object):
             oil.update()
         self.try_create_oil()
 
-        for key, item in self.item_status.items():
-            if item is not None:
-                self.item_status[key].update()
-        
+        for market in (self.free_market_list + self.priced_market_list):
+            market.update(self.player_list, self.oil_list, self.base_list, None)
+
+        self.scoreboard.update()
+
         self.timer -= 1
         if self.timer == 0:
             print("End Game")
@@ -200,8 +174,12 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if random.random() < model_const.oil_probability:
-            self.create_oil()
+        if self.fadacai:
+            if random.random() < model_const.fadacai_oil_probability:
+                self.create_oil()
+        else:
+            if random.random() < model_const.oil_probability:
+                self.create_oil()
 
     def init_base(self) :
         # todo

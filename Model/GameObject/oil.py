@@ -11,15 +11,15 @@ class Oil(object):
         self.price = price
         self.radius = model_const.oil_radius
 
+    def update_position(self, new_position):
+        self.position += new_position
+    
     def update(self):
         pass
 
 def calc_price(pos):
-    game_center = Vec(
-        view_const.game_size[0] / 2,
-        view_const.game_size[1] / 2
-        )
-    dist_from_center = (pos - game_center).length()
+    game_center = Vec(view_const.game_size) / 2
+    dist_from_center = (pos - game_center).length() - model_const.market_radius
     mean = model_const.curve_a / (dist_from_center + model_const.curve_b)
     price = max(
         min(
@@ -31,7 +31,7 @@ def calc_price(pos):
     return price
 
 def new_oil(): 
-    R = random.random() * (view_const.game_size[0] / 2)
+    R = random.random() * (view_const.game_size[0] / 2 - model_const.market_radius) + model_const.market_radius
     theta = random.random() * 2 * np.pi
     pos = Vec(
 	R * math.cos(theta) + view_const.game_size[0] / 2,
