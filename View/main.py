@@ -3,6 +3,7 @@ import Model.main as model
 from Events.Manager import *
 import os, math
 
+
 import Model.GameObject.item as model_item
 import Model.const           as model_const
 import View.const            as view_const
@@ -44,6 +45,7 @@ class GraphicalView(object):
 
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oil(model)
+        self.scoreboard = view_staticobjects.View_scoreboard(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
@@ -194,26 +196,13 @@ class GraphicalView(object):
         self.draw_market()
         self.draw_pet()
         self.players.draw(self.screen)
+        self.scoreboard.draw(self.screen)
+
 
         pg.draw.rect(s, view_const.COLOR_BLACK, [800, 0, 5, 800])
         pg.draw.rect(s, view_const.COLOR_BLACK, [1275, 0, 5, 800])
-        namefont = pg.font.Font(view_const.board_name_font, 40)
-        numfont = pg.font.Font(view_const.board_name_font, 30)
         timefont = pg.font.Font(view_const.board_name_font, 60)
-        for i in range(0, 4, 1):
-            pg.draw.rect(s, view_const.COLOR_BLACK, [800, 157+i*160, 480, 5])
-        i = 0
-        for player in self.model.player_list:
-            name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(name, (850, 170+i*160))
-            self.screen.blit(value, (850, 240+i*160))
-            i += 1
-        i = 0
-        for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,1)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum, (1050, 240+i*160))
-            i += 1
+
 
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         self.screen.blit(time, (950, 35))
