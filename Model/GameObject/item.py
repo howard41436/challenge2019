@@ -1,5 +1,6 @@
 from pygame.math import Vector2 as Vec
 
+import random
 import Model.const as model_const
 from Events.Manager import *
 
@@ -40,7 +41,7 @@ class OtherGoHome(Item):
         self.price = model_const.item_price['OtherGoHome']
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
+        ev_manager.post(EventOtherGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index != player.index:
                 player.position = Vec(self.base_list[player.index].center)
@@ -53,6 +54,7 @@ class TheWorld(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
+        self.price = model_const.item_price['TheWorld']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
@@ -121,23 +123,33 @@ class RadiationOil(Item):
                 base.value_sum *= model_const.radius_oil_multiplier
         self.player_list[self.player_index].item = None
                
-
 class Invincible(Item):
     '''
     Make the player itself immune to collision
     '''
-    def __init__(self):
-        super().__init__()
-    def trigger(self, player, ev_manager):
-        ev_manager.post(EventInvincibleStart(player))
-        player.is_invisible = True
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['Invincible']
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
+        print("Invincible Start")
         self.duration = model_const.invincible_duration
-    def update(self, player, ev_manager):
+        self.active = True
+        self.player_list[self.player_index].is_invinsible = True
+
+    def update(self, ev_manager):
         self.duration -= 1
         if self.duration == 0:
-            # TODO: overlap
-            player.is_invisible = False
-            ev_manager.post(EventInvincibleStop(player))
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        print("Invincible Stop")
+        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].item = None
+
 
 class RadiusNotMove(Item):
     '''
@@ -146,6 +158,7 @@ class RadiusNotMove(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
+        self.price = model_const.item_price['RadiusNotMove']
 
     def trigger(self, ev_manager):
         ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
@@ -169,3 +182,32 @@ class RadiusNotMove(Item):
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
             player.freeze = False
+
+def get_disarrangement(n):
+    ls = [i for i in range(n)]
+    while True:
+        random.shuffle(ls)
+        flag = True
+        for i in range(n):
+            if i == ls[i]: 
+                flag = False
+                break
+        if flag:
+            break
+    return ls
+
+class ShuffleBases(Item):
+    '''
+    Make other players move to their base
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['ShuffleBases']
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
+        disarrangement = get_disarrangement(model_const.player_number)
+        for index in range(model_const.player_number):
+            self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
+            self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
+        self.player_list[self.player_index].item = None

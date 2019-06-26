@@ -65,16 +65,20 @@ base_center = [
 speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
+pet_carry_max_up_idx = 3
+pet_speed_up_idx = 4
 
 speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
+pet_carry_max_up_multiplier = 1.5
+pet_speed_multiplier = 1.2
 
 default_equipments = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 # items
@@ -86,13 +90,17 @@ market_positions = [
 ]
 market_radius = 20
 market_generate_item_probability = 1 / 1
+market_refresh_item_probability = 1 / 4800
 
 item_price = {
-    'IGoHome': 87, 
-    'OtherGoHome': 87, 
-    'TheWorld': 87,
-    'MagnetAttract': 87,
-    'RadiationOil': 87,
+    'IGoHome': 100, 
+    'OtherGoHome': 200, 
+    'TheWorld': 300,
+    'MagnetAttract': 400,
+    'Invincible': 500,
+    'RadiusNotMove': 600,
+    'RadiationOil': 700,
+    'ShuffleBases': 800,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -105,8 +113,16 @@ radius_not_move_duration = 60 * 5
 
 item_activate = {
     'IGoHome': True,
-    'OtherGoHome': False,
+    'OtherGoHome': True,
     'TheWorld': True,
-    'MagnetAttract': False,
-    'RadiationOil': False,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
 }
+
+# score
+score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
+rank_str = ['1st', '2nd', '3rd', '4th']
+swap_duration = 60

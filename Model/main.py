@@ -6,6 +6,7 @@ from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
 from Model.GameObject.market import *
+from Model.GameObject.scoreboard import Scoreboard
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -46,6 +47,8 @@ class GameEngine(object):
         self.init_base()
         self.init_markets()
 
+        self.scoreboard = Scoreboard(self.player_list, self.base_list)
+
         random.seed(time.time())
         
 
@@ -79,8 +82,7 @@ class GameEngine(object):
                 player.buy(self.market_list)
         elif isinstance(event, EventQuit):
             self.running = False
-        elif isinstance(event, EventInitialize) or \
-            isinstance(event, EventRestart):
+        elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
 
     def init_player(self):
@@ -105,11 +107,11 @@ class GameEngine(object):
         # init Player object
         for index in range(model_const.player_number):
             if self.AI_names[index] == "~":
-                Tmp_P = Player("manual", index, model_const.default_equipments[index])
+                Tmp_P = Player("manual", index, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index)
+                Tmp_P = Player("default", index, self.pet_list)
             else:
-                Tmp_P = Player(self.AI_names[index], index)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list)
             self.player_list.append(Tmp_P)
             
     def init_pet(self):
@@ -145,6 +147,8 @@ class GameEngine(object):
 
         for market in self.market_list:
             market.update(self.player_list, self.oil_list, self.base_list, None)
+
+        self.scoreboard.update()
 
         self.timer -= 1
         if self.timer == 0:
