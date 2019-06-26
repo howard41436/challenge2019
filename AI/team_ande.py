@@ -18,11 +18,16 @@ class TeamAI(BaseAI):
         attack_cp, victim_id, victim_pos = self.attack()
         for pos in oils:
             price = ( self.helper.get_distance_to_center(pos) ** (-1/2) )
-            cp = price / (self.helper.get_distance(pos, my_pos) ** 2 * self.helper.get_distance(pos, self.helper.get_base_center()) ** (1/2)) 
+            cp = price / (self.helper.get_distance(pos, my_pos) ** 2 * self.helper.get_distance(pos, self.helper.get_base_center()) ** (1/2))
+            players_pos = self.helper.get_players_position()
+            for i in range(len(players_pos)):
+                if self.helper.player_id == i:
+                    continue
+                cp -= 1/self.helper.get_distance(players_pos[i], pos) 
             if cp > best_cp:
                 best_cp = cp 
                 best_pos = pos 
-        if attack_cp > best_cp:
+        if attack_cp > best_cp and attack_cp > 0:
             return Vec(victim_pos) - Vec(my_pos)
         else:
             return Vec(best_pos) - Vec(my_pos)
