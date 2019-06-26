@@ -7,6 +7,7 @@ import Model.const as model_const
 import View.const as view_const
 
 class Helper(object):
+
     def __init__(self, model, index):
         self.model = model
         self.player_id = index
@@ -119,6 +120,4 @@ class Helper(object):
         return (Vec(p1) - Vec(p2)).magnitude()
 
     def get_distance_to_center(self, p1):
-        return self.get_distance(p1, Vec(self.game_size) / 2)
-
-
+        return self.get_distance(p1, Vec(self.game_size) / 2) 
