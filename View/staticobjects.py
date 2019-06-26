@@ -48,7 +48,7 @@ class View_players(__Object_base):
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
-            angle = math.atan2(players[_i].direction.x, players[_i].direction.y) / math.pi * 180
+            angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
             image = pg.transform.rotate(self.images[_i], angle)
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
             screen.blit(image, image.get_rect(center=players[_i].position))
