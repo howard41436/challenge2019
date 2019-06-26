@@ -71,7 +71,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -99,7 +99,7 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.player_list:
@@ -133,7 +133,6 @@ class Invincible(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
-        print("Invincible Start")
         self.duration = model_const.invincible_duration
         self.active = True
         self.player_list[self.player_index].is_invinsible = True
@@ -144,8 +143,7 @@ class Invincible(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        print("Invincible Stop")
-        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].is_invinsible = False
         self.player_list[self.player_index].item = None
@@ -177,7 +175,7 @@ class RadiusNotMove(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -231,7 +229,7 @@ class FaDaCai(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
 
