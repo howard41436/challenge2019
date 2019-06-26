@@ -62,7 +62,7 @@ class GraphicalView(object):
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
         self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
 
-        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
+        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
         """
