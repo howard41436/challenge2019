@@ -6,10 +6,14 @@ import Model.GameObject.item as Item
 import random
 
 class Market(object):
-    item_list = [getattr(Item, item_name) for item_name, is_activate in model_const.item_activate.items() if is_activate == True]
-    def __init__(self, position):
+    def __init__(self, position, is_free=False):
         self.position = Vec(position)
         self.item = None
+        if is_free:
+            self.item_list = [getattr(Item, item_name) for item_name, is_activate in model_const.free_item_activate.items() if is_activate == True]
+        else:
+            self.item_list = [getattr(Item, item_name) for item_name, is_activate in model_const.priced_item_activate.items() if is_activate == True]
+
 
     def generate_item(self, player_list, oil_list, base_list, player_index):
         self.item = random.choice(self.item_list)(player_list, oil_list, base_list, player_index)
