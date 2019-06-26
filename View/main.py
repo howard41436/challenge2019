@@ -3,6 +3,7 @@ import Model.main as model
 from Events.Manager import *
 import os, math
 
+
 import Model.GameObject.item as model_item
 import Model.const           as model_const
 import View.const            as view_const
@@ -43,9 +44,16 @@ class GraphicalView(object):
         self.animations = []
 
         self.players = view_staticobjects.View_players(model)
+
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
         self.pets = view_staticobjects.View_pets(model)
+
+        self.scoreboard = view_staticobjects.View_scoreboard(model)
+
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
+
         
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
@@ -54,7 +62,7 @@ class GraphicalView(object):
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.1)
         self.market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.1)
 
-        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 0.54)
+        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
         """
@@ -185,8 +193,11 @@ class GraphicalView(object):
         self.draw_market()
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
+        self.scoreboard.draw(self.screen)
+
 
         timefont = pg.font.Font(view_const.board_name_font, 60)
+
 
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         self.screen.blit(time, (950, 35))

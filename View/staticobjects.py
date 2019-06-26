@@ -71,6 +71,7 @@ class View_oils(__Object_base):
             screen.blit(image, image.get_rect(center=_oil.position))
 
 
+
 class View_bases(__Object_base):
     images = ( view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3), )
 
@@ -94,6 +95,27 @@ class View_pets(__Object_base):
             angle = math.atan2(pets[_i].direction.x, pets[_i].direction.y) / math.pi * 180
             image = pg.transform.rotate(self.images[_i], angle)
             screen.blit(image, image.get_rect(center=pets[_i].position))
+
+class View_scoreboard(__Object_base):
+    def __init__(self, model):
+        self.model = model
+
+    def draw(self, screen):
+        namefont = pg.font.Font(view_const.board_name_font, 55)
+        numfont = pg.font.Font(view_const.board_name_font, 25)
+        for board in self.model.scoreboard.score_list:
+            pg.draw.rect(screen, board.player.color, (board.position,(480,160)))
+        for board in self.model.scoreboard.score_list:
+            name = namefont.render(f'{board.get_rank_str()} {board.player.name}', True, view_const.COLOR_BLACK)
+            base_value = numfont.render(f'Base : {int(board.base.value_sum)}', True, view_const.COLOR_BLACK)
+            player_value = numfont.render(f'Carried Value : {int(board.player.value)}', True, view_const.COLOR_BLACK)
+            screen.blit(name, board.position+[10,-5])
+            screen.blit(base_value, board.position+[10,75])
+            screen.blit(player_value, board.position+[10,115])
+
+
+
+
 
 
 def init_staticobjects():
