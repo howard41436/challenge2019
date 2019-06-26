@@ -62,6 +62,8 @@ class GameEngine(object):
             cur_state = self.state.peek()
             if cur_state == STATE_PLAY:
                 self.update_objects()
+            elif cur_state == STATE_CUTIN:
+                self.update_cutin()
         elif isinstance(event, EventStateChange):
             # if event.state is None >> pop state.
             if event.state is None:
@@ -77,11 +79,13 @@ class GameEngine(object):
         elif isinstance(event, EventMove):
             self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
-            player = self.player_list[event.player_index]
-            if player.item is not None:
-                player.use_item(self.ev_manager)
-            else:
-                player.buy(self.priced_market_list)
+            cur_state = self.state.peek()
+            if cur_state != STATE_CUTIN:
+                player = self.player_list[event.player_index]
+                if player.item is not None:
+                    player.use_item(self.ev_manager)
+                else:
+                    player.buy(self.priced_market_list)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, (EventInitialize, EventRestart)):
@@ -90,6 +94,9 @@ class GameEngine(object):
             self.fadacai = True
         elif isinstance(event, EventFaDaCaiStop):
             self.fadacai = False
+        elif isinstance(event, EventCutInStart):
+            self.cutin_timer = model_const.cutin_time
+            self.state.push(STATE_CUTIN)
 
     def init_player(self):
         # set AI Names List
@@ -129,7 +136,6 @@ class GameEngine(object):
         self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
-        if direction > 0: print(direction) 
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
@@ -163,6 +169,11 @@ class GameEngine(object):
         if self.timer == 0:
             print("End Game")
             self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+
+    def update_cutin(self):
+        self.cutin_timer -= 1
+        if self.cutin_timer == 0:
+            self.state.pop()  # pop out STATE_CUTIN
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
