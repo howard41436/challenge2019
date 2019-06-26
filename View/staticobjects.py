@@ -80,13 +80,20 @@ class View_bases(__Object_base):
 
 
 class View_pets(__Object_base):
-    images = ( view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'pet_bug.png') ), 0.2), )
+    images = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'pet_robot_{_color}.png')),
+            0.08
+        )
+        for _color in ('blue', 'green', 'red', 'orange')
+    )
 
     def draw(self, screen):
-        for _pet in self.model.pet_list:
-            angle = math.atan2(_pet.direction.x, _pet.direction.y) / math.pi * 180
-            image = pg.transform.rotate(self.images[0], angle)
-            screen.blit(image, image.get_rect(center=_pet.position))
+        pets = self.model.pet_list
+        for _i in range(len(pets)):
+            angle = math.atan2(pets[_i].direction.x, pets[_i].direction.y) / math.pi * 180
+            image = pg.transform.rotate(self.images[_i], angle)
+            screen.blit(image, image.get_rect(center=pets[_i].position))
 
 
 def init_staticobjects():
