@@ -4,6 +4,7 @@ define Application Programming Interface(API)
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
+import Model.GameObject.item as Item
 import View.const as view_const
 
 class Helper(object):
@@ -53,11 +54,20 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].is_AI
 
-    def get_players_speed(self):
-        return [player.speed for player in self.model.player_list]
     def get_player_speed(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].speed
+
+    def get_player_is_invincible(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].is_invincible
+    
+    def get_players_insurance_value(self):
+        return [player.insurance_value for player in self.model.player_list]
+    def get_player_insurance_value(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].insurance_value
+
 
     # Get pet data
 
@@ -78,11 +88,21 @@ class Helper(object):
 
     # Get market data
     def get_markets(self):
-        return [(tuple(market.position), market.item) for market in self.model.market_list]
+        return [(tuple(market.position), market.item.name, market.item.price) for market in self.model.market_list]
 
     # Get item data
-    def get_items_data(self):
-        pass
+    def get_player_item_data(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return None if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.name
+
+    def get_player_item_is_active(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.activate
+
+    def get_player_item_duration(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
+
         
     # Get game informations
     def get_timer(self):
