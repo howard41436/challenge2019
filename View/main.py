@@ -95,7 +95,7 @@ class GraphicalView(object):
         elif isinstance(event, EventIGoHome):
             self.animations.append(view_Animation.Animation_gohome(center=event.position))
         elif isinstance(event, EventMagnetAttractStart):
-            self.animations.append(view_Animation.Animation_magnetattract(center=self.model.player_list[event.player_index].position))
+            self.animations.append(view_Animation.Animation_magnetattract(event.player_index, self.model))
         elif isinstance(event, EventOtherGoHome):
             for player in self.model.player_list:
                 if player.index != event.player_index:

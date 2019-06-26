@@ -1,5 +1,6 @@
 import pygame as pg
 import Model.main as model
+import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
 import os.path
@@ -54,11 +55,11 @@ class Animation_raster(Animation_base):
     def init_convert(cls):
         cls.frames = tuple( _frame.convert_alpha() for _frame in cls.frames )
     
-    def __init__(self, delay_of_frames, **pos):
+    def __init__(self, delay_of_frames, expire_time, **pos):
         self._timer = 0
         self.delay_of_frames = delay_of_frames
         self.frame_index_to_draw = 0
-        self.expire_time = len(self.frames) * self.delay_of_frames
+        self.expire_time = expire_time
         self.expired = False
         pos[next(iter(pos))] = pg.math.Vector2(pos[next(iter(pos))]) # turn tuple into vec2
         self.pos = pos
@@ -69,7 +70,7 @@ class Animation_raster(Animation_base):
         if self._timer == self.expire_time:
             self.expired = True
         elif self._timer % self.delay_of_frames == 0:
-            self.frame_index_to_draw += 1
+            self.frame_index_to_draw = (self.frame_index_to_draw + 1) % len(self.frames)
 
         # update self.pos if needed
         # self.pos[ next(iter(self.pos)) ] = pg.math.Vector2(next_pos)
@@ -95,7 +96,8 @@ class Animation_equalize(Animation_raster):
     )
 
     def __init__(self, **pos):
-        super().__init__(1, **pos)
+        super().__init__(2, 2*len(self.frames), **pos)
+
 
 class Animation_gohome(Animation_raster):
     frames = tuple(
@@ -107,19 +109,27 @@ class Animation_gohome(Animation_raster):
     )
 
     def __init__(self, **pos):
-        super().__init__(1, **pos)
+        super().__init__(1, 2*len(self.frames), **pos)
+
 
 class Animation_magnetattract(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'mag.png')),
-            1/50*(i%10)
+            1 / 40 * i
         )
-        for i in range(1,200)
+        for i in range(1, 11)
     )
 
-    def __init__(self, **pos):
-        super().__init__(1,**pos)
+    def __init__(self, player_index, model):
+        super().__init__(2, model_const.magnet_attract_duration, center=model.player_list[player_index].position)
+        self.player_index = player_index
+        self.model = model
+    
+    def update(self):
+        super().update()
+        self.pos[ next(iter(self.pos)) ] = self.model.player_list[self.player_index].position
+
 
 class Animation_othergohome(Animation_raster):
     frames = tuple(
@@ -131,7 +141,8 @@ class Animation_othergohome(Animation_raster):
     )
 
     def __init__(self, **pos):
-        super().__init__(1, **pos)
+        super().__init__(1, 2*len(self.frames), **pos)
+
 
 class Animation_radiationOil(Animation_raster):
     frames = tuple(
@@ -143,7 +154,7 @@ class Animation_radiationOil(Animation_raster):
     )
 
     def __init__(self, **pos):
-        super().__init__(1, **pos)
+        super().__init__(1, 2*len(frames), **pos)
 
 
 def init_animation():
