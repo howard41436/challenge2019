@@ -81,13 +81,6 @@ default_equipments = [
     [0, 0, 0, 0, 0]
 ]
 
-# items
-free_market_positions = [
-    (300, 300),
-    (300, 500),
-    (500, 300),
-    (500, 500)
-]
 priced_market_positions = [
     (400, 400)
 ]
