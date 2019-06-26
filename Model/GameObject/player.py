@@ -25,7 +25,6 @@ class Player(object):
         self.item = None
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
-        self.freeze = False   # If one of the other players is use 'The World', then self is freeze
         self.collide_list = [False] * 4
 
     def get_name(self):

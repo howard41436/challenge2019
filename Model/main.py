@@ -42,6 +42,7 @@ class GameEngine(object):
         self.turn_to = 0
         self.timer = 0
         self.fadacai = False
+        self.za_warudo_id = None
 
         self.init_oil()
         self.init_pet()
@@ -90,6 +91,10 @@ class GameEngine(object):
             self.fadacai = True
         elif isinstance(event, EventFaDaCaiStop):
             self.fadacai = False
+        elif isinstance(event, EventTheStart):
+            self.za_warudo_id = event.player_index
+        elif isinstance(evnet, EventTheWorldStop):
+            self.za_warudo_id = None
 
     def init_player(self):
         # set AI Names List
@@ -137,32 +142,38 @@ class GameEngine(object):
                 player.direction_no = direction
 
     def update_objects(self):
-        # Update player_list
-        for oil in self.oil_list:
-            oil.update()
-        self.try_create_oil()
-        for player in self.player_list:
+        '''
+        TODO: Za Warudo!
+        '''
+        if self.za_warudo_id is not None:
+            player = self.player_list[self.za_warudo_id]
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
-        if self.timer % 2400 == 1000:
+            pet = self.pet_list[self.za_warudo_id]
+            pet.update(self.player_list, self.base_list) 
+        else:
+            self.try_create_oil()
+            for player in self.player_list:
+                player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            if self.timer % 2400 == 1000:
+                for pet in self.pet_list:
+                    pet.change_status(1)
+            
             for pet in self.pet_list:
-                pet.change_status(1)
-        
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
+                pet.update(self.player_list, self.base_list)
 
-        for oil in self.oil_list:
-            oil.update()
-        self.try_create_oil()
+            for oil in self.oil_list:
+                oil.update()
+            self.try_create_oil()
 
-        for market in self.priced_market_list:
-            market.update(self.player_list, self.oil_list, self.base_list, None)
+            for market in self.priced_market_list:
+                market.update(self.player_list, self.oil_list, self.base_list, None)
 
-        self.scoreboard.update()
+            self.scoreboard.update()
 
-        self.timer -= 1
-        if self.timer == 0:
-            print("End Game")
-            self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+            self.timer -= 1
+            if self.timer == 0:
+                print("End Game")
+                self.ev_manager.post(EventStateChange(STATE_ENDGAME))
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
