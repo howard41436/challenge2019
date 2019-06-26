@@ -91,9 +91,9 @@ class GameEngine(object):
             self.fadacai = True
         elif isinstance(event, EventFaDaCaiStop):
             self.fadacai = False
-        elif isinstance(event, EventTheStart):
+        elif isinstance(event, EventTheWorldStart):
             self.za_warudo_id = event.player_index
-        elif isinstance(evnet, EventTheWorldStop):
+        elif isinstance(event, EventTheWorldStop):
             self.za_warudo_id = None
 
     def init_player(self):
