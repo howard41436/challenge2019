@@ -5,7 +5,7 @@ import View.utils as view_utils
 import os.path
 
 '''
-* How to use Animation:
+* How Animation works:
 
 tick = 0
 animations = []
@@ -20,16 +20,6 @@ while True:
         ani.draw(screen)
     
     tick += 1
-    
-
-
-* Hierarchy of classes:
-
-Animation_base
-    Animation_vector
-
-    Animation_raster
-        Animation_equalize
 '''
 
 class Animation_base():
@@ -58,8 +48,12 @@ class Animation_vector(Animation_base):
 
 
 class Animation_raster(Animation_base):
-    frames = [] # should have .get_rect() method
+    frames = tuple()
 
+    @classmethod
+    def init_convert(cls):
+        cls.frames = tuple( _frame.convert_alpha() for _frame in cls.frames )
+    
     def __init__(self, delay_of_frames, **pos):
         self._timer = 0
         self.delay_of_frames = delay_of_frames
@@ -68,8 +62,6 @@ class Animation_raster(Animation_base):
         self.expired = False
         pos[next(iter(pos))] = pg.math.Vector2(pos[next(iter(pos))]) # turn tuple into vec2
         self.pos = pos
-        for i in range(len(self.frames)):
-            self.frames[i] = self.frames[i].convert_alpha()
 
     def update(self):
         self._timer += 1
@@ -94,62 +86,70 @@ class Animation_raster(Animation_base):
         
 
 class Animation_equalize(Animation_raster):
-    frames = [
+    frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'equalize_background.png')),
             1 / 20 * i
         )
         for i in range(1, 21)
-    ]
+    )
 
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
 class Animation_gohome(Animation_raster):
-    frames = [
+    frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'gohome.png')),
             1/20 * i
         )
         for i in range(1, 20)
-    ]
+    )
+
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
-class Animation_MagnetAttract(Animation_raster):
-    frames = [
+class Animation_magnetattract(Animation_raster):
+    frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'mag.png')),
             1/50*(i%10)
         )
         for i in range(1,200)
-    ]
+    )
+
     def __init__(self, **pos):
         super().__init__(1,**pos)
 
 class Animation_othergohome(Animation_raster):
-    frames = [
+    frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'othergohome.png')),
             1/20 * i
         )
         for i in range(1, 20)
-    ]
+    )
+
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
 class Animation_radiationOil(Animation_raster):
-    frames = [
+    frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'locked.png')),
             1/30 * i
         )
         for i in range(1, 30)
-    ]
+    )
+
     def __init__(self, **pos):
         super().__init__(1, **pos)
 
 
 def init_animation():
-    print('init_animation() not yet implemented')
-    pass
+    Animation_equalize.init_convert()
+    Animation_gohome.init_convert()
+    Animation_magnetattract.init_convert()
+    Animation_othergohome.init_convert()
+    Animation_radiationOil.init_convert()
+
