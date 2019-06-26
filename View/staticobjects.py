@@ -81,16 +81,16 @@ class View_scoreboard(__Object_base):
 
     def draw(self, screen):
         namefont = pg.font.Font(view_const.board_name_font, 55)
-        numfont = pg.font.Font(view_const.board_name_font, 40)
+        numfont = pg.font.Font(view_const.board_name_font, 25)
         for board in self.model.scoreboard.score_list:
             pg.draw.rect(screen, board.player.color, (board.position,(480,160)))
         for board in self.model.scoreboard.score_list:
-            name = namefont.render(board.player.name, True, view_const.COLOR_BLACK)
-            base_value = numfont.render(f'{int(board.base.value_sum)}', True, view_const.COLOR_BLACK)
-            player_value = numfont.render(f'{int(board.player.value)}', True, view_const.COLOR_BLACK)
-            screen.blit(name, board.position+[0,-5])
-            screen.blit(base_value, board.position+[0,90])
-            screen.blit(player_value, board.position+[200,90])
+            name = namefont.render(f'{board.get_rank_str()} {board.player.name}', True, view_const.COLOR_BLACK)
+            base_value = numfont.render(f'Base : {int(board.base.value_sum)}', True, view_const.COLOR_BLACK)
+            player_value = numfont.render(f'Carried Value : {int(board.player.value)}', True, view_const.COLOR_BLACK)
+            screen.blit(name, board.position+[10,-5])
+            screen.blit(base_value, board.position+[10,75])
+            screen.blit(player_value, board.position+[10,115])
 
 
 
