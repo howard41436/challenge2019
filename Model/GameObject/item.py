@@ -1,6 +1,7 @@
+import random
+
 from pygame.math import Vector2 as Vec
 
-import random
 import Model.const as model_const
 from Events.Manager import *
 
@@ -50,7 +51,10 @@ class OtherGoHome(Item):
 
 class TheWorld(Item):
     '''
-    Make all the other players not able to move for ? seconds
+    Za Warudo!
+    Only the player who triggered this item is able to move, pick up oil and item, and use other items,
+    like the whole game is the player's own world.
+    This effect will last ? seconds.
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
@@ -72,7 +76,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -100,7 +104,7 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.player_list:
@@ -134,10 +138,9 @@ class Invincible(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
-        print("Invincible Start")
         self.duration = model_const.invincible_duration
         self.active = True
-        self.player_list[self.player_index].is_invinsible = True
+        self.player_list[self.player_index].is_invincible = True
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -145,10 +148,9 @@ class Invincible(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        print("Invincible Stop")
-        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
-        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].is_invincible = False
         self.player_list[self.player_index].item = None
 
 
@@ -178,7 +180,7 @@ class RadiusNotMove(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -232,7 +234,7 @@ class FaDaCai(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
 

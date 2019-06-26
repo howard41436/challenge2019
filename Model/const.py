@@ -24,6 +24,14 @@ dir_mapping = [
     [-0.707, -0.707],    #left up
 ]
 
+# color
+colors = [ 
+    COLOR_BLUE,
+    COLOR_GREEN,
+    COLOR_RED,
+    COLOR_ORANGERED
+]
+
 # oil_const
 curve_a = 100000
 curve_b = 100
@@ -81,17 +89,10 @@ default_equipments = [
     [0, 0, 0, 0, 0]
 ]
 
-# items
-free_market_positions = [
-    (300, 300),
-    (300, 500),
-    (500, 300),
-    (500, 500)
-]
 priced_market_positions = [
     (376, 373.5)
 ]
-market_radius = 20
+market_radius = 70
 market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
 
@@ -118,17 +119,6 @@ fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
-    'FaDaCai': True,
-}
-free_item_activate = {
     'IGoHome': True,
     'OtherGoHome': True,
     'TheWorld': True,
