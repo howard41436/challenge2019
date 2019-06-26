@@ -51,7 +51,10 @@ class OtherGoHome(Item):
 
 class TheWorld(Item):
     '''
-    Make all the other players not able to move for ? seconds
+    Za Warudo!
+    Only the player who triggered this item is able to move, pick up oil and item, and use other items,
+    like the whole game is the player's own world.
+    This effect will last ? seconds.
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
@@ -137,7 +140,7 @@ class Invincible(Item):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
         self.duration = model_const.invincible_duration
         self.active = True
-        self.player_list[self.player_index].is_invinsible = True
+        self.player_list[self.player_index].is_invincible = True
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -147,7 +150,7 @@ class Invincible(Item):
     def close(self, ev_manager):
         # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
-        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].is_invincible = False
         self.player_list[self.player_index].item = None
 
 
@@ -169,7 +172,7 @@ class RadiusNotMove(Item):
             if player.index != self.player_index and \
                Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
-                freeze_list.append(player)
+                self.freeze_list.append(player)
 
     def update(self, ev_manager):
         self.duration -= 1

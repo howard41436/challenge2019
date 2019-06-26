@@ -154,7 +154,7 @@ class Animation_radiationOil(Animation_raster):
     )
 
     def __init__(self, **pos):
-        super().__init__(1, 2*len(frames), **pos)
+        super().__init__(1, 2*len(self.frames), **pos)
 
 
 def init_animation():

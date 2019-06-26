@@ -24,6 +24,14 @@ dir_mapping = [
     [-0.707, -0.707],    #left up
 ]
 
+# color
+colors = [ 
+    view_const.COLOR_BLUE,
+    view_const.COLOR_GREEN,
+    view_const.COLOR_RED,
+    view_const.COLOR_ORANGERED
+]
+
 # oil_const
 curve_a = 100000
 curve_b = 100
@@ -81,15 +89,8 @@ default_equipments = [
     [0, 0, 0, 0, 0]
 ]
 
-# items
-free_market_positions = [
-    (300, 300),
-    (300, 500),
-    (500, 300),
-    (500, 500)
-]
 priced_market_positions = [
-    (377.5, 373.5)
+    (376, 373.5)
 ]
 market_radius = 70
 market_generate_item_probability = 1 / 1
@@ -128,17 +129,7 @@ priced_item_activate = {
     'ShuffleBases': False,
     'FaDaCai': False,
 }
-free_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': False,
-    'TheWorld': False,
-    'MagnetAttract': False,
-    'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
-    'FaDaCai': False,
-}
+
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]

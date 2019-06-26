@@ -58,10 +58,13 @@ class GraphicalView(object):
         self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.08)
+        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
+        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.12)
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-
+        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
@@ -167,8 +170,14 @@ class GraphicalView(object):
                 image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
             elif isinstance(market.item, model_item.OtherGoHome):
                 image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
-            else:
-                image = self.blackhole
+            elif isinstance(market.item, model_item.RadiationOil):
+                image = self.bomb
+            elif isinstance(market.item, model_item.RadiusNotMove):
+                image = self.staff
+            elif isinstance(market.item, model_item.ShuffleBases):
+                image = self.shuffle
+            else :
+                image = self.marketcenter
             image.convert()
             self.screen.blit(image, market.position)
 
@@ -181,7 +190,7 @@ class GraphicalView(object):
         # draw background
         self.screen.fill(view_const.COLOR_WHITE)
         self.screen.blit(self.background_image, [0, 0])
-        self.screen.blit(self.priced_market, [325, 325])
+        self.screen.blit(self.priced_market, [322, 328])
 
         # draw animation
         for ani in self.animations:
