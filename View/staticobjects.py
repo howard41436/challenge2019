@@ -104,7 +104,7 @@ class View_scoreboard(__Object_base):
         namefont = pg.font.Font(view_const.board_name_font, 55)
         numfont = pg.font.Font(view_const.board_name_font, 25)
         for score in self.model.scoreboard.score_list:
-            pg.draw.rect(screen, model.colors[score.get_id()], (score.position,(480,160)))
+            pg.draw.rect(screen, self.model.colors[score.get_id()], (score.position,(480,160)))
         for score in self.model.scoreboard.score_list:
             name = namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
             base_value = numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)
