@@ -50,8 +50,11 @@ class OtherGoHome(Item):
         self.player_list[self.player_index].item = None
 
 class TheWorld(Item):
-    '''
-    Make all the other players not able to move for ? seconds
+    '''t push --set-upstream origin za_warudo
+    Za Warudo!
+    Only the player who triggered this item is able to move, pick up oil and item, and use other items,
+    like the whole game is the player's own world.
+    This effect will last ? seconds.
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)

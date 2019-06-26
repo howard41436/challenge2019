@@ -24,6 +24,14 @@ dir_mapping = [
     [-0.707, -0.707],    #left up
 ]
 
+# color
+colors = [ 
+    COLOR_BLUE,
+    COLOR_GREEN,
+    COLOR_RED,
+    COLOR_ORANGERED
+]
+
 # oil_const
 curve_a = 100000
 curve_b = 100
