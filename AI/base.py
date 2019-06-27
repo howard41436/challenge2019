@@ -1,15 +1,16 @@
 """
 const of AI code use.
 """
-DIR_stop = 0
-DIR_U    = 1
-DIR_RU   = 2
-DIR_R    = 3
-DIR_RD   = 4
-DIR_D    = 5
-DIR_LD   = 6
-DIR_L    = 7
-DIR_LU   = 8
+AI_DIR_stop     = 0
+AI_DIR_U        = 1
+AI_DIR_RU       = 2
+AI_DIR_R        = 3
+AI_DIR_RD       = 4
+AI_DIR_D        = 5
+AI_DIR_LD       = 6
+AI_DIR_L        = 7
+AI_DIR_LU       = 8
+AI_TRIGGER_ITEM = 9
 AI_dir_mapping = [
     [0, 0],             #steady
     [0, -1],             #up

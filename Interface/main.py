@@ -41,9 +41,13 @@ class Interface(object):
         for player in self.model.player_list:
             if player.is_AI:
                 AI_dir = self.player_AI[player.index].decide()
-                if AI_dir not in range(9):
-                    AI_dir = 0
-                self.ev_manager.post(EventMove(player.index, AI_dir))
+                if AI_dir in range(9):
+                    self.ev_manager.post(EventMove(player.index, AI_dir))
+                elif AI_dir == 9:
+                    self.ev_manager.post(EventMove(player.index, 0))
+                    self.ev_manager.post(EventTriggerItem(player.index))
+                else:
+                    self.ev_manager.post(EventMove(player.index, 0))
         
     def initialize(self):
         if self.is_init_AI: return
