@@ -5,6 +5,7 @@ import math
 import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
+import Model.const       as model_const
 
 
 '''
@@ -32,14 +33,6 @@ class __Object_base():
 
 
 class View_players(__Object_base):
-    images = tuple(
-        view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_{_color}.png')),
-            0.2
-        )
-        for player_color in self.model.player_list
-    )
-    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
 
     images_color = tuple(
         view_utils.scaled_surface(
@@ -48,25 +41,34 @@ class View_players(__Object_base):
         )
         for _rainbow in range(0,19,1)
     )
+    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     def __init__(self, model):
         super(View_players, self).__init__(model)
         super(View_players, self).init_convert()
         self.color_switch = [0, 0, 0, 0]
+        self.images = tuple(
+            view_utils.scaled_surface(
+                view_utils.uni_color(os.path.join(view_const.IMAGE_PATH, 'player.png'), self.model.player_list[_i].color, 0.7),
+                0.2
+            )
+            for _i in range(0, model_const.player_number, 1)
+        )
+
 
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
 
     def draw(self, screen):
         players = self.model.player_list
+        print(len(self.images))
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
             if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
             else: 
                 image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
                 self.color_switch[_i] += 1
-            if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
+            # if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
@@ -100,12 +102,10 @@ class View_bases(__Object_base):
 class View_pets(__Object_base):
     images = tuple(
         view_utils.scaled_surface(
-            uni_color(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'player.png')),
-                      _player.color,
-                      0.5)
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'pet_robot_{_color}.png')),
             0.08
         )
-        for _player in self.model.player_list
+        for _color in ('blue', 'green', 'red', 'orange')
     )
 
     def draw(self, screen):
@@ -131,7 +131,7 @@ class View_scoreboard(__Object_base):
         namefont = pg.font.Font(view_const.board_name_font, 55)
         numfont = pg.font.Font(view_const.board_name_font, 25)
         for score in self.model.scoreboard.score_list:
-            pg.draw.rect(screen, self.model.colors[score.get_id()], (score.position,(480,160)))
+            pg.draw.rect(screen, score.player.color, (score.position,(480,160)))
         for score in self.model.scoreboard.score_list:
             name = namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
             base_value = numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)
@@ -154,6 +154,7 @@ class View_scoreboard(__Object_base):
             elif isinstance(score.player.item, model_item.ShuffleBases):
                 item_image = self.shuffle
             if item_image: screen.blit(item_image, score.position+[340,5])
+
             screen.blit(name, score.position+[10,-5])
             screen.blit(base_value, score.position+[10,75])
             screen.blit(player_value, score.position+[10,115])

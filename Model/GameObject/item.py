@@ -50,7 +50,7 @@ class OtherGoHome(Item):
         self.player_list[self.player_index].item = None
 
 class TheWorld(Item):
-    '''
+    '''t push --set-upstream origin za_warudo
     Za Warudo!
     Only the player who triggered this item is able to move, pick up oil and item, and use other items,
     like the whole game is the player's own world.
@@ -76,7 +76,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
