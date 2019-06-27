@@ -112,6 +112,7 @@ class View_pets(__Object_base):
             image = pg.transform.rotate(self.images[_i], angle)
             screen.blit(image, image.get_rect(center=pets[_i].position))
 
+
 class View_scoreboard(__Object_base):
     def __init__(self, model):
         self.model = model
@@ -155,8 +156,45 @@ class View_scoreboard(__Object_base):
             screen.blit(base_value, score.position+[10,75])
             screen.blit(player_value, score.position+[10,115])
 
+
+class View_items(__Object_base):
+    def __init__(self, model):
+        self.model = model
+        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.2)
+        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
+        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
+        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
+        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
+        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
+        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
+
+    def draw(self, screen):
+        for market in self.model.priced_market_list:
+            if isinstance(market.item, model_item.IGoHome):
+                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.MagnetAttract):
+                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.Invincible):
+                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.TheWorld):
+                image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.OtherGoHome):
+                image = self.blackhole        #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+            elif isinstance(market.item, model_item.RadiationOil):
+                image = self.bomb
+            elif isinstance(market.item, model_item.RadiusNotMove):
+                image = self.staff
+            elif isinstance(market.item, model_item.ShuffleBases):
+                image = self.shuffle
+            else:
+                image = self.marketcenter
+            screen.blit(image, market.position+[5,5])
+
 def init_staticobjects():
     View_players.init_convert()
     View_oils.init_convert()
     View_bases.init_convert()
     View_pets.init_convert()
+    View_items.init_convert()

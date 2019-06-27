@@ -21,6 +21,8 @@ class Pet(object):
         2 for going base
         """
         self.speed = model_const.pet_normal_speed
+        self.cd_time = model_const.pet_cd_time
+        self.cd = self.cd_time
     
     def check_collide_with_player(self, player):
         if Vec(self.position - player.position).length() <= player.radius + self.radius:
@@ -35,6 +37,7 @@ class Pet(object):
     def check_collide_with_base(self, base):
         if self.status == 2 and Vec(self.position - base.center).length() <= self.radius:
             self.status = 0
+            self.cd = self.cd_time
             base.value_sum += self.carry_now
             self.carry_now = 0
     
@@ -42,9 +45,10 @@ class Pet(object):
         self.check_collide_with_player(player_list[self.owner_index])
         self.check_collide_with_base(base_list[self.owner_index])
         if self.status == 0:
-            # do nothing
             self.direction = Vec(0, 0)
-            pass
+            self.cd -= 1
+            if self.cd < 0:
+                self.change_status(1)
         else:
             target = (player_list[self.owner_index].position if self.status == 1 \
                       else base_list[self.owner_index].center)
