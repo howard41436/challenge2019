@@ -4,6 +4,7 @@ define Application Programming Interface(API)
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
+import Model.GameObject.item as Item
 import View.const as view_const
 
 class Helper(object):
@@ -57,6 +58,17 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].speed
 
+    def get_player_is_invincible(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].is_invincible
+    
+    def get_players_insurance_value(self):
+        return [player.insurance_value for player in self.model.player_list]
+    def get_player_insurance_value(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].insurance_value
+
+
     # Get pet data
 
     # Get oil data
@@ -75,6 +87,23 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+
+    # Get market data
+    def get_markets(self):
+        return [(tuple(market.position), market.item.name, market.item.price) for market in self.model.market_list]
+
+    # Get item data
+    def get_player_item_name(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return None if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.name
+
+    def get_player_item_is_active(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.active
+
+    def get_player_item_duration(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
 
     # Get game informations
     def get_timer(self):
@@ -107,11 +136,21 @@ class Helper(object):
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
 
+    def get_nearest_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        my_pos = self.get_player_position(player_id)
+        return min(self.get_markets(), key=lambda market: self.get_distance(market[0], my_pos))
+
+    def get_nearest_market_with_item(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        my_pos = self.get_player_position(player_id)
+        market_with_item = filter(lambda market: market[1] != None, self.get_markets())
+        return min(market_with_item, key=lambda market: self.get_distance(market[0], my_pos)) if market_with_item != [] else None
+
+
     # Useful (?) functions
     def get_distance(self, p1, p2):
         return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
-    
-
 

@@ -8,8 +8,7 @@ from Events.Manager import *
 
 
 class Player(object):
-
-    def __init__(self, name, index, pet_list, equipments=[0, 0, 0, 0, 0], is_AI = False):
+    def __init__(self, name, index, pet_list, equipments = [0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
