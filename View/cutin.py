@@ -35,7 +35,6 @@ class Cutin_manager():
         self.model = model
 
     def update_state(self, player_index, skill_name, prev_screen):
-        print(player_index)
         self.player_index = player_index
         self.skill_name = skill_name
         self.background = prev_screen.copy()
@@ -57,7 +56,6 @@ class Cutin_manager():
             # phase 3
             cutin_background = cutin_background.convert()
             cutin_background.set_alpha(255/30*(90-self.timer))
-            print('alpha:', cutin_background.get_alpha())
             screen.blit( cutin_background, (0, 250) )
 
         pg.display.flip()

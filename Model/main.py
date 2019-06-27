@@ -181,7 +181,6 @@ class GameEngine(object):
 
             self.timer -= 1
             if self.timer == 0:
-                print("End Game")
                 self.ev_manager.post(EventStateChange(STATE_ENDGAME))
 
     def update_cutin(self):
@@ -197,12 +196,10 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if self.fadacai:
-            if random.random() < model_const.fadacai_oil_probability:
-                self.create_oil()
-        else:
-            if random.random() < model_const.oil_probability:
-                self.create_oil()
+        p = model_const.fadacai_oil_probability if self.fadacai else model_const.oil_probability
+        p *= 2 * (max(model_const.max_oil_num - len(self.oil_list), 0)) / model_const.max_oil_num
+        if random.random() < p:
+            self.create_oil()
 
     def init_base(self) :
         # todo

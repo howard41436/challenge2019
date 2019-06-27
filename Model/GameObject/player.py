@@ -44,7 +44,6 @@ class Player(object):
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
         self.pet.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
         self.pet.cd_time *= model_const.pet_cd_down_multiplier ** equipments[model_const.pet_cd_down_idx]
-        print(self.pet.cd_time)
         self.pet.cd = self.pet.cd_time
 
     def use_item(self, ev_manager):
