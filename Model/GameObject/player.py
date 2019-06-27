@@ -25,7 +25,6 @@ class Player(object):
         self.item = None
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
-        self.freeze = False   # If one of the other players is use 'The World', then self is freeze
         self.collide_list = [False] * 4
 
     def get_name(self):
@@ -112,14 +111,13 @@ class Player(object):
             for oil in oils:
                 if Vec.magnitude(oil.position - self.position) <= oil.radius + model_const.magnet_attract_radius:
                     oil.update_position(Vec.normalize(self.position - oil.position) * model_const.magnet_attract_speed)
-        if not self.freeze:
-            new_x = self.position[0] + self.direction[0] * self.speed
-            new_y = self.position[1] + self.direction[1] * self.speed
-            if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
-                self.direction[0] = 0
-            if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
-                self.direction[1] = 0
-            self.position += Vec(self.direction) * self.speed
+        new_x = self.position[0] + self.direction[0] * self.speed
+        new_y = self.position[1] + self.direction[1] * self.speed
+        if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
+            self.direction[0] = 0
+        if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
+            self.direction[1] = 0
+        self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
         if not self.is_invincible:
