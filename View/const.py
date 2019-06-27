@@ -15,6 +15,7 @@ COLOR_BLUE           = (  0,   0, 255)
 COLOR_GREEN          = (  0, 255,   0)
 COLOR_RED            = (255,   0,   0)
 COLOR_GRAY           = (128, 128, 128)
+COLOR_ORANGE         = (255, 128,   0)
 
 
 # These cooler colors are preferred

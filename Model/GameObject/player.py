@@ -32,9 +32,6 @@ class Player(object):
     def get_name(self):
         return self.name
 
-    def get_color(self):
-        return self.color
-
     def get_value(self):
         return self.value
 
@@ -47,7 +44,9 @@ class Player(object):
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
         self.pet.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
-        self.pet.speed *= model_const.pet_speed_multiplier ** equipments[model_const.pet_speed_up_idx]
+        self.pet.cd_time *= model_const.pet_cd_down_multiplier ** equipments[model_const.pet_cd_down_idx]
+        print(self.pet.cd_time)
+        self.pet.cd = self.pet.cd_time
 
     def use_item(self, ev_manager):
         if self.item is not None and not self.item.active:
