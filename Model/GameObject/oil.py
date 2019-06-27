@@ -6,10 +6,11 @@ import random
 from pygame.math import Vector2 as Vec
 
 class Oil(object):
-    def __init__(self, pos, price):
+    def __init__(self, pos, price, level):
         self.position = pos
         self.price = price
         self.radius = model_const.oil_radius
+        self.level = level
 
     def update_position(self, new_position):
         self.position += new_position
@@ -30,6 +31,16 @@ def calc_price(pos):
         )
     return price
 
+def level_determined(price):
+    if price <= 400:
+        return 1
+    elif price <= 600:
+        return 2
+    elif price <= 800:
+        return 3
+    else:
+        return 4
+
 def new_oil(): 
     R = random.random() * (view_const.game_size[0] / 2 - model_const.market_radius) + model_const.market_radius
     theta = random.random() * 2 * np.pi
@@ -38,4 +49,5 @@ def new_oil():
 	R * math.sin(theta) + view_const.game_size[0] / 2
         )
     price = calc_price(pos)
-    return Oil(pos, price) 
+    level = level_determined(price)
+    return Oil(pos, price, level) 

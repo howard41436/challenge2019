@@ -17,6 +17,10 @@ class Item(object):
         self.player_list = player_list
         self.oil_list = oil_list
         self.base_list = base_list
+        self.name = None
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventCutInStart(self.player_index, self.name))
 
 class IGoHome(Item):
     '''
@@ -24,7 +28,8 @@ class IGoHome(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['IGoHome']
+        self.name = 'IGoHome'
+        self.price = model_const.item_price[self.name]
 
 
     def trigger(self, ev_manager):
@@ -40,7 +45,8 @@ class OtherGoHome(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['OtherGoHome']
+        self.name = 'OtherGoHome'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventOtherGoHome(self.player_list[self.player_index]))
@@ -59,9 +65,11 @@ class TheWorld(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
-        self.price = model_const.item_price['TheWorld']
+        self.name = 'TheWorld'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventTheWorldStart(self.player_list[self.player_index]))
         self.duration = model_const.the_world_duration
         self.active = True
@@ -76,7 +84,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -88,7 +96,8 @@ class MagnetAttract(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['MagnetAttract']
+        self.name = 'MagnetAttract'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
@@ -117,7 +126,8 @@ class RadiationOil(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['RadiationOil']
+        self.name = 'RadiationOil'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
@@ -134,7 +144,8 @@ class Invincible(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['Invincible']
+        self.name = 'Invincible'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
@@ -161,7 +172,8 @@ class RadiusNotMove(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
         self.freeze_list = []
-        self.price = model_const.item_price['RadiusNotMove']
+        self.name = 'RadiusNotMove'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
@@ -170,7 +182,7 @@ class RadiusNotMove(Item):
         position = self.player_list[ self.player_index ].position
         for player in self.player_list:
             if player.index != self.player_index and \
-               Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
+               Vec.length(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
                 self.freeze_list.append(player)
 
@@ -205,7 +217,8 @@ class ShuffleBases(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['ShuffleBases']
+        self.name = 'ShuffleBases'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
@@ -221,7 +234,8 @@ class FaDaCai(Item):
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index)
-        self.price = model_const.item_price['FaDaCai']
+        self.name = 'FaDaCai'
+        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))

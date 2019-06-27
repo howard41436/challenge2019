@@ -10,6 +10,7 @@ import View.const            as view_const
 import View.animations       as view_Animation
 import View.utils            as view_utils
 import View.staticobjects    as view_staticobjects
+import View.cutin            as view_cutin
 import Controller.const      as ctrl_const
 import Interface.const       as ifa_const
 from pygame.math import Vector2 as Vec
@@ -40,6 +41,7 @@ class GraphicalView(object):
 
         view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
+        view_cutin.init_cutin()
 
         self.animations = []
 
@@ -49,10 +51,10 @@ class GraphicalView(object):
         self.pets = view_staticobjects.View_pets(model)
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
+        self.endboard = view_staticobjects.View_endboard(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
-
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
@@ -67,16 +69,15 @@ class GraphicalView(object):
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
                 self.render_play()
+            if cur_state == model.STATE_CUTIN:
+                self.cutin_manager.draw(self.screen)
             if cur_state == model.STATE_STOP:
                 self.render_stop()
             if cur_state == model.STATE_ENDGAME:
                 self.render_endgame()
-
             self.display_fps()
-            # limit the redraw speed to 30 frames per second
             self.clock.tick(view_const.frame_per_sec)
         elif isinstance(event, EventQuit):
-            # shut down the pygame graphics
             self.is_initialized = False
             pg.quit()
         elif isinstance(event, EventInitialize) or\
@@ -94,6 +95,7 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
         elif isinstance(event, EventShuffleBases):
             base_pos = self.model.base_list
             for i in range(0, model_const.player_number):
@@ -104,11 +106,16 @@ class GraphicalView(object):
                     if base_pos[i].center[1] == base_pos[j].center[1]:
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
                             (base_pos[i].center+base_pos[j].center)/2))
-
             
 
 
+        elif isinstance(event, EventCutInStart):
+            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
 
+        """
+        elif isinstance(event, EventRadiusNotMoveStart):
+            self.animations.append(view_Animation.Animation_freeze(center=event.position))
+        """
 
 
 
@@ -161,30 +168,8 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
+            self.endboard.draw(self.screen)
 
-            # draw background
-            self.screen.fill(view_const.COLOR_WHITE)
-            # write some word
-            result = []
-            
-            titlefont = pg.font.Font(view_const.board_name_font, 70)
-            title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-            self.screen.blit(title, (400, 15))
-            numfont = pg.font.Font(view_const.board_name_font, 30)
-            for base in self.model.base_list:
-                result.append([self.model.player_list[base.owner_index].name, base.value_sum])
-            def takeSecond(item): return item[1]
-            result.sort(key=takeSecond, reverse=True)
-            pos_x = 0
-            prize = 1
-            for player in result:
-                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(int(player[1]))), True, view_const.COLOR_BLACK)
-                self.screen.blit(line, (400, 200 + pos_x))
-                pg.display.flip()
-                pos_x += 100
-                prize += 1
-            # update surface
-            pg.display.flip()
     
 
     def render_play(self):
@@ -193,10 +178,13 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
+        
         # draw background
         self.screen.fill(view_const.COLOR_WHITE)
         self.screen.blit(self.background_image, [0, 0])
         self.screen.blit(self.priced_market, [322, 328])
+
+        self.bases.draw(self.screen)
 
         # draw animation
         for ani in self.animations:
@@ -205,7 +193,6 @@ class GraphicalView(object):
 
         # draw static objects
         self.oils.draw(self.screen)
-        self.bases.draw(self.screen)
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
@@ -213,12 +200,12 @@ class GraphicalView(object):
         self.scoreboard.draw(self.screen)
 
 
-        timefont = pg.font.Font(view_const.board_name_font, 60)
-
-
+        # draw time
+        timefont = pg.font.Font(view_const.board_num_font, 60)
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        # update screen
         self.screen.blit(time, (950, 35))
-
         pg.display.flip()
         
     def render_stop(self):
@@ -263,11 +250,10 @@ class GraphicalView(object):
             self.screen.fill(view_const.COLOR_WHITE)
             pos_x = 0
             for player in result:
-                line = boardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
+                line = self.animations.appendboardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
                 self.screen.blit(line, (50, 50 + pos_x))
                 pg.display.flip()
                 pos_x += 50
-
 
     def display_fps(self):
         """Show the programs FPS in the window handle."""

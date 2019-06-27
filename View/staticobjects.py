@@ -6,7 +6,6 @@ import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
 
-
 '''
 * "Static" object means that it is rendered every tick!
 * The term "static" is designed compared to "animation", which is dynamic.
@@ -39,19 +38,35 @@ class View_players(__Object_base):
         )
         for _color in ('blue', 'green', 'red', 'orange')
     )
+
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.8)
+    images_color = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
+            0.2
+        )
+        for _rainbow in range(0,19,1)
+    )
+    def __init__(self, model):
+        super(View_players, self).__init__(model)
+        super(View_players, self).init_convert()
+        self.color_switch = [0, 0, 0, 0]
 
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
-
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
+
             image = pg.transform.rotate(self.images[_i], angle)
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-25, -60])
+            if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
+            else: 
+                image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
+                self.color_switch[_i] += 1
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
@@ -212,6 +227,37 @@ class View_items(__Object_base):
             else:
                 image = self.marketcenter
             screen.blit(image, market.position+[5,5])
+
+
+class View_endboard(__Object_base):
+    def __init__(self, model):
+        self.model = model
+    def draw(self, screen):
+        screen.fill(view_const.COLOR_WHITE)
+        # write some word
+        result = []
+        
+        titlefont = pg.font.Font(view_const.board_name_font, 70)
+        title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
+        screen.blit(title, (400, 15))
+        numfont = pg.font.Font(view_const.board_name_font, 30)
+        numfont2 = pg.font.Font(view_const.board_name_font, 25)
+        for base in self.model.base_list:
+            result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+        def takeSecond(item): return item[1]
+        result.sort(key=takeSecond, reverse=True)
+        pos_x = 256
+        prize = 1
+        first = result[0][1]
+        for player in result:
+            line = numfont.render(f'{prize}.{player[0]}', True, view_const.COLOR_BLACK)
+            num = numfont2.render(f'{int(player[1])}', True, view_const.COLOR_BLACK)
+            screen.blit(line, (pos_x-100, 700))
+            screen.blit(num, (pos_x-60 , 665-player[1]/first*500))
+            pg.draw.rect(screen, view_const.COLOR_GRAY ,((pos_x-100, 700-player[1]/first*500), (160, player[1]/first*500)))
+            pos_x += 256
+            prize += 1
+        pg.display.flip()
 
 def init_staticobjects():
     View_players.init_convert()
