@@ -36,7 +36,7 @@ colors = [
 # oil_const
 curve_a = 100000
 curve_b = 100
-oil_probability = 1 / 20
+oil_probability = 1 / 10
 init_oil_number = 20
 oil_radius = 8
 price_max = 1200

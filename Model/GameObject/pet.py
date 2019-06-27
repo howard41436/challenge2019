@@ -25,7 +25,11 @@ class Pet(object):
         self.cd = self.cd_time
     
     def check_collide_with_player(self, player):
+<<<<<<< HEAD
         if Vec(self.position - player.position).length() <= player.radius + self.radius:
+=======
+        if (self.position - player.position).length() <= player.radius + self.radius:
+>>>>>>> origin/AI
             delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta

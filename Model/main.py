@@ -133,9 +133,9 @@ class GameEngine(object):
             if self.AI_names[index] == "~":
                 Tmp_P = Player("manual", index, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index, self.pet_list)
+                Tmp_P = Player("default", index, self.pet_list, is_AI = True)
             else:
-                Tmp_P = Player(self.AI_names[index], index, self.pet_list)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list, is_AI = True)
             self.player_list.append(Tmp_P)
             
     def init_pet(self):

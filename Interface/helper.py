@@ -1,5 +1,5 @@
 """
-define Application Programming Interface(API) 
+define Application Programming Interface(API)
 """
 from pygame.math import Vector2 as Vec
 
@@ -7,6 +7,7 @@ import Model.const as model_const
 import View.const as view_const
 
 class Helper(object):
+
     def __init__(self, model, index):
         self.model = model
         self.player_id = index
@@ -16,12 +17,10 @@ class Helper(object):
         self.player_normal_speed = model_const.player_normal_speed
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
-        
 
     # Get player data
     def get_self_id(self):
         return self.player_id
-
     def get_players_position(self):
         return [tuple(player.position) for player in self.model.player_list]
     def get_player_position(self, player_id = None):
@@ -63,16 +62,20 @@ class Helper(object):
     # Get oil data
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
-    def get_oils_distance_from_center(self):
-        game_center = Vec(view_const.game_size[0] / 2, view_const.game_size[1] / 2)
-        return [((Vec(oil.position) - game_center)).length() for oil in self.model.oil_list]
-    # Get base data
+    def get_oils_level(self):
+        return [oil.level for oil in self.model.oil_list]
+    def get_oils_distance_to_center(self):
+        return [self.get_distance_to_center(oil) for oil in self.get_oils()]
+    def get_oils_by_distance_from_center(self):
+        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+
+    # Get base data 
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
-        
+
     # Get game informations
     def get_timer(self):
         return self.model.timer
@@ -82,15 +85,33 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         players = self.get_players_position()
-        return min(players.remove(my_pos), key=lambda player: (player - my_pos).magnitude())
+        min_distance = 800
+        id = None
+        for i in range(len(players)):
+            if i == player_id:
+                continue 
+            if (Vec(players[i]) - Vec(my_pos)).length() < min_distance:
+                min_distance = (Vec(players[i]) - Vec(my_pos)).length()
+                id = i 
+        return id
 
     def get_nearest_oil(self, player_id = None):
         if player_id == None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         oils = self.get_oils()
-        return min(oils, key=lambda oil: (oil - my_pos).magnitude())
-    
+        if len(oils) == 0:
+            return None
+        else:
+            return min(oils, key=lambda oil: (Vec(oil) - Vec(my_pos)).length())
+
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
+
+    # Useful (?) functions
+    def get_distance(self, p1, p2):
+        return (Vec(p1) - Vec(p2)).length()
+    def get_distance_to_center(self, p1):
+        return self.get_distance(p1, Vec(self.game_size) / 2)
+    
 
 
