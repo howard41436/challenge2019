@@ -57,7 +57,6 @@ class Cutin_manager():
             # phase 3
             cutin_background = cutin_background.convert()
             cutin_background.set_alpha(255/30*(90-self.timer))
-            print('alpha:', cutin_background.get_alpha())
             screen.blit( cutin_background, (0, 250) )
 
         pg.display.flip()
