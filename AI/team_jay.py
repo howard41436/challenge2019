@@ -1,4 +1,4 @@
-from AI.base import *
+rom AI.base import *
 
 from pygame.math import Vector2 as Vec
 import random
@@ -8,7 +8,7 @@ class TeamAI(BaseAI):
         self.helper = helper
         self.skill = []
 
-        self.last_dir = random.randint(1, 8)
+        self.last_dir = random.randint(1, 😎
 
     def get_best_oil_position(self):
         my_pos = self.helper.get_player_position()
@@ -53,27 +53,29 @@ class TeamAI(BaseAI):
         for i in range(4):
             if self.helper.player_id == i:
                 continue
-            cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed +1)))
-            if 0 < maximum <= cp:
+            cp = 1e-3 * (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1)))
+            # print("{}th cp is {}".format(i, cp))
+            if maximum <= cp:
                 maximum = cp
                 target = i
-        return maximum, players_position[i]
+        return maximum, players_position[target]
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
-        home_cp = 1e-5 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
+        home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)
 
         if home_cp > best_cp:
             best_cp = home_cp
             dest = home
-        #attack_cp, target = self.attack(carry, my_pos)
-        #if best_cp >= attack_cp:
-        #    dest = (target[0] - my_pos[0], target[1] - my_pos[1])
+        attack_cp, target_pos = self.attack(carry, my_pos)
+        # print("smooth")
+        if attack_cp >= best_cp:
+            dest = target_pos
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
