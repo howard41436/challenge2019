@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 4
+game_length = 60 * 60 * 1
 #dir const
 """
 DIR_U  = 1
