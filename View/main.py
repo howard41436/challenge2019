@@ -104,7 +104,10 @@ class GraphicalView(object):
                     if base_pos[i].center[1] == base_pos[j].center[1]:
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
                             (base_pos[i].center+base_pos[j].center)/2))
-
+        """
+        elif isinstance(event, EventRadiusNotMoveStart):
+            self.animations.append(view_Animation.Animation_freeze(center=event.position))
+        """
             
 
 
@@ -214,7 +217,7 @@ class GraphicalView(object):
         self.scoreboard.draw(self.screen)
 
 
-        timefont = pg.font.Font(view_const.board_name_font, 60)
+        timefont = pg.font.Font(view_const.board_num_font, 60)
 
 
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
