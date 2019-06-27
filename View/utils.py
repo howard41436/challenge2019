@@ -23,6 +23,7 @@ def scaled_surface(surface, scale):
 
 
 """A library for describing and applying affine transforms to PIL images."""
+"""Credit:https://gist.github.com/WChargin/d8eb0cbafc4d4479d004"""
 class RGBTransform(object):
     """A description of an affine transformation to an RGB image.
     This class is immutable.
