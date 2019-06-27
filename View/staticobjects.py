@@ -41,6 +41,18 @@ class View_players(__Object_base):
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
 
+    images_color = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
+            0.2
+        )
+        for _rainbow in range(0,19,1)
+    )
+    def __init__(self, model):
+        super(View_players, self).__init__(model)
+        super(View_players, self).init_convert()
+        self.color_switch = [0, 0, 0, 0]
+
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
@@ -50,7 +62,10 @@ class View_players(__Object_base):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
-            image = pg.transform.rotate(self.images[_i], angle)
+            if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
+            else: 
+                image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
+                self.color_switch[_i] += 1
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-15, -60])
             screen.blit(image, image.get_rect(center=players[_i].position))
 
