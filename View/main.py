@@ -198,6 +198,8 @@ class GraphicalView(object):
         self.screen.blit(self.background_image, [0, 0])
         self.screen.blit(self.priced_market, [322, 328])
 
+        self.bases.draw(self.screen)
+
         # draw animation
         for ani in self.animations:
             if ani.expired: self.animations.remove(ani)
@@ -205,7 +207,6 @@ class GraphicalView(object):
 
         # draw static objects
         self.oils.draw(self.screen)
-        self.bases.draw(self.screen)
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
