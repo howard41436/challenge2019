@@ -44,27 +44,16 @@ class GraphicalView(object):
         self.animations = []
 
         self.players = view_staticobjects.View_players(model)
-
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
         self.pets = view_staticobjects.View_pets(model)
-
         self.scoreboard = view_staticobjects.View_scoreboard(model)
+        self.items = view_staticobjects.View_items(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
 
-        
-        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
-        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.11)
-        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
-        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
-        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.12)
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
@@ -158,28 +147,6 @@ class GraphicalView(object):
             # update surface
             pg.display.flip()
     
-    def draw_priced_market(self):
-        for market in self.model.priced_market_list:
-            if isinstance(market.item, model_item.IGoHome):
-                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.MagnetAttract):
-                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.Invincible):
-                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.TheWorld):
-                image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.RadiationOil):
-                image = self.bomb
-            elif isinstance(market.item, model_item.RadiusNotMove):
-                image = self.staff
-            elif isinstance(market.item, model_item.ShuffleBases):
-                image = self.shuffle
-            else :
-                image = self.marketcenter
-            image.convert()
-            self.screen.blit(image, market.position)
 
     def render_play(self):
         """
@@ -200,7 +167,7 @@ class GraphicalView(object):
         # draw static objects
         self.oils.draw(self.screen)
         self.bases.draw(self.screen)
-        self.draw_priced_market()
+        self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
         self.scoreboard.draw(self.screen)
