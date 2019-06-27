@@ -188,7 +188,30 @@ class Animation_shuffleBases_horizontal(Animation_raster):
 class Animation_start():
     pass
 
+class Animation_endboard(Animation_raster):
+    def __init__(self, score, **pos):
+        super().__init__(1, 2*len(self.frames), **pos)
+        self.frames = tuple(
+            pg.Surface((200, i)).fill(view_const.COLOR_BLACK) for i in range(0, int(score), 10)
+        )
+        
 
+"""class Animation_freeze(Animation_raster):
+    frames = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')),
+            1/30 * i
+        )
+        for i in range(1, 30)
+    )
+
+    def __init__(self, **pos):
+        super().__init__(1, len(self.frames), **pos)
+
+# the countdown animation
+class Animation_start():
+    pass
+"""
 
 def init_animation():
     Animation_equalize.init_convert()
@@ -196,4 +219,5 @@ def init_animation():
     Animation_magnetattract.init_convert()
     Animation_othergohome.init_convert()
     Animation_radiationOil.init_convert()
+    """Animation_freeze.init_convert()"""
 
