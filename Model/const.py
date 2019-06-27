@@ -29,7 +29,7 @@ colors = [
     view_const.COLOR_BLUE,
     view_const.COLOR_GREEN,
     view_const.COLOR_RED,
-    view_const.COLOR_ORANGERED
+    view_const.COLOR_ORANGE
 ]
 
 # oil_const
@@ -57,6 +57,7 @@ player_initial_direction_no = [4, 6, 2, 8]
 pet_normal_speed = player_normal_speed / 3
 pet_radius = 4
 pet_carry_max = 1000
+pet_cd_time = 60 * 20
 
 # base
 
@@ -74,16 +75,16 @@ speed_up_idx = 0
 oil_up_idx = 1
 insurance_idx = 2
 pet_carry_max_up_idx = 3
-pet_speed_up_idx = 4
+pet_cd_down_idx = 4
 
 speed_multiplier = 1.2
 oil_multiplier = 1.2
 init_insurance = 50
 pet_carry_max_up_multiplier = 1.5
-pet_speed_multiplier = 1.2
+pet_cd_down_multiplier = 0.8
 
 default_equipments = [
-    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 10],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0]
@@ -123,10 +124,10 @@ priced_item_activate = {
     'OtherGoHome': True,
     'TheWorld': True,
     'MagnetAttract': True,
-    'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
     'FaDaCai': False,
 }
 
