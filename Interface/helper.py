@@ -26,49 +26,49 @@ class Helper(object):
     def get_players_position(self):
         return [tuple(player.position) for player in self.model.player_list]
     def get_player_position(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return tuple(self.model.player_list[player_id].position)
 
     def get_players_direction(self):
         return [tuple(player.direction) for player in self.model.player_list]
     def get_player_direction(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return tuple(self.model.player_list[player_id].direction)
 
     def get_players_value(self):
         return [player.value for player in self.model.player_list]
     def get_player_value(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].value
 
     def get_players_bag(self):
         return [player.bag for player in self.model.player_list]
     def get_player_bag(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].bag
 
     def get_players_is_AI(self):
         return [player.is_AI for player in self.model.player_list]
     def get_player_is_AI(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].is_AI
 
     def get_players_speed(self):
         return [player.speed for player in self.model.player_list]
     def get_player_speed(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].speed
 
     def get_players_is_invincible(self):
         return [player.in_invincible for player in self.model.player_list]
     def get_player_is_invincible(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].is_invincible
     
     def get_players_insurance_value(self):
         return [player.insurance_value for player in self.model.player_list]
     def get_player_insurance_value(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].insurance_value
 
 
@@ -83,13 +83,13 @@ class Helper(object):
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+        return sorted(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data 
     def get_bases_center(self):
         return [tuple(base.center) for base in self.model.base_list]
     def get_base_center(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
 
     # Get market data
@@ -99,16 +99,16 @@ class Helper(object):
 
     # Get item data
     def get_player_item_name(self, player_id = None):
-        if player_id == None: player_id = self.player_id
-        return None if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.name
+        if player_id is None: player_id = self.player_id
+        return None if self.model.player_list[player_id].item is None else self.model.player_list[player_id].item.name
 
     def get_player_item_is_active(self, player_id = None):
-        if player_id == None: player_id = self.player_id
-        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.active
+        if player_id is None: player_id = self.player_id
+        return False if self.model.player_list[player_id].item is None else self.model.player_list[player_id].item.active
 
     def get_player_item_duration(self, player_id = None):
-        if player_id == None: player_id = self.player_id
-        return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
+        if player_id is None: player_id = self.player_id
+        return 0 if self.model.player_list[player_id].item is None else self.model.player_list[player_id].item.duration
 
     # Get game informations
     def get_timer(self):
@@ -116,7 +116,7 @@ class Helper(object):
 
     # Extra functions
     def get_nearest_player(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         players = self.get_players_position()
         min_distance = 800
@@ -130,7 +130,7 @@ class Helper(object):
         return id
 
     def get_nearest_oil(self, player_id = None):
-        if player_id == None: player_id = self.player_id
+        if player_id is None: player_id = self.player_id
         my_pos = self.get_player_position(player_id)
         oils = self.get_oils()
         if len(oils) == 0:
