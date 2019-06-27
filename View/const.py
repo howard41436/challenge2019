@@ -73,7 +73,7 @@ player_width = 100
 
 # Font
 board_name_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
-board_num_font = os.path.join('Font', 'pixel', 'Pixel-Miners.otf')
+board_num_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
 
 # Path
 IMAGE_PATH = os.path.join('View', 'image')

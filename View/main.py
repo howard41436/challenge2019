@@ -205,7 +205,7 @@ class GraphicalView(object):
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
         # update screen
-        self.screen.blit(time, (925, 50))
+        self.screen.blit(time, (950, 35))
         pg.display.flip()
         
     def render_stop(self):
