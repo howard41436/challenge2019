@@ -2,21 +2,7 @@ from AI.base import *
 
 from pygame.math import Vector2 as Vec
 import random
-<<<<<<< HEAD
-=======
 
->>>>>>> model
-direct = [
-[0, 0],             #steady
-[0, -1],             #up
-[0.707, -0.707],     #up right
-[1, 0],             #right
-[0.707, 0.707],    #right down
-[0, 1],            #down
-[-0.707, 0.707],   #left down
-[-1, 0],            #left
-[-0.707, -0.707],    #left up
-]
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
@@ -37,10 +23,17 @@ class TeamAI(BaseAI):
                 best_pos = oil_poses[i]
         return best_pos, my_pos, best_cp
     def get_dir(self, dest, my_pos):
-<<<<<<< HEAD
-        
-=======
->>>>>>> model
+        direct = [
+        [0, 0],             #steady
+        [0, -1],             #up
+        [0.707, -0.707],     #up right
+        [1, 0],             #right
+        [0.707, 0.707],    #right down
+        [0, 1],            #down
+        [-0.707, 0.707],   #left down
+        [-1, 0],            #left
+        [-0.707, -0.707],    #left up
+        ]
         new = Vec(dest) - Vec(my_pos)
         maximum = 0
         record = 0
@@ -62,31 +55,10 @@ class TeamAI(BaseAI):
                 continue
             cp = 1e-3 * (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1)))
             # print("{}th cp is {}".format(i, cp))
-            if maximum <= cp and players_speed[i] < my_speed:
+            if maximum <= cp:
                 maximum = cp
                 target = i
         return maximum, players_position[target]
-
-    def ankle_break(self, my_dir, carry, my_pos):
-        players_position = self.helper.get_players_position()
-        new_dir = Vec(direct[my_dir])
-        for i in range(4):
-            if self.helper.player_id == i:
-                continue
-            distance = (Vec(players_position[i]) - Vec(my_pos)).length()
-            if distance <=  * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
-                # print(self.helper.player_id, "changed")
-                vector_of_centers = (Vec(my_pos) - Vec(self.helper.get_player_position(player_id = i)))
-                new_dir = Vec(direct[my_dir]) +  vector_of_centers / vector_of_centers.length()
-        maximum = 0
-        togo = -1
-        for i in range(1, 9):
-            # print("new is {}".format(new_dir))
-
-            if maximum < new_dir.dot(Vec(direct[i])):
-                maximum = new_dir.dot(Vec(direct[i]))
-                togo = i
-        return togo
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
@@ -95,22 +67,17 @@ class TeamAI(BaseAI):
         dest = best_pos
         home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
-                     else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)**0.8
+                     else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)
+
         if home_cp > best_cp:
             best_cp = home_cp
             dest = home
-        attack_cp, target_pos = self.attack(carry, my_pos)
-
-        if attack_cp >= best_cp:
-            dest = target_pos
-        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
+        #attack_cp, target_pos = self.attack(carry, my_pos)
+        # print("smooth")
+        #if attack_cp >= best_cp:
+        #    dest = target_pos
+        return self.get_dir(dest, my_pos)
 """
-=======
-        if attack_cp >= best_cp:
-            dest = target_pos
-        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
-'''
->>>>>>> model
 DIR_stop = 0
 DIR_U    = 1
 DIR_RU   = 2
@@ -120,4 +87,4 @@ DIR_D    = 5
 DIR_LD   = 6
 DIR_L    = 7
 DIR_LU   = 8
-'''
+"""

@@ -62,7 +62,6 @@ class Helper(object):
     # Get oil data
     def get_oils(self):
         return [tuple(oil.position) for oil in self.model.oil_list]
-
     def get_oils_level(self):
         return [oil.level for oil in self.model.oil_list]
     def get_oils_distance_to_center(self):

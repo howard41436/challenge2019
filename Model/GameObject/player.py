@@ -8,13 +8,14 @@ from Events.Manager import *
 
 
 class Player(object):
-    def __init__(self, name, index, pet_list, equipments = [0, 0, 0, 0, 0], is_AI = False):
 
+    def __init__(self, name, index, pet_list, equipments=[0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.value = 0
+        self.color = random.choice(view_const.playerColor)
         self.is_AI = is_AI
         self.direction = Vec(0, 0)
         self.direction_no = model_const.player_initial_direction_no[index]
@@ -26,7 +27,6 @@ class Player(object):
         self.item = None
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
-        self.freeze = False   # If one of the other players is use 'The World', then self is freeze
         self.collide_list = [False] * 4
 
     def get_name(self):
@@ -45,7 +45,6 @@ class Player(object):
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
         self.pet.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
         self.pet.cd_time *= model_const.pet_cd_down_multiplier ** equipments[model_const.pet_cd_down_idx]
-        print(self.pet.cd_time)
         self.pet.cd = self.pet.cd_time
 
     def use_item(self, ev_manager):
