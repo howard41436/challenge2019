@@ -94,6 +94,7 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
         elif isinstance(event, EventShuffleBases):
             base_pos = self.model.base_list
             for i in range(0, model_const.player_number):
@@ -103,7 +104,13 @@ class GraphicalView(object):
                             (base_pos[i].center+base_pos[j].center)/2))
                     if base_pos[i].center[1] == base_pos[j].center[1]:
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))    
+                            (base_pos[i].center+base_pos[j].center)/2))
+
+        elif isinstance(event, EventCutInStart):
+            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+
+
+    
     def render_menu(self):
         """
         Render the game menu.

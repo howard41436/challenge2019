@@ -182,7 +182,7 @@ class RadiusNotMove(Item):
         position = self.player_list[ self.player_index ].position
         for player in self.player_list:
             if player.index != self.player_index and \
-               Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
+               Vec.length(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
                 self.freeze_list.append(player)
 

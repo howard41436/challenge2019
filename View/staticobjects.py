@@ -39,7 +39,7 @@ class View_players(__Object_base):
         )
         for _color in ('blue', 'green', 'red', 'orange')
     )
-
+    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     images_color = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
@@ -55,7 +55,7 @@ class View_players(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-
+        cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
