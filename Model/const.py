@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 5
+game_length = 60 * 60 * 0.1
 #dir const
 """
 DIR_U  = 1
@@ -124,7 +124,7 @@ priced_item_activate = {
     'OtherGoHome': False,
     'TheWorld': False,
     'MagnetAttract': False,
-    'Invincible': False,
+    'Invincible': True,
     'RadiusNotMove': False,
     'RadiationOil': False,
     'ShuffleBases': True,
