@@ -98,6 +98,7 @@ priced_market_positions = [
 market_radius = 70
 market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
+market_cd_time = 600
 
 item_price = {
     'IGoHome': 500, 
