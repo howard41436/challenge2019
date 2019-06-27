@@ -52,10 +52,14 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].is_AI
 
+    def get_players_speed(self):
+        return [player.speed for player in self.model.player_list]
     def get_player_speed(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].speed
 
+    def get_players_is_invincible(self):
+        return [player.in_invincible for player in self.model.player_list]
     def get_player_is_invincible(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].is_invincible
