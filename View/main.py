@@ -43,8 +43,14 @@ class GraphicalView(object):
         view_Animation.init_animation()
         view_cutin.init_cutin()
 
+        # animations
         self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
 
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(model)
+
+        # static objects
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
@@ -95,7 +101,6 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
-
         elif isinstance(event, EventShuffleBases):
             base_pos = self.model.base_list
             for i in range(0, model_const.player_number):
@@ -106,18 +111,12 @@ class GraphicalView(object):
                     if base_pos[i].center[1] == base_pos[j].center[1]:
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
                             (base_pos[i].center+base_pos[j].center)/2))
-            
-
-
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
-
         """
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
         """
-
-
 
     
     def render_menu(self):
@@ -146,7 +145,7 @@ class GraphicalView(object):
             gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
         else:
             gray = (255,) * 3
-       
+
         words_1 = titlefont.render("Fa", True, gray)
         words_2 = titlefont.render("Da", True, gray)
         words_3 = titlefont.render("Cai!", True, gray)
@@ -161,7 +160,8 @@ class GraphicalView(object):
         
         # update surface
         pg.display.flip()
-    
+
+
     def render_endgame(self):
         """
         Render the game menu.
@@ -169,7 +169,6 @@ class GraphicalView(object):
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
             self.endboard.draw(self.screen)
-
     
 
     def render_play(self):
@@ -183,7 +182,6 @@ class GraphicalView(object):
         self.screen.fill(view_const.COLOR_WHITE)
         self.screen.blit(self.background_image, [0, 0])
         self.screen.blit(self.priced_market, [322, 328])
-
         self.bases.draw(self.screen)
 
         # draw animation
@@ -198,7 +196,6 @@ class GraphicalView(object):
         self.players.draw(self.screen)
         pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
-
 
         # draw time
         timefont = pg.font.Font(view_const.board_num_font, 60)
@@ -255,12 +252,14 @@ class GraphicalView(object):
                 pg.display.flip()
                 pos_x += 50
 
+
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
             view_const.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
+        
         
     def initialize(self):
         """
