@@ -75,7 +75,7 @@ class View_oils(__Object_base):
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'oil_{_color}.png')), 0.16
         )
-        for _color in ('black', 'gray', 'pink', 'purple')
+        for _color in ('purple', 'pink', 'gray', 'black')
     )
     
     def draw(self, screen):
@@ -93,6 +93,42 @@ class View_bases(__Object_base):
 
     def draw(self, screen):
         for _base in self.model.base_list:
+            if _base.owner_index == 0:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 800],  160, 160)
+            elif _base.owner_index == 1:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 800],  160, 160)
+            elif _base.owner_index == 2:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 800],  160, 160)
+            elif _base.owner_index == 3:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 800],  160, 160)
             screen.blit(self.images[0], self.images[0].get_rect(center=_base.center))
 
 
@@ -122,7 +158,7 @@ class View_scoreboard(__Object_base):
         self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.3)
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.3)
         self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.3)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.3)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.25)
         self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.3)
 
     def draw(self, screen):
@@ -166,7 +202,7 @@ class View_items(__Object_base):
         self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
         self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
         self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
+        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
         self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
         self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
 

@@ -147,7 +147,7 @@ class Animation_othergohome(Animation_raster):
 class Animation_radiationOil(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'locked.png')),
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'radiation.png')),
             1/30 * i
         )
         for i in range(1, 30)

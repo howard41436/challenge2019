@@ -50,6 +50,9 @@ class GraphicalView(object):
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
 
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
+
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
@@ -206,6 +209,7 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
+        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
 
 

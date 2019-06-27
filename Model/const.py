@@ -126,8 +126,8 @@ priced_item_activate = {
     'MagnetAttract': False,
     'Invincible': False,
     'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': True,
+    'RadiationOil': True,
+    'ShuffleBases': False,
     'FaDaCai': False,
 }
 
