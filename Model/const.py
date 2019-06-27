@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 5
+game_length = 60 * 60 * 3
 cutin_time = 90
 #dir const
 """
