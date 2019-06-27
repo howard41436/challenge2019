@@ -44,7 +44,8 @@ class GraphicalView(object):
         view_cutin.init_cutin()
 
         self.animations = []
-
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(model)
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
