@@ -74,7 +74,8 @@ class Interface(object):
                 player.name, player.is_AI, player.ai = "Error", False, None
                 continue
             self.load_msg(str(index), player.name, "Successful to Load")
-            player.equip_equipments(self.player_AI[player.index].equipments)
+            if self.player_AI[player.index].equipments and len(self.player_AI[player.index].equipments) == model_const.equipment_num:
+                player.equip_equipments(self.player_AI[player.index].equipments)
 
     def load_msg(self, index, name ,msg):
         print(f"[{str(index)}] team_{name}.py: {msg}")

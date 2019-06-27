@@ -85,6 +85,7 @@ init_insurance = 500
 pet_carry_max_up_multiplier = 1.5
 pet_cd_down_multiplier = 0.8
 
+equipment_num = 5
 default_equipments = [
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
