@@ -120,15 +120,15 @@ fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
+    'IGoHome': False,
+    'OtherGoHome': False,
     'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
-    'FaDaCai': True,
+    'MagnetAttract': False,
+    'Invincible': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': False,
+    'FaDaCai': False,
 }
 
 # score
