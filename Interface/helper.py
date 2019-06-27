@@ -18,6 +18,7 @@ class Helper(object):
         self.player_normal_speed = model_const.player_normal_speed
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
+        self.market_position = tuple(model_const.priced_market_positions[0])
 
     # Get player data
     def get_self_id(self):
@@ -58,6 +59,8 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].speed
 
+    def get_players_is_invincible(self):
+        return [player.in_invincible for player in self.model.player_list]
     def get_player_is_invincible(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].is_invincible
@@ -89,8 +92,9 @@ class Helper(object):
         return tuple(self.model.base_list[player_id].center)
 
     # Get market data
-    def get_markets(self):
-        return [(tuple(market.position), market.item.name, market.item.price) for market in self.model.market_list]
+    def get_market(self):
+        market = self.model.priced_market_list[0]
+        return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
 
     # Get item data
     def get_player_item_name(self, player_id = None):
@@ -135,17 +139,6 @@ class Helper(object):
 
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
-
-    def get_nearest_market(self, player_id = None):
-        if player_id == None: player_id = self.player_id
-        my_pos = self.get_player_position(player_id)
-        return min(self.get_markets(), key=lambda market: self.get_distance(market[0], my_pos))
-
-    def get_nearest_market_with_item(self, player_id = None):
-        if player_id == None: player_id = self.player_id
-        my_pos = self.get_player_position(player_id)
-        market_with_item = filter(lambda market: market[1] != None, self.get_markets())
-        return min(market_with_item, key=lambda market: self.get_distance(market[0], my_pos)) if market_with_item != [] else None
 
 
     # Useful (?) functions
