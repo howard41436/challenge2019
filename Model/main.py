@@ -35,6 +35,7 @@ class GameEngine(object):
         self.AI_names = AI_names
         self.player_list = []
         self.colors = model_const.colors
+        self.cutin_enable = True
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
@@ -42,6 +43,11 @@ class GameEngine(object):
         self.turn_to = 0
         self.timer = 0
         self.fadacai = False
+
+        for s in self.AI_names:
+            if s == '--debug':
+                self.cutin_enable = False
+                self.AI_names.remove(s)
 
         self.init_oil()
         self.init_pet()
@@ -94,7 +100,7 @@ class GameEngine(object):
             self.fadacai = True
         elif isinstance(event, EventFaDaCaiStop):
             self.fadacai = False
-        elif isinstance(event, EventCutInStart):
+        elif self.cutin_enable and isinstance(event, EventCutInStart):
             self.cutin_timer = model_const.cutin_time
             self.state.push(STATE_CUTIN)
 
