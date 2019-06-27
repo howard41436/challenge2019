@@ -15,6 +15,7 @@ class Player(object):
         self.position = Vec(model_const.base_center[self.index])
         self.value = 0
         self.is_AI = False
+        self.color = random.choice(view_const.playerColor)
         self.direction = Vec(0, 0)
         self.direction_no = model_const.player_initial_direction_no[index]
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
