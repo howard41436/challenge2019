@@ -67,7 +67,7 @@ class TeamAI(BaseAI):
             if self.helper.player_id == i:
                 continue
             distance = (Vec(players_position[i]) - Vec(my_pos)).length()
-            if distance <=  * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
+            if distance <= 9 * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
                 # print(self.helper.player_id, "changed")
                 vector_of_centers = (Vec(my_pos) - Vec(self.helper.get_player_position(player_id = i)))
                 new_dir = Vec(direct[my_dir]) +  vector_of_centers / vector_of_centers.length()
@@ -94,7 +94,6 @@ class TeamAI(BaseAI):
             best_cp = home_cp
             dest = home
         attack_cp, target_pos = self.attack(carry, my_pos)
-
         if attack_cp >= best_cp:
             dest = target_pos
         return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
