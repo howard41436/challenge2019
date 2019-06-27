@@ -2,7 +2,7 @@ import pygame as pg
 import Model.main as model
 from Events.Manager import *
 import os, math
-
+import random
 
 import Model.GameObject.item as model_item
 import Model.const           as model_const
@@ -114,18 +114,41 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            # draw background
-            self.screen.fill(view_const.COLOR_BLACK)
-            # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Menu', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            # update surface
-            pg.display.flip()
+            self.title_counter = 0;
+
+        # draw backround
+        self.screen.fill(view_const.COLOR_BLACK)
+
+        # word animation
+        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        title_loop_counter = self.title_counter % 80
+        littlefont = pg.font.Font(view_const.board_name_font, 40)
+        if not title_loop_counter:
+            self.darken_time = [random.randint(25, 35), random.randint(55,65)]
+
+        if self.title_counter <= 10:
+            gray = (155 + int(self.title_counter / 10 * 100),) * 3
+        elif self.darken_time[0] <= title_loop_counter <= self.darken_time[0] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[0]) / 5 * 100),) * 3
+        elif self.darken_time[1] <= title_loop_counter <= self.darken_time[1] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
+        else:
+            gray = (255,) * 3
+       
+        words_1 = titlefont.render("Fa", True, gray)
+        words_2 = titlefont.render("Da", True, gray)
+        words_3 = titlefont.render("Cai!", True, gray)
+        words_4 = littlefont.render("presented by 2019 NTU CSIE CAMP", True, gray)
+
+        self.screen.blit(words_1, (595,150))
+        self.screen.blit(words_2, (595,300))
+        self.screen.blit(words_3, (570,450))
+        self.screen.blit(words_4, (320,600))
+
+        self.title_counter += 1
+        
+        # update surface
+        pg.display.flip()
     
     def render_endgame(self):
         """
