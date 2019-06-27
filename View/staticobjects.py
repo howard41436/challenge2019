@@ -60,7 +60,7 @@ class View_oils(__Object_base):
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'oil_{_color}.png')), 0.16
         )
-        for _color in ('black', 'gray', 'pink', 'purple')
+        for _color in ('purple', 'pink', 'gray', 'black')
     )
     
     def draw(self, screen):
@@ -78,6 +78,42 @@ class View_bases(__Object_base):
 
     def draw(self, screen):
         for _base in self.model.base_list:
+            if _base.owner_index == 0:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 800],  160, 160)
+            elif _base.owner_index == 1:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 800],  160, 160)
+            elif _base.owner_index == 2:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 800],  160, 160)
+            elif _base.owner_index == 3:
+                if _base.center == [50, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 0],  160, 160)
+                elif _base.center == [750, 50]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 0],  160, 160)
+                elif _base.center == [50, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 800],  160, 160)
+                elif _base.center == [750, 750]:
+                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 800],  160, 160)
             screen.blit(self.images[0], self.images[0].get_rect(center=_base.center))
 
 
