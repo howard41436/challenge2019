@@ -67,14 +67,6 @@ bulletFlickerCycle        = 15
 whiteBallGenerationTime   = 30
 itemGenerationTime        = 60
 
-# skill card phrases
-# phrase1 : two thin  lines run right
-# phrase2 : two thick lines run left
-# phrase3 : silouette runs left
-# phrase4 : flash
-# phrase5 : silouette becomes picture, and big picture appears
-# phrase6 : silouette and big picture accelerates and disappears
-
 # Size
 player_height = 100
 player_width = 100

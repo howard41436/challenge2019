@@ -6,7 +6,6 @@ import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
 
-
 '''
 * "Static" object means that it is rendered every tick!
 * The term "static" is designed compared to "animation", which is dynamic.
@@ -40,7 +39,6 @@ class View_players(__Object_base):
         for _color in ('blue', 'green', 'red', 'orange')
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
-
     images_color = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
@@ -57,7 +55,6 @@ class View_players(__Object_base):
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
-
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
@@ -227,6 +224,37 @@ class View_items(__Object_base):
             else:
                 image = self.marketcenter
             screen.blit(image, market.position+[5,5])
+
+
+class View_endboard(__Object_base):
+    def __init__(self, model):
+        self.model = model
+    def draw(self, screen):
+        screen.fill(view_const.COLOR_WHITE)
+        # write some word
+        result = []
+        
+        titlefont = pg.font.Font(view_const.board_name_font, 70)
+        title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
+        screen.blit(title, (400, 15))
+        numfont = pg.font.Font(view_const.board_name_font, 30)
+        numfont2 = pg.font.Font(view_const.board_name_font, 25)
+        for base in self.model.base_list:
+            result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+        def takeSecond(item): return item[1]
+        result.sort(key=takeSecond, reverse=True)
+        pos_x = 256
+        prize = 1
+        first = result[0][1]
+        for player in result:
+            line = numfont.render(f'{prize}.{player[0]}', True, view_const.COLOR_BLACK)
+            num = numfont2.render(f'{int(player[1])}', True, view_const.COLOR_BLACK)
+            screen.blit(line, (pos_x-100, 700))
+            screen.blit(num, (pos_x-60 , 665-player[1]/first*500))
+            pg.draw.rect(screen, view_const.COLOR_GRAY ,((pos_x-100, 700-player[1]/first*500), (160, player[1]/first*500)))
+            pos_x += 256
+            prize += 1
+        pg.display.flip()
 
 def init_staticobjects():
     View_players.init_convert()

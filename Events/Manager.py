@@ -258,6 +258,19 @@ class EventEqualize(BaseEvent):
     def __str__(self):
         return f"{self.name} => collision_position = {self.position}"
 
+
+class EventCutInStart(BaseEvent):
+    '''
+    A player triggers a strong skill.
+    '''
+    def __init__(self, player_index, skill_name):
+        self.name = "Cut-In Start"
+        self.player_index = player_index
+        self.skill_name = skill_name
+    def __str__(self):
+        return self.name
+
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.

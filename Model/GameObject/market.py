@@ -19,7 +19,6 @@ class Market(object):
         self.item = random.choice(self.item_list)(player_list, oil_list, base_list, player_index)
 
     def sell(self):
-        print(self.item.price)
         self.item = None 
 
     def update(self, player_list, oil_list, base_list, player_index):
