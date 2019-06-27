@@ -50,7 +50,7 @@ class OtherGoHome(Item):
         self.player_list[self.player_index].item = None
 
 class TheWorld(Item):
-    '''
+    '''t push --set-upstream origin za_warudo
     Za Warudo!
     Only the player who triggered this item is able to move, pick up oil and item, and use other items,
     like the whole game is the player's own world.
