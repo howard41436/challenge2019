@@ -68,12 +68,10 @@ class TeamAI(BaseAI):
                 continue
             distance = (Vec(players_position[i]) - Vec(my_pos)).length()
             if distance <= 6 * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
-                print(self.helper.player_id, "changed")
                 new_dir = Vec(direct[my_dir]) + Vec(self.helper.get_player_direction(player_id = i))
         maximum = 0
         togo = -1
         for i in range(1, 9):
-            print("new is {}".format(new_dir))
             if maximum < new_dir.dot(Vec(direct[i])):
                 maximum = new_dir.dot(Vec(direct[i]))
                 togo = i
@@ -93,7 +91,8 @@ class TeamAI(BaseAI):
         attack_cp, target_pos = self.attack(carry, my_pos)
         if attack_cp >= best_cp:
             dest = target_pos
-        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos"""
+        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
+'''
 DIR_stop = 0
 DIR_U    = 1
 DIR_RU   = 2
@@ -103,4 +102,4 @@ DIR_D    = 5
 DIR_LD   = 6
 DIR_L    = 7
 DIR_LU   = 8
-"""
+'''
