@@ -143,10 +143,10 @@ class GameEngine(object):
 
     def update_objects(self):
         if self.za_warudo_id is not None:
-            player = self.player_list[self.za_warudo_id]
-            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
             pet = self.pet_list[self.za_warudo_id]
             pet.update(self.player_list, self.base_list) 
+            player = self.player_list[self.za_warudo_id]
+            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
         else:
             self.try_create_oil()
             for player in self.player_list:

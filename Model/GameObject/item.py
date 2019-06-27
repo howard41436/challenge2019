@@ -76,7 +76,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
