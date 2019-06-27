@@ -156,6 +156,30 @@ class Animation_radiationOil(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, 2*len(self.frames), **pos)
 
+class Animation_shuffleBases_vertical(Animation_raster):
+    frames = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_vertical.png')),
+            1/30 * i
+        )
+        for i in range(1, 30)
+    )
+
+    def __init__(self, **pos):
+        super().__init__(1, 2*len(self.frames), **pos)
+
+class Animation_shuffleBases_horizontal(Animation_raster):
+    frames = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_horizontal.png')),
+            1/30 * i
+        )
+        for i in range(1, 30)
+    )
+
+    def __init__(self, **pos):
+        super().__init__(1, 2*len(self.frames), **pos)
+
 
 def init_animation():
     Animation_equalize.init_convert()

@@ -105,6 +105,22 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+        elif isinstance(event, EventShuffleBases):
+            base_pos = self.model.base_list
+            for i in range(0, model_const.player_number):
+                for j in range(i+1, model_const.player_number):
+                    if base_pos[i].center[0] == base_pos[j].center[0]:
+                        self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=\
+                            (base_pos[i].center+base_pos[j].center)/2))
+                    if base_pos[i].center[1] == base_pos[j].center[1]:
+                        self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
+                            (base_pos[i].center+base_pos[j].center)/2))
+
+            
+
+
+
+
 
 
     
