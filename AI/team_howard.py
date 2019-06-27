@@ -17,7 +17,7 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = -1
         for i in range(len(oil_poses)):
-            cp = 1/(Vec(my_pos) - Vec(oil_poses[i])).length()
+            cp = (400-oil_prices[i])/((Vec(my_pos) - Vec(oil_poses[i])).length()**2)
             if cp > best_cp:
                 best_cp = cp
                 best_pos = oil_poses[i]
@@ -43,16 +43,39 @@ class TeamAI(BaseAI):
                 record = i
         return record
 
+    def attack(self, carry, my_pos):
+        players_value = self.helper.get_players_value()
+        players_speed = self.helper.get_players_speed()
+        players_position = self.helper.get_players_position()
+        my_speed = self.helper.get_player_speed()
+        maximum = 0
+        target = -1
+        for i in range(4):
+            if self.helper.player_id == i:
+                continue
+            cp = 1e-3 * (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1)))
+            # print("{}th cp is {}".format(i, cp))
+            if maximum <= cp:
+                maximum = cp
+                target = i
+        return maximum, players_position[target]
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
-        if dest is None:
-            return 0
-        if carry > 5000:
+        home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
+                     <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
+                     else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)
+
+        if home_cp > best_cp:
+            best_cp = home_cp
             dest = home
+        #attack_cp, target_pos = self.attack(carry, my_pos)
+        # print("smooth")
+        #if attack_cp >= best_cp:
+        #    dest = target_pos
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
