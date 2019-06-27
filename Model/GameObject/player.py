@@ -1,16 +1,18 @@
-import View.const      as view_const
-import Model.const     as model_const
-
-from pygame.math import Vector2 as Vec
 import random
 
+from pygame.math import Vector2 as Vec
+
+import View.const      as view_const
+import Model.const     as model_const
+from Events.Manager import *
+
+
 class Player(object):
-    def __init__(self, name, index, pet, equipments = [0, 0, 0, 0, 0], is_AI = False):
+    def __init__(self, name, index, pet_list, equipments = [0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
-        self.color = [ random.randint(0, 255) for _ in range(3) ]
         self.value = 0
         self.is_AI = is_AI
         self.direction = Vec(0, 0)
@@ -18,15 +20,19 @@ class Player(object):
         self.oil_multiplier = 1  # the oil player gains will be multiplied with this value
         self.insurance_value = model_const.init_insurance  # when collide, the player can keep at least this oil
         self.speed = model_const.player_normal_speed
-        self.pet = pet
+        self.pet = pet_list[index]
         self.init_equipments(equipments)
         self.item = None
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False   # If one of the other players is use 'The World', then self is freeze
+        self.collide_list = [False] * 4
 
     def get_name(self):
         return self.name
+
+    def get_color(self):
+        return self.color
 
     def get_value(self):
         return self.value
@@ -61,7 +67,7 @@ class Player(object):
             bases[self.index].change_value_sum(self.value)
             self.value = 0
 
-    def check_collide(self, player_list):
+    def check_collide(self, player_list, ev_manager):
         collide = []
         sum_of_all = 0
         for player in player_list:
@@ -70,10 +76,17 @@ class Player(object):
             if (player.position - self.position).length() <= self.radius + player.radius:
                 collide.append(player)
                 sum_of_all += max(player.value - player.insurance_value, 0)
+        new_collide_list = [False] * 4
         for player in collide:
             player.value = min(player.value, player.insurance_value)
             player.value += sum_of_all / len(collide)
             player.bag = sum_of_all / len(collide)
+            new_collide_list[player.index] = True
+        for idx in range(4):
+            if new_collide_list[idx] and not self.collide_list[idx] and idx > self.index:
+                ev_manager.post(EventEqualize((player_list[idx].position + self.position) / 2))
+        self.collide_list = new_collide_list
+        
 
     def check_market(self, market_list):
         for market in market_list:
@@ -96,14 +109,19 @@ class Player(object):
         if self.item is not None and self.item.active:
             self.item.update(ev_manager)
         self.update_speed()
-        new_x = self.position[0] + self.direction[0] * self.speed
-        new_y = self.position[1] + self.direction[1] * self.speed
-        if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
-            self.direction[0] = 0
-        if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
-            self.direction[1] = 0
-        self.position += Vec(self.direction) * self.speed
+        if self.magnet_attract:
+            for oil in oils:
+                if Vec.magnitude(oil.position - self.position) <= oil.radius + model_const.magnet_attract_radius:
+                    oil.update_position(Vec.normalize(self.position - oil.position) * model_const.magnet_attract_speed)
+        if not self.freeze:
+            new_x = self.position[0] + self.direction[0] * self.speed
+            new_y = self.position[1] + self.direction[1] * self.speed
+            if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
+                self.direction[0] = 0
+            if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
+                self.direction[1] = 0
+            self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
         if not self.is_invincible:
-            self.check_collide(players)
+            self.check_collide(players, ev_manager)

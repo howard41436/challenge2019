@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 5
+game_length = 60 * 60 * 4
 #dir const
 """
 DIR_U  = 1
@@ -24,10 +24,18 @@ dir_mapping = [
     [-0.707, -0.707],    #left up
 ]
 
+# color
+colors = [ 
+    view_const.COLOR_BLUE,
+    view_const.COLOR_GREEN,
+    view_const.COLOR_RED,
+    view_const.COLOR_ORANGERED
+]
+
 # oil_const
 curve_a = 100000
 curve_b = 100
-oil_probability = 1 / 10
+oil_probability = 1 / 40
 init_oil_number = 20
 oil_radius = 8
 price_max = 1200
@@ -39,14 +47,14 @@ player_number = 4
 player_radius = 15
 bag_capacity = 100**20
 max_manual_player_num = 4
-player_normal_speed = 9
+player_normal_speed = 7
 init_insurance = 50
 player_speed_decreasing_rate = player_normal_speed / price_max / 10
 player_speed_min = player_normal_speed / 3
 player_initial_direction_no = [4, 6, 2, 8]
 
 # pet
-pet_normal_speed = 3
+pet_normal_speed = player_normal_speed / 3
 pet_radius = 4
 pet_carry_max = 1000
 
@@ -81,14 +89,10 @@ default_equipments = [
     [0, 0, 0, 0, 0]
 ]
 
-# items
-market_positions = [
-    (300, 300),
-    (300, 500),
-    (500, 300),
-    (500, 500)
+priced_market_positions = [
+    (376, 373.5)
 ]
-market_radius = 20
+market_radius = 70
 market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
 
@@ -101,6 +105,7 @@ item_price = {
     'RadiusNotMove': 600,
     'RadiationOil': 700,
     'ShuffleBases': 800,
+    'FaDaCai': 0,
 }
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
@@ -110,17 +115,21 @@ invincible_duration = 60 * 10
 radius_oil_multiplier = 0.8
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
+fadacai_duration = 60 * 5
+fadacai_oil_probability = 1 / 3
 
-item_activate = {
+priced_item_activate = {
     'IGoHome': True,
     'OtherGoHome': True,
     'TheWorld': True,
     'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
+    'Invincible': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': False,
+    'FaDaCai': False,
 }
+
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]

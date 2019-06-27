@@ -1,6 +1,7 @@
+import random
+
 from pygame.math import Vector2 as Vec
 
-import random
 import Model.const as model_const
 from Events.Manager import *
 
@@ -26,6 +27,7 @@ class IGoHome(Item):
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'IGoHome')
 
+
     def trigger(self, ev_manager):
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
@@ -49,7 +51,10 @@ class OtherGoHome(Item):
 
 class TheWorld(Item):
     '''
-    Make all the other players not able to move for ? seconds
+    Za Warudo!
+    Only the player who triggered this item is able to move, pick up oil and item, and use other items,
+    like the whole game is the player's own world.
+    This effect will last ? seconds.
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'TheWorld')
@@ -71,7 +76,7 @@ class TheWorld(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventTheWorldStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -98,7 +103,7 @@ class MagnetAttract(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventMagnetAttractStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.player_list:
@@ -113,7 +118,7 @@ class RadiationOil(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'RadiationOil')
 
     def trigger(self, ev_manager):
-        ev_manager.post(EventRadiationOil())
+        ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
             if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
@@ -130,10 +135,9 @@ class Invincible(Item):
 
     def trigger(self, ev_manager):
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
-        print("Invincible Start")
         self.duration = model_const.invincible_duration
         self.active = True
-        self.player_list[self.player_index].is_invinsible = True
+        self.player_list[self.player_index].is_invincible = True
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -141,10 +145,9 @@ class Invincible(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        print("Invincible Stop")
-        ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventInvincibleStop(self.player_list[self.player_index]))
         self.active = False
-        self.player_list[self.player_index].is_invinsible = False
+        self.player_list[self.player_index].is_invincible = False
         self.player_list[self.player_index].item = None
 
 
@@ -165,7 +168,7 @@ class RadiusNotMove(Item):
             if player.index != self.player_index and \
                Vec.magnitude(position - player.position) <= model_const.radius_not_move_radius + player.radius:
                 player.freeze = True
-                freeze_list.append(player)
+                self.freeze_list.append(player)
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -173,7 +176,7 @@ class RadiusNotMove(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
+        # ev_manager.post(EventRadiusNotMoveStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
@@ -206,3 +209,27 @@ class ShuffleBases(Item):
             self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
             self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
         self.player_list[self.player_index].item = None
+
+class FaDaCai(Item):
+    '''
+    發大財(Only MasterAI can use this item)
+    '''
+    def __init__(self, player_list, oil_list, base_list, player_index):
+        super().__init__(player_list, oil_list, base_list, player_index)
+        self.price = model_const.item_price['FaDaCai']
+
+    def trigger(self, ev_manager):
+        ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
+        self.duration = model_const.fadacai_duration
+        self.active = True
+
+    def update(self, ev_manager):
+        self.duration -= 1
+        if self.duration == 0:
+            self.close(ev_manager)
+
+    def close(self, ev_manager):
+        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        self.active = False
+        self.player_list[self.player_index].item = None
+

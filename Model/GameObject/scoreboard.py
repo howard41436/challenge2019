@@ -13,6 +13,9 @@ class Score(object):
         self.acceleration = Vec((0, 0)) 
         self.timer = 0
 
+    def get_id(self):
+        return self.player.index
+
     def get_position(self):
         return self.position
 
@@ -48,7 +51,7 @@ class Scoreboard(object):
         new_list = sorted(self.index_list, key=self.get_score, reverse=True)
         for i in range(model_const.player_number):
             if self.index_list[i] != new_list[i]:
-                self.score_list[i].update_target(new_list[i])
+                self.score_list[new_list[i]].update_target(i)
         self.index_list = new_list
         for score in self.score_list:
             score.update()
