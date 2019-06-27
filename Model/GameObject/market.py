@@ -25,7 +25,7 @@ class Market(object):
 
     def update(self, player_list, oil_list, base_list, player_index):
         if self.timer == 0:
-            if self.item is None and random.random() < model_const.market_generate_item_probability:
+            if self.item is None:
                 self.generate_item(player_list, oil_list, base_list, player_index)
             elif self.item is not None and random.random() < model_const.market_refresh_item_probability:
                 self.generate_item(player_list, oil_list, base_list, player_index)
