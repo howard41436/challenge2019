@@ -37,7 +37,7 @@ class View_players(__Object_base):
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_{_color}.png')),
             0.2
         )
-        for _color in ('blue', 'green', 'red', 'orange')
+        for player_color in self.model.player_list
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
 
@@ -70,6 +70,7 @@ class View_players(__Object_base):
             screen.blit(image, image.get_rect(center=players[_i].position))
 
 
+
 class View_oils(__Object_base):
     images = tuple(
         view_utils.scaled_surface(
@@ -99,10 +100,12 @@ class View_bases(__Object_base):
 class View_pets(__Object_base):
     images = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'pet_robot_{_color}.png')),
+            uni_color(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'player.png')),
+                      _player.color,
+                      0.5)
             0.08
         )
-        for _color in ('blue', 'green', 'red', 'orange')
+        for _player in self.model.player_list
     )
 
     def draw(self, screen):
