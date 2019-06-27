@@ -53,10 +53,11 @@ class TeamAI(BaseAI):
         for i in range(4):
             if self.helper.player_id == i:
                 continue
-            cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed)))
-            if 0 < maximum <= cp:
-                maximum = cp
-                target = i
+                if players_speed[i] != my_speed:
+                    cp = (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed)))
+                    if 0 < maximum <= cp:
+                        maximum = cp
+                        target = i
         return maximum, players_position[i]
     def decide(self):
         radius = self.helper.player_radius
