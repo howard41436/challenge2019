@@ -1,4 +1,4 @@
-rom AI.base import *
+from AI.base import *
 
 from pygame.math import Vector2 as Vec
 import random
@@ -8,7 +8,7 @@ class TeamAI(BaseAI):
         self.helper = helper
         self.skill = []
 
-        self.last_dir = random.randint(1, 😎
+        self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
         my_pos = self.helper.get_player_position()
