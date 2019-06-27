@@ -67,13 +67,13 @@ class TeamAI(BaseAI):
             if self.helper.player_id == i:
                 continue
             distance = (Vec(players_position[i]) - Vec(my_pos)).length()
-            if distance <= 6 * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
-                print(self.helper.player_id, "changed")
-                new_dir = Vec(direct[my_dir]) + Vec(self.helper.get_player_direction(player_id = i))
+            if distance <= 7 * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
+                # print(self.helper.player_id, "changed")
+                new_dir = Vec(direct[my_dir]) + (Vec(my_pos) - Vec(self.helper.get_player_position(player_id = i)))
         maximum = 0
         togo = -1
         for i in range(1, 9):
-            print("new is {}".format(new_dir))
+            # print("new is {}".format(new_dir))
             if maximum < new_dir.dot(Vec(direct[i])):
                 maximum = new_dir.dot(Vec(direct[i]))
                 togo = i
@@ -88,7 +88,7 @@ class TeamAI(BaseAI):
         home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)**0.8
-        #print(home_cp, best_cp)             
+        # print(home_cp, best_cp)             
         if home_cp > best_cp:
             best_cp = home_cp
             dest = home
