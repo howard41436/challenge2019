@@ -2,10 +2,6 @@ from AI.base import *
 
 from pygame.math import Vector2 as Vec
 import random
-<<<<<<< HEAD
-=======
-
->>>>>>> model
 direct = [
 [0, 0],             #steady
 [0, -1],             #up
@@ -37,10 +33,6 @@ class TeamAI(BaseAI):
                 best_pos = oil_poses[i]
         return best_pos, my_pos, best_cp
     def get_dir(self, dest, my_pos):
-<<<<<<< HEAD
-        
-=======
->>>>>>> model
         new = Vec(dest) - Vec(my_pos)
         maximum = 0
         record = 0
@@ -103,20 +95,3 @@ class TeamAI(BaseAI):
         if attack_cp >= best_cp:
             dest = target_pos
         return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
-"""
-=======
-        if attack_cp >= best_cp:
-            dest = target_pos
-        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
-'''
->>>>>>> model
-DIR_stop = 0
-DIR_U    = 1
-DIR_RU   = 2
-DIR_R    = 3
-DIR_RD   = 4
-DIR_D    = 5
-DIR_LD   = 6
-DIR_L    = 7
-DIR_LU   = 8
-'''
