@@ -100,13 +100,17 @@ class View_bases(__Object_base):
 
 
 class View_pets(__Object_base):
-    images = tuple(
-        view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'pet_robot_{_color}.png')),
-            0.08
+    def __init__(self, model):
+        super(View_pets, self).__init__(model)
+        super(View_pets, self).init_convert()
+        self.color_switch = [0, 0, 0, 0]
+        self.images = tuple(
+            view_utils.scaled_surface(
+                view_utils.uni_color(os.path.join(view_const.IMAGE_PATH, 'pet_white.png'), self.model.player_list[_i].color, 0.7),
+                0.1
+            )
+            for _i in range(0, model_const.player_number, 1)
         )
-        for _color in ('blue', 'green', 'red', 'orange')
-    )
 
     def draw(self, screen):
         pets = self.model.pet_list
