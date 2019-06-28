@@ -23,6 +23,7 @@ class Cutin_manager():
         'background_orange': load_and_scale('cutin_back_orange.png', 1.51),
         'background_green': load_and_scale('cutin_back_green.png', 1.51),
         'background_blue': load_and_scale('cutin_back_blue.png', 1.51),
+        'front_blue': load_and_scale('cutin_front_blue.png', 0.9),
     }
 
     color_of_player_index = ('blue', 'green', 'red', 'orange')
@@ -43,20 +44,24 @@ class Cutin_manager():
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
         cutin_background = self.images[f'background_{self.color_of_player_index[self.player_index]}'].copy()
+        cutin_front = self.images[f'front_blue']
 
         if self.timer < 30:
             # phase 1
-            screen.blit( cutin_background, ( -800 + (800/30*(self.timer+1)), 250) )
+            screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE1_TOPLEFT + (800/30*(self.timer+1), 0) )
+            screen.blit( cutin_front, view_const.CUTIN_FRONT_PHASE1_TOPLEFT + ((800/30*(self.timer+1)), 0) )
 
         elif 30 <= self.timer < 60:
             # phase 2
-            screen.blit( cutin_background, (0, 250) )
+            screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT )
+            screen.blit( cutin_front, view_const.CUTIN_FRONT_PHASE2_TOPLEFT + ((view_const.CUTIN_PHASE2_SHIFT/30*(self.timer-29)), 0) )
 
         else:
             # phase 3
+            cutin_background.blit(cutin_front, (view_const.CUTIN_FRONT_PHASE3_TOPLEFT[0], view_const.CUTIN_FRONT_PHASE3_TOPLEFT[1] - view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT[1]))
             cutin_background = cutin_background.convert()
             cutin_background.set_alpha(255/30*(90-self.timer))
-            screen.blit( cutin_background, (0, 250) )
+            screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT )
 
         pg.display.flip()
         self.timer += 1

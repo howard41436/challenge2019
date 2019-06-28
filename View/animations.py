@@ -238,6 +238,12 @@ class Animation_theworld(Animation_raster):
 
         self.update()
 
+    def twist_inside(self, screen):
+        pass
+    
+    def twist_outskirts(self, screen):
+        pass
+
 
 """class Animation_freeze(Animation_raster):
     frames = tuple(
