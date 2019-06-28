@@ -164,10 +164,29 @@ class GraphicalView(object):
         """
         Render the game menu.
         """
-        if self.last_update != model.STATE_MENU:
-            self.last_update = model.STATE_MENU
-            self.endboard.draw(self.screen)
-    
+        if self.last_update != model.STATE_ENDGAME:
+            self.last_update = model.STATE_ENDGAME
+
+            result = []
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, 
+                               base.value_sum,
+                               model_const.colors[base.owner_index]])
+
+            
+
+            def takeSecond(item): return item[1]
+            result.sort(key=takeSecond, reverse=True)
+            pos_x = 256
+            prize = 1
+            first = result[0][1]
+            self.animations.append(view_Animation.View_endboard(player[2], player[1]/first*500, center=(pos_x, 680)) for player in result)
+
+        if self.animations:
+            for ani in self.animations:
+                if ani.expired: self.animations.remove(ani)
+                else          : ani.draw(self.screen)
+ 
 
     def render_play(self):
         """

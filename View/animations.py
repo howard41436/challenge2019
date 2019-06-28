@@ -189,12 +189,25 @@ class Animation_start():
     pass
 
 class Animation_endboard(Animation_raster):
-    def __init__(self, score, **pos):
-        super().__init__(1, 2*len(self.frames), **pos)
-        self.frames = tuple(
-            pg.Surface((200, i)).fill(view_const.COLOR_BLACK) for i in range(0, int(score), 10)
-        )
-        
+    def __init__(self, color, max_height, **pos):
+        super().__init__(1, 90, **pos)
+        self.height = 1
+        self.vel = max_height / self.expire_time
+
+    def update(self):
+        if self.height + self.vel < self.max_height:
+            self.height += self.vel
+        else:
+            self.height = self.max_height
+
+    def draw(self, screen):
+        col = pg.Rect(0,0,0,0)
+        col.w = 200
+        col.h = self.height
+        col.midbottom = self.pos + (0, -20)
+        pg.draw.rect(screen, self.color, col)
+        self.update()
+
 
 """class Animation_freeze(Animation_raster):
     frames = tuple(
