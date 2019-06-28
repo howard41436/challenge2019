@@ -178,8 +178,8 @@ class GraphicalView(object):
         if self.animations:
             self.screen.fill(view_const.COLOR_WHITE)
             titlefont = pg.font.Font(view_const.board_name_font, 60)
-            title = titlefont.render('Score Board', True, view_const.COLOR_BLACK)
-            self.screen.blit(title, title.get_rect(center=(640, 60)))
+            title = titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            self.screen.blit(title, title.get_rect(center=(645, 60)))
             for ani in self.animations:
                 if ani.expired: self.animations.remove(ani)
                 else          : ani.draw(self.screen)
