@@ -14,7 +14,6 @@ class Helper(object):
         self.player_id = index
         self.oil_radius = model_const.oil_radius
         self.player_radius = model_const.player_radius
-        self.bag_capacity = model_const.bag_capacity
         self.player_normal_speed = model_const.player_normal_speed
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
@@ -40,12 +39,6 @@ class Helper(object):
     def get_player_value(self, player_id = None):
         if player_id is None: player_id = self.player_id
         return self.model.player_list[player_id].value
-
-    def get_players_bag(self):
-        return [player.bag for player in self.model.player_list]
-    def get_player_bag(self, player_id = None):
-        if player_id is None: player_id = self.player_id
-        return self.model.player_list[player_id].bag
 
     def get_players_is_AI(self):
         return [player.is_AI for player in self.model.player_list]
