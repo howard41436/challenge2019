@@ -95,6 +95,9 @@ class Helper(object):
     def get_market(self):
         market = self.model.priced_market_list[0]
         return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
+    def player_in_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return True if self.model.player_list[player_id].check_market() is not None else False
 
     # Get item data
     def get_player_item_name(self, player_id = None):
