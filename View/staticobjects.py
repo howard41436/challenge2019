@@ -30,12 +30,6 @@ class __Object_base():
     def __init__(self, model):
         self.model = model
 
-class View_menu(__Object_base):
-    def __init__(self, model):
-        self.menu = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'menu.png')), 1)
-    def draw(self, screen):
-        image_menu = self.menu
-        screen.blit(image_menu, [0, 0])
 
 class View_background(__Object_base):
     background = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 1)
@@ -272,17 +266,6 @@ class View_scoreboard(__Object_base):
 
 
 class View_items(__Object_base):
-    def __init__(self, model):
-        self.model = model
-        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.2)
-        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
-        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
-        self.hurricane = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'hurricane.png')), 0.2)
-        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
-        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
-        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
     backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.2)
     magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
     star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
