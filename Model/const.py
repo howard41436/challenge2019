@@ -97,7 +97,7 @@ priced_market_positions = [
     (376, 373.5)
 ]
 market_radius = 70
-market_cd_time = 600
+market_cd_time = 60 * 5
 
 item_price = {
     'IGoHome': 500, 
@@ -112,15 +112,15 @@ item_price = {
 }
 
 item_weight = {
-    'IGoHome': 1 / 9,
-    'OtherGoHome': 1 / 9,
-    'TheWorld': 1 / 9,
-    'MagnetAttract': 1 / 9,
-    'Invincible': 1 / 9,
-    'RadiusNotMove': 1 / 9,
-    'RadiationOil': 1 / 9,
-    'ShuffleBases': 1 / 9,
-    'FaDaCai': 1 / 9
+    'IGoHome': 4,
+    'OtherGoHome': 4,
+    'TheWorld': 2,
+    'MagnetAttract': 4,
+    'Invincible': 3,
+    'RadiusNotMove': 3,
+    'RadiationOil': 2,
+    'ShuffleBases': 2,
+    'FaDaCai': 0
 }
 
 the_world_duration = 60 * 5
