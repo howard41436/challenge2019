@@ -16,8 +16,7 @@ direct = [
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
-        self.skill = []
-
+        self.equipments = [0, 0, 0, 0, 0]
         self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):

@@ -1,5 +1,5 @@
 import random
-
+import math
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
@@ -9,30 +9,32 @@ class Item(object):
     '''
     Base Item
     '''
-    def __init__(self, player_list, oil_list, base_list, player_index):
-        self.active = False  # taking effect or not
+    def __init__(self, player_list, oil_list, base_list, player_index, item_name):
+        self.active = False # taking effect or not
         self.duration = 0
         self.position = None
         self.player_index = player_index
         self.player_list = player_list
         self.oil_list = oil_list
         self.base_list = base_list
-        self.name = None
-
+        self.name = item_name
+        self.is_activate = model_const.priced_item_activate[item_name]
+        self.price = model_const.item_price[item_name]
+        self.weight = model_const.item_weight[item_name]
+        
     def trigger(self, ev_manager):
-        ev_manager.post(EventCutInStart(self.player_index, self.name))
+        if model_const.cutin_enable[self.name]:
+            ev_manager.post(EventCutInStart(self.player_index, self.name))
 
 class IGoHome(Item):
     '''
     Make one player move to his/her base
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'IGoHome'
-        self.price = model_const.item_price[self.name]
-
+        super().__init__(player_list, oil_list, base_list, player_index, 'IGoHome')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index == player.index:
@@ -44,11 +46,10 @@ class OtherGoHome(Item):
     Make other players move to their base
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'OtherGoHome'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'OtherGoHome')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventOtherGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index != player.index:
@@ -63,10 +64,8 @@ class TheWorld(Item):
     This effect will last ? seconds.
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
+        super().__init__(player_list, oil_list, base_list, player_index, 'TheWorld')
         self.freeze_list = []
-        self.name = 'TheWorld'
-        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
         super().trigger(ev_manager)
@@ -95,11 +94,10 @@ class MagnetAttract(Item):
     Make all oils attract to this player
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'MagnetAttract'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'MagnetAttract')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
         self.duration = model_const.magnet_attract_duration
         self.active = True
@@ -125,17 +123,16 @@ class RadiationOil(Item):
     Make some's bases balue * multiplier (< 1 constant)
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'RadiationOil'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'RadiationOil')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
-            if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
-               base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
-                base.value_sum *= model_const.radius_oil_multiplier
+            length = model_const.radiation_oil_range + base.length / 2
+            if max(abs(position.x - base.center.x), abs(position.y - base.center.y)) <= length:
+                base.value_sum *= model_const.radiation_oil_multiplier
         self.player_list[self.player_index].item = None
                
 class Invincible(Item):
@@ -143,11 +140,10 @@ class Invincible(Item):
     Make the player itself immune to collision
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'Invincible'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'Invincible')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
         self.duration = model_const.invincible_duration
         self.active = True
@@ -170,12 +166,11 @@ class RadiusNotMove(Item):
     Make all the other players in the range of ? that can not move for ? seconds
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
+        super().__init__(player_list, oil_list, base_list, player_index, 'RadiusNotMove')
         self.freeze_list = []
-        self.name = 'RadiusNotMove'
-        self.price = model_const.item_price[self.name]
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
         self.duration = model_const.radius_not_move_duration
         self.active = True
@@ -216,11 +211,10 @@ class ShuffleBases(Item):
     Make other players move to their base
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'ShuffleBases'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'ShuffleBases')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
         disarrangement = get_disarrangement(model_const.player_number)
         for index in range(model_const.player_number):
@@ -233,11 +227,10 @@ class FaDaCai(Item):
     發大財(Only MasterAI can use this item)
     '''
     def __init__(self, player_list, oil_list, base_list, player_index):
-        super().__init__(player_list, oil_list, base_list, player_index)
-        self.name = 'FaDaCai'
-        self.price = model_const.item_price[self.name]
+        super().__init__(player_list, oil_list, base_list, player_index, 'FaDaCai')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
         self.duration = model_const.fadacai_duration
         self.active = True

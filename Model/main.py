@@ -145,7 +145,7 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
+        self.priced_market_list = [ Market(position) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
@@ -164,10 +164,6 @@ class GameEngine(object):
             self.try_create_oil()
             for player in self.player_list:
                 player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
-            if self.timer % 2400 == 1000:
-                for pet in self.pet_list:
-                    pet.change_status(1)
-            
             for pet in self.pet_list:
                 pet.update(self.player_list, self.base_list)
 
