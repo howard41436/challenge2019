@@ -3,7 +3,6 @@ from pygame.math import Vector2 as Vec
 import Model.const as model_const
 import View.const as view_const
 import Model.GameObject.item as Item
-import random
 import numpy as np
 
 class Market(object):
