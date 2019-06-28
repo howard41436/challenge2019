@@ -18,7 +18,7 @@ COLOR_GRAY           = (128, 128, 128)
 COLOR_ORANGE         = (255, 128,   0)
 
 
-# Color of four players
+# Colors of four players
 COLOR_PLAYER_BLUE    = (  0, 162, 232)
 COLOR_PLAYER_GREEN   = (  6, 203,  56)
 COLOR_PLAYER_RED     = (237,  28,  35)

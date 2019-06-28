@@ -58,9 +58,8 @@ class GraphicalView(object):
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
         self.endboard = view_staticobjects.View_endboard(model)
+        self.background = view_staticobjects.View_background(model)
 
-        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
         """
@@ -177,9 +176,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_PLAY
         
         # draw background
-        self.screen.fill(view_const.COLOR_WHITE)
-        self.screen.blit(self.background_image, [0, 0])
-        self.screen.blit(self.priced_market, [322, 328])
+        self.background.draw(self.screen)
         self.bases.draw(self.screen)
 
         # draw animation

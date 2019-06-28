@@ -30,6 +30,18 @@ class __Object_base():
         self.model = model
 
 
+class View_background(__Object_base):
+    def __init__(self, model):
+        self.background = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 1)
+        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
+    def draw(self, screen):
+        image_background = self.background
+        image_priced_market = self.priced_market
+        screen.fill(view_const.COLOR_WHITE)
+        screen.blit(image_background, [0, 0])
+        screen.blit(image_priced_market, [322, 328])
+
+
 class View_players(__Object_base):
     images = tuple(
         view_utils.scaled_surface(
@@ -210,15 +222,15 @@ class View_items(__Object_base):
     def draw(self, screen):
         for market in self.model.priced_market_list:
             if isinstance(market.item, model_item.IGoHome):
-                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
+                image = self.backbag
             elif isinstance(market.item, model_item.MagnetAttract):
-                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
+                image = self.magnet
             elif isinstance(market.item, model_item.Invincible):
-                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
+                image = self.star
             elif isinstance(market.item, model_item.TheWorld):
-                image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+                image = self.timer
             elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.blackhole        #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
+                image = self.blackhole
             elif isinstance(market.item, model_item.RadiationOil):
                 image = self.bomb
             elif isinstance(market.item, model_item.RadiusNotMove):
@@ -261,6 +273,7 @@ class View_endboard(__Object_base):
         pg.display.flip()
 
 def init_staticobjects():
+    View_background.init_convert()
     View_players.init_convert()
     View_oils.init_convert()
     View_bases.init_convert()
