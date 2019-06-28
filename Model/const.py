@@ -97,8 +97,6 @@ priced_market_positions = [
     (376, 373.5)
 ]
 market_radius = 70
-market_generate_item_probability = 1 / 1
-market_refresh_item_probability = 1 / 4800
 market_cd_time = 600
 
 item_price = {
@@ -113,7 +111,7 @@ item_price = {
     'FaDaCai': 0,
 }
 
-item_probability = {
+item_weight = {
     'IGoHome': 1 / 9,
     'OtherGoHome': 1 / 9,
     'TheWorld': 1 / 9,

@@ -9,7 +9,7 @@ class Market(object):
     def __init__(self, position):
         self.position = Vec(position)
         self.item = None
-        self.item_list, p = zip(*[(getattr(Item, item_name), model_const.item_probability[item_name]) for item_name, is_activate in model_const.priced_item_activate.items() if is_activate]) 
+        self.item_list, p = zip(*[(getattr(Item, item_name), model_const.item_weight[item_name]) for item_name, is_activate in model_const.priced_item_activate.items() if is_activate]) 
         self.p_distribution = p / np.sum(p)
         self.timer = 0
 

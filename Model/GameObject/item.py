@@ -20,7 +20,7 @@ class Item(object):
         self.name = item_name
         self.is_activate = model_const.priced_item_activate[item_name]
         self.price = model_const.item_price[item_name]
-        self.probability = model_const.item_probability[item_name]
+        self.weight = model_const.item_weight[item_name]
         
     def trigger(self, ev_manager):
         ev_manager.post(EventCutInStart(self.player_index, self.name))
