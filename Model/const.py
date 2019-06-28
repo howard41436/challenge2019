@@ -148,13 +148,13 @@ priced_item_activate = {
 }
 cutin_enable = {
     'IGoHome': False,
-    'OtherGoHome': False,
-    'TheWorld': True,
+    'OtherGoHome': True,
+    'TheWorld': False,
     'MagnetAttract': False,
     'Invincible': False,
     'RadiusNotMove': False,
     'RadiationOil': False,
-    'ShuffleBases': True,
+    'ShuffleBases': False,
     'FaDaCai': True,
 }
 
