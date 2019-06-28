@@ -1,5 +1,5 @@
 import random
-
+import math
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
@@ -133,8 +133,9 @@ class RadiationOil(Item):
         ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
-            if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
-               base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
+            length = model_const.radius_oil_range + base.length/2
+            if abs(position.x - base.center.x) <= length and \
+               abs(position.y - base.center.y) <= length:
                 base.value_sum *= model_const.radius_oil_multiplier
         self.player_list[self.player_index].item = None
                
