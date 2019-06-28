@@ -92,6 +92,8 @@ class Helper(object):
         return tuple(self.model.base_list[player_id].center)
     def get_base_value(self):
         return self.model.base_list[self.player_id].value_sum
+    def get_bases_value(self):
+        return [base.value_sum for base in self.model.base_list]
 
     # Get market data
     def get_market(self):
