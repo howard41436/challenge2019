@@ -95,40 +95,40 @@ class View_bases(__Object_base):
         for _base in self.model.base_list:
             if _base.owner_index == 0:
                 if _base.center == [50, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_BLUE,[0, 0],  160, 160)
                 elif _base.center == [750, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_BLUE,[800, 0],  160, 160)
                 elif _base.center == [50, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_BLUE,[0, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_BLUE,[0, 800],  160, 160)
                 elif _base.center == [750, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_BLUE,[800, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_BLUE,[800, 800],  160, 160)
             elif _base.owner_index == 1:
                 if _base.center == [50, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_GREEN,[0, 0],  160, 160)
                 elif _base.center == [750, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_GREEN,[800, 0],  160, 160)
                 elif _base.center == [50, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_GREEN,[0, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_GREEN,[0, 800],  160, 160)
                 elif _base.center == [750, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_GREEN,[800, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_GREEN,[800, 800],  160, 160)
             elif _base.owner_index == 2:
                 if _base.center == [50, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_RED,[0, 0],  160, 160)
                 elif _base.center == [750, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_RED,[800, 0],  160, 160)
                 elif _base.center == [50, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_RED,[0, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_RED,[0, 800],  160, 160)
                 elif _base.center == [750, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_RED,[800, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_RED,[800, 800],  160, 160)
             elif _base.owner_index == 3:
                 if _base.center == [50, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_ORANGE,[0, 0],  160, 160)
                 elif _base.center == [750, 50]:
-                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 0],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_ORANGE,[800, 0],  160, 160)
                 elif _base.center == [50, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[0, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_ORANGE,[0, 800],  160, 160)
                 elif _base.center == [750, 750]:
-                    pg.draw.circle(screen, view_const.COLOR_ORANGE,[800, 800],  160, 160)
+                    pg.draw.circle(screen, view_const.COLOR_PLAYER_ORANGE,[800, 800],  160, 160)
             screen.blit(self.images[0], self.images[0].get_rect(center=_base.center))
 
 
