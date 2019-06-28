@@ -82,7 +82,7 @@ class Helper(object):
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+        return sorted(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data 
     def get_bases_center(self):
@@ -90,6 +90,8 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+    def get_base_value(self):
+        return self.model.base_list[self.player_id].value_sum
 
     # Get market data
     def get_market(self):
