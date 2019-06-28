@@ -60,15 +60,17 @@ class View_players(__Object_base):
         )
         for _rainbow in range(0,19,1)
     )
+
     def __init__(self, model):
-        super(View_players, self).__init__(model)
-        super(View_players, self).init_convert()
+        self.model = model
         self.color_switch = [0, 0, 0, 0]
 
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.image_freeze = pg.Surface.convert_alpha( cls.image_freeze )
+        cls.image_freeze = cls.image_freeze.convert_alpha()
+        cls.images_color = cls.images_color.convert_alpha()
+
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
@@ -163,16 +165,25 @@ class View_pets(__Object_base):
 
 
 class View_scoreboard(__Object_base):
-    def __init__(self, model):
-        self.model = model
-        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.3)
-        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.3)
-        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.3)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.3)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.3)
-        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.3)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.25)
-        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.3)
+    backbag = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3)
+    magnet = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3)
+    star = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3)
+    timer = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3)
+    blackhole = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'blackhole.png')), 0.3)
+    staff = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3)
+    bomb = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.25)
+    shuffle = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
+
+    @classmethod
+    def init_convert(cls):
+        backbag = cls.backbag.convert_alpha()
+        magnet = cls.magnet.convert_alpha()
+        star = cls.star.convert_alpha()
+        timer = cls.timer.convert_alpha()
+        blackhole = cls.blackhole.convert_alpha()
+        staff = cls.staff.convert_alpha()
+        bomb = cls.bomb.convert_alpha()
+        shuffle = cls.shuffle.convert_alpha()
 
     def draw(self, screen):
         pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
@@ -244,8 +255,6 @@ class View_items(__Object_base):
 
 
 class View_endboard(__Object_base):
-    def __init__(self, model):
-        self.model = model
     def draw(self, screen):
         screen.fill(view_const.COLOR_WHITE)
         # write some word
@@ -286,3 +295,4 @@ def init_staticobjects():
     View_bases.init_convert()
     View_pets.init_convert()
     View_items.init_convert()
+    View_scoreboard.init_convert()
