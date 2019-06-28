@@ -111,6 +111,19 @@ item_price = {
     'ShuffleBases': 1,
     'FaDaCai': 0,
 }
+
+item_probability = {
+    'IGoHome': 1 / 9,
+    'OtherGoHome': 1 / 9,
+    'TheWorld': 1 / 9,
+    'MagnetAttract': 1 / 9,
+    'Invincible': 1 / 9,
+    'RadiusNotMove': 1 / 9,
+    'RadiationOil': 1 / 9,
+    'ShuffleBases': 1 / 9,
+    'FaDaCai': 1 / 9
+}
+
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
 magnet_attract_radius = 50
