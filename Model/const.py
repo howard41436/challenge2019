@@ -102,9 +102,9 @@ market_cd_time = 60 * 5
 item_price = {
     'IGoHome': 500, 
     'OtherGoHome': 500, 
-    'TheWorld': 1500,
-    'MagnetAttract': 750,
-    'Invincible': 750,
+    'TheWorld': 1450,
+    'MagnetAttract': 689,
+    'Invincible': 500,
     'RadiusNotMove': 500,
     'RadiationOil': 1000,
     'ShuffleBases': 1,
@@ -129,7 +129,7 @@ magnet_attract_radius = 50
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
 radiation_oil_range = 100
-radiation_oil_multiplier = 0.8
+radiation_oil_multiplier = 0.9
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 fadacai_duration = 60 * 5
