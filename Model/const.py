@@ -163,3 +163,5 @@ cutin_enable = {
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
 rank_str = ['1st', '2nd', '3rd', '4th']
 swap_duration = 60
+varition_vel = (0, -2)
+varition_duration = 30
