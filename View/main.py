@@ -59,6 +59,7 @@ class GraphicalView(object):
         self.items = view_staticobjects.View_items(model)
         self.endboard = view_staticobjects.View_endboard(model)
         self.background = view_staticobjects.View_background(model)
+        self.menu = view_staticobjects.View_menu(model)
 
 
     def notify(self, event):
@@ -125,7 +126,7 @@ class GraphicalView(object):
             self.title_counter = 0
 
         # draw backround
-        self.screen.fill(view_const.COLOR_BLACK)
+        self.menu.draw(self.screen)
 
         # word animation
         titlefont = pg.font.Font(view_const.board_name_font, 90)
@@ -142,16 +143,6 @@ class GraphicalView(object):
             gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
         else:
             gray = (255,) * 3
-
-        words_1 = titlefont.render("Fa", True, gray)
-        words_2 = titlefont.render("Da", True, gray)
-        words_3 = titlefont.render("Cai!", True, gray)
-        words_4 = littlefont.render("presented by 2019 NTU CSIE CAMP", True, gray)
-
-        self.screen.blit(words_1, (595,150))
-        self.screen.blit(words_2, (595,300))
-        self.screen.blit(words_3, (570,450))
-        self.screen.blit(words_4, (320,600))
 
         self.title_counter += 1
         

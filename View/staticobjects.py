@@ -30,6 +30,12 @@ class __Object_base():
     def __init__(self, model):
         self.model = model
 
+class View_menu(__Object_base):
+    def __init__(self, model):
+        self.menu = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'menu.png')), 1)
+    def draw(self, screen):
+        image_menu = self.menu
+        screen.blit(image_menu, [0, 0])
 
 class View_background(__Object_base):
     def __init__(self, model):
@@ -69,7 +75,7 @@ class View_players(__Object_base):
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = cls.image_freeze.convert_alpha()
-        cls.images_color = cls.images_color.convert_alpha()
+    #    cls.images_color = cls.images_color.convert_alpha()
 
     def draw(self, screen):
         players = self.model.player_list
@@ -169,7 +175,7 @@ class View_scoreboard(__Object_base):
     magnet = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3)
     star = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3)
     timer = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3)
-    blackhole = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'blackhole.png')), 0.3)
+    hurricane = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3)
     staff = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3)
     bomb = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.25)
     shuffle = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
@@ -180,7 +186,7 @@ class View_scoreboard(__Object_base):
         magnet = cls.magnet.convert_alpha()
         star = cls.star.convert_alpha()
         timer = cls.timer.convert_alpha()
-        blackhole = cls.blackhole.convert_alpha()
+        hurricane = cls.hurricane.convert_alpha()
         staff = cls.staff.convert_alpha()
         bomb = cls.bomb.convert_alpha()
         shuffle = cls.shuffle.convert_alpha()
@@ -205,7 +211,7 @@ class View_scoreboard(__Object_base):
             elif isinstance(score.player.item, model_item.TheWorld):
                 item_image = self.timer
             elif isinstance(score.player.item, model_item.OtherGoHome):
-                item_image = self.blackhole
+                item_image = self.hurricane
             elif isinstance(score.player.item, model_item.RadiationOil):
                 item_image = self.bomb
             elif isinstance(score.player.item, model_item.RadiusNotMove):
@@ -225,7 +231,7 @@ class View_items(__Object_base):
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
         self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.hurricane = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'hurricane.png')), 0.2)
         self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
         self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
         self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
@@ -242,7 +248,7 @@ class View_items(__Object_base):
             elif isinstance(market.item, model_item.TheWorld):
                 image = self.timer
             elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.blackhole
+                image = self.hurricane
             elif isinstance(market.item, model_item.RadiationOil):
                 image = self.bomb
             elif isinstance(market.item, model_item.RadiusNotMove):
@@ -296,3 +302,4 @@ def init_staticobjects():
     View_pets.init_convert()
     View_items.init_convert()
     View_scoreboard.init_convert()
+    View_menu.init_convert()
