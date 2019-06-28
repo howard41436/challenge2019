@@ -54,6 +54,48 @@ class View_background(__Object_base):
         screen.blit(image_priced_market, [322, 328])
 
 
+class View_menu(__Object_base):
+    menu = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'menu.png')), 1)
+
+    def draw(self, screen):
+        image = self.menu
+        screen.blit(image, [0, 0])
+
+
+class View_characters(__Object_base):
+    images = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'move_{_index}.png')),
+            0.6
+        )
+        for _index in ('1', '2', '3', '4', '5', '6', '7')
+    )
+    image_oil = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'oil_black.png')),0.4)
+
+    def __init__(self, model):
+        self.model = model
+        self.picture_switch = [0, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 6]
+        self.position_switch = [200, 335, 470, 605, 740, 875, 1010, 1010, 875, 740, 605, 470, 335, 200, 200]
+        self.index = 0
+        self.counter = 0
+
+    @classmethod
+    def init_convert(cls):
+        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
+        cls.image_oil = pg.Surface.convert_alpha( cls.image_oil )
+
+    def draw(self, screen):
+        image = self.images[self.picture_switch[self.index]]
+        screen.blit(image, [self.position_switch[self.index], 520])
+        if self.index < 8:
+            screen.blit(self.image_oil, [1220, 700])
+        if self.counter == 20:
+            self.index += 1
+            self.index %= 15
+        self.counter %= 20
+        self.counter += 1
+
+
 class View_players(__Object_base):
     images = tuple(
         view_utils.scaled_surface(
@@ -328,5 +370,6 @@ def init_staticobjects():
     View_pets.init_convert()
     View_items.init_convert()
     View_scoreboard.init_convert()
-    View_menu.init_convert()
     View_endboard.init_convert()
+    View_menu.init_convert()
+    View_characters.init_convert()

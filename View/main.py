@@ -60,6 +60,7 @@ class GraphicalView(object):
         self.endboard = view_staticobjects.View_endboard(model)
         self.background = view_staticobjects.View_background(model)
         self.menu = view_staticobjects.View_menu(model)
+        self.characters = view_staticobjects.View_characters(model)
 
 
     def notify(self, event):
@@ -127,9 +128,10 @@ class GraphicalView(object):
 
         # draw backround
         self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.board_name_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.board_name_font, 40)
         if not title_loop_counter:
@@ -144,7 +146,7 @@ class GraphicalView(object):
         else:
             gray = (255,) * 3
 
-        self.title_counter += 1
+        self.title_counter += 1"""
         
         # update surface
         pg.display.flip()
