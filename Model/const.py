@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 3
+game_length = 60 * 60 * 4
 cutin_time = 90
 #dir const
 """
@@ -36,7 +36,7 @@ colors = [
 # oil_const
 curve_a = 100000
 curve_b = 100
-oil_probability = 1 / 10
+oil_probability = 1 / 40
 init_oil_number = 20
 oil_radius = 8
 price_max = 1200
@@ -49,14 +49,14 @@ player_number = 4
 player_radius = 15
 bag_capacity = 100**20
 max_manual_player_num = 4
-player_normal_speed = 9
+player_normal_speed = 7
 init_insurance = 50
 player_speed_decreasing_rate = player_normal_speed / price_max / 10
 player_speed_min = player_normal_speed / 3
 player_initial_direction_no = [4, 6, 2, 8]
 
 # pet
-pet_normal_speed = 3
+pet_normal_speed = player_normal_speed / 3
 pet_radius = 4
 pet_carry_max = 1000
 pet_cd_time = 60 * 20
@@ -85,6 +85,7 @@ init_insurance = 500
 pet_carry_max_up_multiplier = 1.5
 pet_cd_down_multiplier = 0.8
 
+equipment_num = 5
 default_equipments = [
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
@@ -136,16 +137,17 @@ fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': False,
-    'OtherGoHome': False,
+    'IGoHome': True,
+    'OtherGoHome': True,
     'TheWorld': True,
-    'MagnetAttract': False,
-    'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
     'FaDaCai': False,
 }
+
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]

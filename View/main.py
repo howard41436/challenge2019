@@ -2,7 +2,7 @@ import pygame as pg
 import Model.main as model
 from Events.Manager import *
 import os, math
-
+import random
 
 import Model.GameObject.item as model_item
 import Model.const           as model_const
@@ -44,27 +44,18 @@ class GraphicalView(object):
         view_cutin.init_cutin()
 
         self.animations = []
-
         # about cutin
         self.cutin_manager = view_cutin.Cutin_manager(model)
-
-        # static objects
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
         self.pets = view_staticobjects.View_pets(model)
         self.scoreboard = view_staticobjects.View_scoreboard(model)
+        self.items = view_staticobjects.View_items(model)
 
-        self.backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.1)
-        self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.1)
-        self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.1)
-        self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.1)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
-        self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
-        self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.2)
-        self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.12)
+        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
+        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-        self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
@@ -104,6 +95,18 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
+        elif isinstance(event, EventShuffleBases):
+            base_pos = self.model.base_list
+            for i in range(0, model_const.player_number):
+                for j in range(i+1, model_const.player_number):
+                    if base_pos[i].center[0] == base_pos[j].center[0]:
+                        self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=\
+                            (base_pos[i].center+base_pos[j].center)/2))
+                    if base_pos[i].center[1] == base_pos[j].center[1]:
+                        self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
+                            (base_pos[i].center+base_pos[j].center)/2))
+
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
 
@@ -115,18 +118,41 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            # draw background
-            self.screen.fill(view_const.COLOR_BLACK)
-            # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Menu', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            # update surface
-            pg.display.flip()
+            self.title_counter = 0;
+
+        # draw backround
+        self.screen.fill(view_const.COLOR_BLACK)
+
+        # word animation
+        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        title_loop_counter = self.title_counter % 80
+        littlefont = pg.font.Font(view_const.board_name_font, 40)
+        if not title_loop_counter:
+            self.darken_time = [random.randint(25, 35), random.randint(55,65)]
+
+        if self.title_counter <= 10:
+            gray = (155 + int(self.title_counter / 10 * 100),) * 3
+        elif self.darken_time[0] <= title_loop_counter <= self.darken_time[0] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[0]) / 5 * 100),) * 3
+        elif self.darken_time[1] <= title_loop_counter <= self.darken_time[1] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
+        else:
+            gray = (255,) * 3
+       
+        words_1 = titlefont.render("Fa", True, gray)
+        words_2 = titlefont.render("Da", True, gray)
+        words_3 = titlefont.render("Cai!", True, gray)
+        words_4 = littlefont.render("presented by 2019 NTU CSIE CAMP", True, gray)
+
+        self.screen.blit(words_1, (595,150))
+        self.screen.blit(words_2, (595,300))
+        self.screen.blit(words_3, (570,450))
+        self.screen.blit(words_4, (320,600))
+
+        self.title_counter += 1
+        
+        # update surface
+        pg.display.flip()
     
     def render_endgame(self):
         """
@@ -159,28 +185,6 @@ class GraphicalView(object):
             # update surface
             pg.display.flip()
     
-    def draw_priced_market(self):
-        for market in self.model.priced_market_list:
-            if isinstance(market.item, model_item.IGoHome):
-                image = self.backbag           #pg.draw.rect(self.screen, view_const.COLOR_VIOLET, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.MagnetAttract):
-                image = self.magnet            #pg.draw.rect(self.screen, view_const.COLOR_BLACK, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.Invincible):
-                image = self.star              #pg.draw.rect(self.screen, view_const.COLOR_RED, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.TheWorld):
-                image = self.timer            #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.blackhole         #pg.draw.rect(self.screen, view_const.COLOR_GRAY, pg.Rect(market.position, [20, 20]))
-            elif isinstance(market.item, model_item.RadiationOil):
-                image = self.bomb
-            elif isinstance(market.item, model_item.RadiusNotMove):
-                image = self.staff
-            elif isinstance(market.item, model_item.ShuffleBases):
-                image = self.shuffle
-            else :
-                image = self.marketcenter
-            image.convert()
-            self.screen.blit(image, market.position)
 
     def render_play(self):
         """
@@ -194,6 +198,8 @@ class GraphicalView(object):
         self.screen.blit(self.background_image, [0, 0])
         self.screen.blit(self.priced_market, [322, 328])
 
+        self.bases.draw(self.screen)
+
         # draw animation
         for ani in self.animations:
             if ani.expired: self.animations.remove(ani)
@@ -201,10 +207,10 @@ class GraphicalView(object):
 
         # draw static objects
         self.oils.draw(self.screen)
-        self.bases.draw(self.screen)
-        self.draw_priced_market()
+        self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
+        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
 
         # draw time
