@@ -182,25 +182,21 @@ class View_pets(__Object_base):
 
 
 class View_scoreboard(__Object_base):
-    backbag = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3)
-    magnet = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3)
-    star = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3)
-    timer = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3)
-    hurricane = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3)
-    staff = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3)
-    bomb = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.25)
-    shuffle = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
+    images = {
+    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3),
+    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3),
+    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3),
+    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3),
+    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3),
+    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
+    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
+    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
+    }
 
     @classmethod
     def init_convert(cls):
-        backbag = cls.backbag.convert_alpha()
-        magnet = cls.magnet.convert_alpha()
-        star = cls.star.convert_alpha()
-        timer = cls.timer.convert_alpha()
-        hurricane = cls.hurricane.convert_alpha()
-        staff = cls.staff.convert_alpha()
-        bomb = cls.bomb.convert_alpha()
-        shuffle = cls.shuffle.convert_alpha()
+        cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
+
 
     def draw(self, screen):
         pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
@@ -212,24 +208,9 @@ class View_scoreboard(__Object_base):
             name = namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
             base_value = numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)
             player_value = numfont.render(f'Carried Value : {int(score.player.value)}', True, view_const.COLOR_BLACK)
-            item_image = None
-            if isinstance(score.player.item, model_item.IGoHome):
-                item_image = self.backbag
-            elif isinstance(score.player.item, model_item.MagnetAttract):
-                item_image = self.magnet
-            elif isinstance(score.player.item, model_item.Invincible):
-                item_image = self.star
-            elif isinstance(score.player.item, model_item.TheWorld):
-                item_image = self.timer
-            elif isinstance(score.player.item, model_item.OtherGoHome):
-                item_image = self.hurricane
-            elif isinstance(score.player.item, model_item.RadiationOil):
-                item_image = self.bomb
-            elif isinstance(score.player.item, model_item.RadiusNotMove):
-                item_image = self.staff
-            elif isinstance(score.player.item, model_item.ShuffleBases):
-                item_image = self.shuffle
-            if item_image: screen.blit(item_image, score.position+[340,5])
+            if score.player.item:
+                item_image = self.images[score.player.item.name]
+                screen.blit(item_image, score.position+[340, 5])
             screen.blit(name, score.position+[10,-5])
             screen.blit(base_value, score.position+[10,75])
             screen.blit(player_value, score.position+[10,115])
