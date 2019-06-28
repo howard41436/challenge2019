@@ -58,6 +58,8 @@ class GraphicalView(object):
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
         self.background = view_staticobjects.View_background(model)
+        self.menu = view_staticobjects.View_menu(model)
+        self.characters = view_staticobjects.View_characters(model)
 
 
 
@@ -110,10 +112,10 @@ class GraphicalView(object):
                             (base_pos[i].center+base_pos[j].center)/2))
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
-        """
+        elif isinstance(event, EventTheWorldStart):
+            self.post_animations.append(view_Animation.Animation_theworld(event.position))
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
-        """
 
     
     def render_menu(self):
@@ -122,13 +124,14 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            self.title_counter = 0;
+            self.title_counter = 0
 
         # draw backround
-        self.screen.fill(view_const.COLOR_BLACK)
+        self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.board_name_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.board_name_font, 40)
         if not title_loop_counter:
@@ -143,17 +146,7 @@ class GraphicalView(object):
         else:
             gray = (255,) * 3
 
-        words_1 = titlefont.render("Fa", True, gray)
-        words_2 = titlefont.render("Da", True, gray)
-        words_3 = titlefont.render("Cai!", True, gray)
-        words_4 = littlefont.render("presented by 2019 NTU CSIE CAMP", True, gray)
-
-        self.screen.blit(words_1, (595,150))
-        self.screen.blit(words_2, (595,300))
-        self.screen.blit(words_3, (570,450))
-        self.screen.blit(words_4, (320,600))
-
-        self.title_counter += 1
+        self.title_counter += 1"""
         
         # update surface
         pg.display.flip()
@@ -221,10 +214,16 @@ class GraphicalView(object):
         timefont = pg.font.Font(view_const.board_num_font, 60)
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
+        # draw post_animation
+        for ani in self.post_animations:
+            if ani.expired: self.post_animations.remove(ani)
+            else          : ani.draw(self.screen)
+
         # update screen
         self.screen.blit(time, (950, 35))
         pg.display.flip()
         
+
     def render_stop(self):
         """
         Render the stop screen.
@@ -241,19 +240,12 @@ class GraphicalView(object):
             pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
             pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
             self.screen.blit(s,(0,0))
-            """
-            #write some word
-            somewords = self.smallfont.render(
-                        'the game is paused. space, escape to return the game.', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            """
 
             # update surface
-            # pg.display.flip()
+            pg.display.flip()
+
+
+
 
     def display_fps(self):
         """Show the programs FPS in the window handle."""

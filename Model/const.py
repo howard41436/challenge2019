@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 4
+game_length = 60 * 60 * 0.1
 cutin_time = 90
 #dir const
 """
@@ -85,6 +85,7 @@ init_insurance = 500
 pet_carry_max_up_multiplier = 1.5
 pet_cd_down_multiplier = 0.8
 
+equipment_num = 5
 default_equipments = [
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
@@ -96,8 +97,7 @@ priced_market_positions = [
     (376, 373.5)
 ]
 market_radius = 70
-market_generate_item_probability = 1 / 1
-market_refresh_item_probability = 1 / 4800
+market_cd_time = 60 * 5
 
 item_price = {
     'IGoHome': 500, 
@@ -110,27 +110,52 @@ item_price = {
     'ShuffleBases': 1,
     'FaDaCai': 0,
 }
+
+item_weight = {
+    'IGoHome': 4,
+    'OtherGoHome': 4,
+    'TheWorld': 2,
+    'MagnetAttract': 4,
+    'Invincible': 3,
+    'RadiusNotMove': 3,
+    'RadiationOil': 2,
+    'ShuffleBases': 2,
+    'FaDaCai': 0
+}
+
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
 magnet_attract_radius = 50
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
-radius_oil_multiplier = 0.8
+radiation_oil_range = 100
+radiation_oil_multiplier = 0.8
 radius_not_move_radius = 100
 radius_not_move_duration = 60 * 5
 fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': False,
+    'MagnetAttract': False,
+    'Invincible': False,
     'RadiusNotMove': True,
-    'RadiationOil': True,
+    'RadiationOil': False,
     'ShuffleBases': True,
     'FaDaCai': False,
+}
+cutin_enable = {
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
+    'MagnetAttract': False,
+    'Invincible': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': True,
+    'FaDaCai': True,
 }
 
 

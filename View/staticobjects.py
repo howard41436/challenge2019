@@ -31,17 +31,70 @@ class __Object_base():
     def __init__(self, model):
         self.model = model
 
+class View_menu(__Object_base):
+    def __init__(self, model):
+        self.menu = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'menu.png')), 1)
+    def draw(self, screen):
+        image_menu = self.menu
+        screen.blit(image_menu, [0, 0])
 
 class View_background(__Object_base):
-    def __init__(self, model):
-        self.background = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 1)
-        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
+    background = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 1)
+    priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
+    
+    @classmethod
+    def init_convert(cls):
+        background = cls.background.convert_alpha()
+        priced_market = cls.priced_market.convert_alpha()
+    
     def draw(self, screen):
         image_background = self.background
         image_priced_market = self.priced_market
         screen.fill(view_const.COLOR_WHITE)
         screen.blit(image_background, [0, 0])
         screen.blit(image_priced_market, [322, 328])
+
+
+class View_menu(__Object_base):
+    menu = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'menu.png')), 1)
+
+    def draw(self, screen):
+        image = self.menu
+        screen.blit(image, [0, 0])
+
+
+class View_characters(__Object_base):
+    images = tuple(
+        view_utils.scaled_surface(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'move_{_index}.png')),
+            0.6
+        )
+        for _index in ('1', '2', '3', '4', '5', '6', '7')
+    )
+    image_oil = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'oil_black.png')),0.4)
+
+    def __init__(self, model):
+        self.model = model
+        self.picture_switch = [0, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 6]
+        self.position_switch = [200, 335, 470, 605, 740, 875, 1010, 1010, 875, 740, 605, 470, 335, 200, 200]
+        self.index = 0
+        self.counter = 0
+
+    @classmethod
+    def init_convert(cls):
+        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
+        cls.image_oil = pg.Surface.convert_alpha( cls.image_oil )
+
+    def draw(self, screen):
+        image = self.images[self.picture_switch[self.index]]
+        screen.blit(image, [self.position_switch[self.index], 520])
+        if self.index < 8:
+            screen.blit(self.image_oil, [1220, 700])
+        if self.counter == 20:
+            self.index += 1
+            self.index %= 15
+        self.counter %= 20
+        self.counter += 1
 
 
 class View_players(__Object_base):
@@ -53,7 +106,7 @@ class View_players(__Object_base):
         for _color in ('blue', 'green', 'red', 'orange')
     )
 
-    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.8)
+    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     images_color = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
@@ -78,7 +131,7 @@ class View_players(__Object_base):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
 
             image = pg.transform.rotate(self.images[_i], angle)
-            if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-25, -60])
+            if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-17, -50])
             if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
             else: 
                 image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
@@ -170,7 +223,7 @@ class View_scoreboard(__Object_base):
     magnet = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3)
     star = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3)
     timer = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3)
-    blackhole = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'blackhole.png')), 0.3)
+    hurricane = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3)
     staff = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3)
     bomb = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.25)
     shuffle = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
@@ -181,7 +234,7 @@ class View_scoreboard(__Object_base):
         magnet = cls.magnet.convert_alpha()
         star = cls.star.convert_alpha()
         timer = cls.timer.convert_alpha()
-        blackhole = cls.blackhole.convert_alpha()
+        hurricane = cls.hurricane.convert_alpha()
         staff = cls.staff.convert_alpha()
         bomb = cls.bomb.convert_alpha()
         shuffle = cls.shuffle.convert_alpha()
@@ -206,7 +259,7 @@ class View_scoreboard(__Object_base):
             elif isinstance(score.player.item, model_item.TheWorld):
                 item_image = self.timer
             elif isinstance(score.player.item, model_item.OtherGoHome):
-                item_image = self.blackhole
+                item_image = self.hurricane
             elif isinstance(score.player.item, model_item.RadiationOil):
                 item_image = self.bomb
             elif isinstance(score.player.item, model_item.RadiusNotMove):
@@ -226,11 +279,32 @@ class View_items(__Object_base):
         self.magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
         self.star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
         self.timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
-        self.blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+        self.hurricane = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'hurricane.png')), 0.2)
         self.staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
         self.bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
         self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
         self.marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
+    backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.2)
+    magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
+    star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
+    timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
+    blackhole = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'blackhole.png')), 0.2)
+    staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
+    bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
+    shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
+    marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
+
+    @classmethod
+    def init_convert(cls):
+        backbag = cls.backbag.convert_alpha()
+        magnet = cls.magnet.convert_alpha()
+        star = cls.star.convert_alpha()
+        timer = cls.timer.convert_alpha()
+        blackhole = cls.blackhole.convert_alpha()
+        staff = cls.staff.convert_alpha()
+        bomb = cls.bomb.convert_alpha()
+        shuffle = cls.shuffle.convert_alpha()
+        marketcenter = cls.marketcenter.convert_alpha()
 
     def draw(self, screen):
         for market in self.model.priced_market_list:
@@ -243,7 +317,7 @@ class View_items(__Object_base):
             elif isinstance(market.item, model_item.TheWorld):
                 image = self.timer
             elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.blackhole
+                image = self.hurricane
             elif isinstance(market.item, model_item.RadiationOil):
                 image = self.bomb
             elif isinstance(market.item, model_item.RadiusNotMove):
@@ -265,3 +339,5 @@ def init_staticobjects():
     View_pets.init_convert()
     View_items.init_convert()
     View_scoreboard.init_convert()
+    View_menu.init_convert()
+    View_characters.init_convert()

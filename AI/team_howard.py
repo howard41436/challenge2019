@@ -68,14 +68,12 @@ class TeamAI(BaseAI):
         home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)
-
         if home_cp > best_cp:
             best_cp = home_cp
             dest = home
-        #attack_cp, target_pos = self.attack(carry, my_pos)
-        # print("smooth")
-        #if attack_cp >= best_cp:
-        #    dest = target_pos
+        attack_cp, target_pos = self.attack(carry, my_pos)
+        if attack_cp >= best_cp:
+            dest = target_pos
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
