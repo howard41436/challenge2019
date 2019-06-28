@@ -4,6 +4,7 @@ import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
 import os.path
+from math import sqrt
 
 '''
 * How Animation works:
@@ -194,7 +195,49 @@ class Animation_endboard(Animation_raster):
         self.frames = tuple(
             pg.Surface((200, i)).fill(view_const.COLOR_BLACK) for i in range(0, int(score), 10)
         )
-        
+
+
+class Animation_theworld(Animation_raster):
+    '''
+    There are two phases in "the world" skill.
+    phase 1: the circle grows larger from the starting position until the whole screen is covered
+    phase 2: the circle shrinks
+    '''
+
+    image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
+
+    @classmethod
+    def init_convert(cls):
+        cls.image_inside = cls.image_inside.convert_alpha()
+
+    def __get_max_radius(self):
+        x1 = self.center[0]
+        x2 = 1200 - self.center[0]
+        y1 = self.center[1]
+        y2 = 800 - self.center[1]
+        return max(map(sqrt, (x1**2+y1**2, x1**2+y2**2, x2**2+y1**2, x2**2+y2**2)))
+    
+    def __init__(self, center):
+        '''
+        Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
+        '''
+        self.expired = False
+        self.center = center
+        self.radius = 1
+        self.radius_vel = 60
+        self.max_radius = self.__get_max_radius()
+
+    def update(self):
+        self.radius += self.radius_vel
+        if self.radius > self.max_radius: self.radius_vel = -self.radius_vel
+        if self.radius == 1: self.expired = True
+
+    def draw(self, screen):
+        cur_inside = pg.transform.scale(self.image_inside, (2*self.radius, 2*self.radius))
+        screen.blit(cur_inside, cur_inside.get_rect(center=self.center))
+
+        self.update()
+
 
 """class Animation_freeze(Animation_raster):
     frames = tuple(
@@ -215,5 +258,6 @@ def init_animation():
     Animation_magnetattract.init_convert()
     Animation_othergohome.init_convert()
     Animation_radiationOil.init_convert()
+    Animation_theworld.init_convert()
     """Animation_freeze.init_convert()"""
 
