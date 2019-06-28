@@ -1,7 +1,8 @@
 from AI.base import *
-
+import Model.const as model_const
 from pygame.math import Vector2 as Vec
 import random
+PICK = 9
 direct = [
 [0, 0],             #steady
 [0, -1],             #up
@@ -16,8 +17,7 @@ direct = [
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
-        self.skill = []
-
+        self.equipments = [0, 0, 0, 0, 0]
         self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
@@ -33,7 +33,6 @@ class TeamAI(BaseAI):
                 best_pos = oil_poses[i]
         return best_pos, my_pos, best_cp
     def get_dir(self, dest, my_pos):
-        
         new = Vec(dest) - Vec(my_pos)
         maximum = 0
         record = 0
@@ -44,6 +43,8 @@ class TeamAI(BaseAI):
         return record
 
     def attack(self, carry, my_pos):
+        if self.helper.get_player_item_is_active() and self.helper.get_player_item_name() == 'Invincible':
+            return 0, 0
         players_value = self.helper.get_players_value()
         players_speed = self.helper.get_players_speed()
         players_position = self.helper.get_players_position()
@@ -79,24 +80,64 @@ class TeamAI(BaseAI):
                 togo = i
         return togo
 
+    def pick_item(self, dest, my_pos, carry):
+        if self.helper.get_player_item_name() or self.helper.get_player_item_is_active():
+            return dest
+        total_value = carry + self.helper.get_base_value()
+        time_past = 60 * 60 * 4 - self.helper.get_timer()
+        item = self.helper.get_market()
+        # print("{} / {} = {}".format(total_value, (time_past + 1e-9), total_value / (time_past + 1e-9)))
+        the_max = True
+        for i in range(4):
+            if i == self.helper.player_id:
+                continue
+            if total_value < self.helper.get_player_value(player_id=i) + self.helper.get_player_value(player_id=i):
+                the_max = False
+        if (item[0] == 'OtherGoHome' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
+            if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius:
+                return PICK
+            return self.helper.get_market_center()
+        return dest
+
+    def use_item(self, my_pos):
+        use = False
+        if self.helper.get_player_item_name() == 'RadiusNotMove' and not self.helper.get_player_item_is_active():
+            for i in range(4):
+                if (Vec(my_pos) - Vec(self.helper.get_player_position(player_id=i))).length() <= model_const.radius_not_move_radius:
+                    use = True
+        elif (self.helper.get_player_item_name() == 'ShuffleBases' or self.helper.get_player_item_name() == 'MagnetAttract') and \
+             not self.helper.get_player_item_is_active():
+            use = True
+        elif self.helper.get_player_item_name() == 'RadiationOil' and not self.helper.get_player_item_is_active():
+            use = True
+        return use
+
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
+        if self.use_item(my_pos) == True:
+            return 9
         home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)**0.8
-        # print(home_cp, best_cp)             
-        if home_cp > best_cp:
-            best_cp = home_cp
-            dest = home
-        attack_cp, target_pos = self.attack(carry, my_pos)
 
+        attack_cp, target_pos = self.attack(carry, my_pos)
         if attack_cp >= best_cp:
             dest = target_pos
-        return self.ankle_break(self.get_dir(dest, my_pos), carry, my_pos)
+        dest = self.pick_item(dest, my_pos, carry)
+        if dest == PICK:
+            return PICK
+        if home_cp > best_cp:
+            if self.helper.get_player_item_duration() == 0 and (self.helper.get_player_item_name() == 'IGoHome' or \
+                            self.helper.get_player_item_name() == 'OtherGoHome' or \
+                            self.helper.get_player_item_name() == 'TheWorld' or \
+                            self.helper.get_player_item_name() == 'Invincible'):
+                return 9
+            return self.ankle_break(self.get_dir(home, my_pos), carry, my_pos)
+        return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
 DIR_U    = 1
