@@ -243,33 +243,7 @@ class View_items(__Object_base):
             screen.blit(image, market.position+[5,5])
 
 
-class View_endboard(__Object_base):
-    def draw(self, screen):
-        screen.fill(view_const.COLOR_WHITE)
-        # write some word
-        result = []
-        
-        titlefont = pg.font.Font(view_const.board_name_font, 70)
-        title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-        screen.blit(title, (400, 15))
-        numfont = pg.font.Font(view_const.board_name_font, 30)
-        numfont2 = pg.font.Font(view_const.board_name_font, 25)
-        for base in self.model.base_list:
-            result.append([self.model.player_list[base.owner_index].name, 
-                           base.value_sum,
-                           model_const.colors[base.owner_index]])
-        def takeSecond(item): return item[1]
-        result.sort(key=takeSecond, reverse=True)
-        pos_x = 256
-        prize = 1
-        first = result[0][1]
-        for player in result:
-            line = numfont.render(f'{prize}.{player[0]}', True, view_const.COLOR_BLACK)
-            screen.blit(line, line.get_rect(center=(pos_x, 700)))
-            view_animation.Animation_endboard(player[2], player[1]/first*500, center=(pos_x, 680))
-            pos_x += 256
-            prize += 1
-        pg.display.flip()
+
 
 def init_staticobjects():
     View_players.init_convert()

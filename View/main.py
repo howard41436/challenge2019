@@ -57,7 +57,6 @@ class GraphicalView(object):
         self.pets = view_staticobjects.View_pets(model)
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
-        self.endboard = view_staticobjects.View_endboard(model)
 
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
@@ -166,26 +165,33 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_ENDGAME:
             self.last_update = model.STATE_ENDGAME
-
+            self.screen.fill(view_const.COLOR_WHITE)
             result = []
             for base in self.model.base_list:
                 result.append([self.model.player_list[base.owner_index].name, 
                                base.value_sum,
                                model_const.colors[base.owner_index]])
 
-            
-
-            def takeSecond(item): return item[1]
-            result.sort(key=takeSecond, reverse=True)
+            result.sort(key=(lambda item: item[1]), reverse=True)
             pos_x = 256
             prize = 1
             first = result[0][1]
-            self.animations.append(view_Animation.View_endboard(player[2], player[1]/first*500, center=(pos_x, 680)) for player in result)
+            for player in result:
+                self.animations.append(view_Animation.Animation_endboard(player[2], player[1]/first*500, (pos_x, 680), player[1], player[0]))
+                pos_x += 256
+                prize += 1
+
 
         if self.animations:
+            self.screen.fill(view_const.COLOR_WHITE)
+            titlefont = pg.font.Font(view_const.board_name_font, 60)
+            title = titlefont.render('Score Board', True, view_const.COLOR_BLACK)
+            self.screen.blit(title, title.get_rect(center=(640, 60)))
             for ani in self.animations:
                 if ani.expired: self.animations.remove(ani)
                 else          : ani.draw(self.screen)
+
+        pg.display.flip()
  
 
     def render_play(self):
@@ -249,25 +255,7 @@ class GraphicalView(object):
             """
 
             # update surface
-            pg.display.flip()
-
-    def render_end(self):
-        if self.last_update != model.STATE_END:
-            self.last_update = model.STATE_END
-            result = []
-            numfont = pg.font.Font(view_const.board_name_font, 30)
-
-            for player in self.model.player_list:
-                result.append((player.name, player.value_sum))
-            result.sort(key=takeSecond)
-            self.screen.fill(view_const.COLOR_WHITE)
-            pos_x = 0
-            for player in result:
-                line = self.animations.appendboardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
-                self.screen.blit(line, (50, 50 + pos_x))
-                pg.display.flip()
-                pos_x += 50
-
+            # pg.display.flip()
 
     def display_fps(self):
         """Show the programs FPS in the window handle."""
