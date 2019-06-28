@@ -160,18 +160,22 @@ class View_bases(__Object_base):
 
     def draw(self, screen):
         for _base in self.model.base_list:
-            pg.draw.circle(screen, model_const.colors[_base.owner_index], view_const.corner[_base.owner_index] , 160)
+            pg.draw.circle(screen, self.model.player_list[_base.owner_index].color, view_const.corner[_base.owner_index] , 160)
             screen.blit(self.images, self.images.get_rect(center=_base.center))
 
 
 class View_pets(__Object_base):
-    images = tuple(
-        view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'pet_robot_{_color}.png')),
-            0.08
+    def __init__(self, model):
+        self.model = model
+        self.images = tuple(
+            view_utils.scaled_surface(
+                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'pet_robot_outfit.png'),
+                                        view_const.COLOR_WHITE,
+                                        player.color),
+                0.08
+            )
+            for player in self.model.player_list
         )
-        for _color in ('blue', 'green', 'red', 'orange')
-    )
 
     def draw(self, screen):
         pets = self.model.pet_list
@@ -203,7 +207,7 @@ class View_scoreboard(__Object_base):
         namefont = pg.font.Font(view_const.board_name_font, 55)
         numfont = pg.font.Font(view_const.board_name_font, 25)
         for score in self.model.scoreboard.score_list:
-            pg.draw.rect(screen, self.model.colors[score.get_id()], (score.position,(480,160)))
+            pg.draw.rect(screen, score.player.color, (score.position,(480,160)))
         for score in self.model.scoreboard.score_list:
             name = namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
             base_value = numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)

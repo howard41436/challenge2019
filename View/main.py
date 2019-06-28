@@ -163,7 +163,7 @@ class GraphicalView(object):
             for base in self.model.base_list:
                 result.append([self.model.player_list[base.owner_index].name, 
                                base.value_sum,
-                               model_const.colors[base.owner_index]])
+                               self.model.player_list[base.owner_index].color])
 
             result.sort(key=(lambda item: item[1]), reverse=True)
             pos_x = 256
