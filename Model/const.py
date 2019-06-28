@@ -27,10 +27,10 @@ dir_mapping = [
 
 # color
 colors = [ 
-    view_const.COLOR_BLUE,
-    view_const.COLOR_GREEN,
-    view_const.COLOR_RED,
-    view_const.COLOR_ORANGE
+    view_const.COLOR_PLAYER_BLUE,
+    view_const.COLOR_PLAYER_GREEN,
+    view_const.COLOR_PLAYER_RED,
+    view_const.COLOR_PLAYER_ORANGE
 ]
 
 # oil_const
@@ -122,14 +122,14 @@ fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
+    'IGoHome': False,
+    'OtherGoHome': False,
     'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
+    'MagnetAttract': False,
+    'Invincible': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': False,
     'FaDaCai': False,
 }
 

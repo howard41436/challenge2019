@@ -162,6 +162,7 @@ class View_scoreboard(__Object_base):
         self.shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.3)
 
     def draw(self, screen):
+        pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         namefont = pg.font.Font(view_const.board_name_font, 55)
         numfont = pg.font.Font(view_const.board_name_font, 25)
         for score in self.model.scoreboard.score_list:

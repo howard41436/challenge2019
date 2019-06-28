@@ -192,7 +192,6 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
-        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
 
         # draw time
