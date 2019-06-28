@@ -5,6 +5,7 @@ import View.const as view_const
 import View.utils as view_utils
 import os.path
 from math import *
+import random
 
 '''
 * How Animation works:
@@ -166,27 +167,59 @@ class Animation_start():
 class Animation_shuffleBases_vertical(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_vertical.png')),
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ver.png')),
             1/30 * i
         )
-        for i in range(1, 30)
+        for i in range(1, 45)
     )
 
     def __init__(self, **pos):
-        super().__init__(1, 2*len(self.frames), **pos)
+        super().__init__(1, 90, **pos)
 
 
 class Animation_shuffleBases_horizontal(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_horizontal.png')),
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hor.png')),
             1/30 * i
         )
-        for i in range(1, 30)
+        for i in range(1, 45)
     )
 
     def __init__(self, **pos):
-        super().__init__(1, 2*len(self.frames), **pos)
+        super().__init__(1, 90, **pos)
+
+class Animation_shuffleBases(Animation_raster):
+    images = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
+    
+    def __init__(self, model):
+        self.model = model
+        self.expire_time = 90
+        self.expired = False
+        self.delay_of_frames = 10
+        self._timer = 0
+
+    def update(self):
+        self._timer += 1
+        if self._timer == self.expire_time:
+            self.expired = True
+
+    
+    @classmethod
+    def init_convert(cls):
+        cls.images = cls.images.convert_alpha()
+    
+    def draw(self, screen):
+        if self._timer % self.delay_of_frames:
+            all_color = [player.color for player in self.model.player_list]
+            random.shuffle(all_color)
+            for _base in self.model.base_list:
+                pg.draw.circle(screen, 
+                              all_color[_base.owner_index], 
+                              (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                              160)
+                screen.blit(self.images, self.images.get_rect(center=_base.center))
+        self.update()
 
 
 class Animation_endboard(Animation_raster):

@@ -20,6 +20,8 @@ def scaled_surface(surface, scale):
     image = scaled_surface(image, 0.3)
     '''
     return pg.transform.smoothscale(surface, (int(scale * surface.get_width()), int(scale * surface.get_height())))
+
+
 """
     reference:
     https://stackoverflow.com/questions/38665920/convert-pil-image-into-pygame-surface-image

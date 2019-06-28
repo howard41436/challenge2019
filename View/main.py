@@ -105,6 +105,7 @@ class GraphicalView(object):
             for pos in ani_pos:
                 if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
                 else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.animations.append(view_Animation.Animation_shuffleBases(self.model))
             self.bases.draw(self.screen)
             pg.display.flip()
         elif isinstance(event, EventCutInStart):
