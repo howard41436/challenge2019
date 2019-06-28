@@ -92,14 +92,6 @@ class View_characters(__Object_base):
 
 
 class View_players(__Object_base):
-    images = tuple(
-        view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_{_color}.png')),
-            0.2
-        )
-        for _color in ('blue', 'green', 'red', 'orange')
-    )
-
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     images_color = tuple(
         view_utils.scaled_surface(
@@ -112,6 +104,15 @@ class View_players(__Object_base):
     def __init__(self, model):
         self.model = model
         self.color_switch = [0, 0, 0, 0]
+        self.images = tuple(
+            view_utils.scaled_surface(
+                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'player_outfit.png'),
+                                        view_const.COLOR_WHITE,
+                                        player.color),
+                0.2
+            )
+            for player in self.model.player_list
+        )
 
     @classmethod
     def init_convert(cls):
@@ -123,7 +124,6 @@ class View_players(__Object_base):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
-
             image = pg.transform.rotate(self.images[_i], angle)
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-17, -50])
             if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
