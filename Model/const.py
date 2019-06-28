@@ -125,12 +125,12 @@ item_weight = {
 
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
-magnet_attract_radius = 50
+magnet_attract_radius = 100
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
 radiation_oil_range = 100
 radiation_oil_multiplier = 0.9
-radius_not_move_radius = 100
+radius_not_move_radius = 150
 radius_not_move_duration = 60 * 5
 fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
