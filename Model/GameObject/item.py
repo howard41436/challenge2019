@@ -10,7 +10,7 @@ class Item(object):
     Base Item
     '''
     def __init__(self, player_list, oil_list, base_list, player_index, item_name):
-        self.active = False  # taking effect or not
+        self.active = False # taking effect or not
         self.duration = 0
         self.position = None
         self.player_index = player_index
@@ -18,7 +18,10 @@ class Item(object):
         self.oil_list = oil_list
         self.base_list = base_list
         self.name = item_name
+        self.is_activate = model_const.priced_item_activate[item_name]
         self.price = model_const.item_price[item_name]
+        self.probability = model_const.item_probability[item_name]
+        
     def trigger(self, ev_manager):
         ev_manager.post(EventCutInStart(self.player_index, self.name))
 
