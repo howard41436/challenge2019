@@ -94,6 +94,8 @@ class TeamAI(BaseAI):
         return (2*vec1 + vec2)
 
     def direction(self, pos_vec):
+        if pos_vec == 9:
+            return 9
         AI_move_dir = 0
         vec_dot = 0
         for dir_vec in AI_dir_mapping:
@@ -102,16 +104,34 @@ class TeamAI(BaseAI):
                 AI_move_dir = AI_dir_mapping.index(dir_vec)
         return AI_move_dir
 
+    def get_item(self):
+        my_pos = self.helper.get_player_position()
+        item_name, item_price, market_timer = self.helper.get_market()
+        if item_name != None:
+            if self.helper.get_player_item_name() == None and self.helper.get_player_value() >= item_price:
+                if self.helper.player_in_market() is False:
+                    return Vec(self.helper.get_market_center()) - Vec(my_pos)
+                else:
+                    return 9
+            else:
+                return None
+        else:
+            return None
+            
     def decide(self):
         best_vec = self.get_best_vec()
         my_pos = self.helper.get_player_position()
-        if self.helper.get_nearest_oil() != None:
-            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
-                return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+        go_for_item = self.get_item()
+        if go_for_item is not None:
+            return self.direction(go_for_item)
+        else:
+            if self.helper.get_nearest_oil() != None:
+                if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                    return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                else:
+                    return self.direction(best_vec)
             else:
                 return self.direction(best_vec)
-        else:
-            return self.direction(best_vec)
 
 """
 const of AI code use.
