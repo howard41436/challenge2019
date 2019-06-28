@@ -43,8 +43,14 @@ class GraphicalView(object):
         view_Animation.init_animation()
         view_cutin.init_cutin()
 
+        # animations
         self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
 
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(model)
+
+        # static objects
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
@@ -52,11 +58,8 @@ class GraphicalView(object):
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
         self.endboard = view_staticobjects.View_endboard(model)
+        self.background = view_staticobjects.View_background(model)
 
-        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
-        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
         """
@@ -95,7 +98,6 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
-
         elif isinstance(event, EventShuffleBases):
             base_pos = self.model.base_list
             for i in range(0, model_const.player_number):
@@ -106,18 +108,12 @@ class GraphicalView(object):
                     if base_pos[i].center[1] == base_pos[j].center[1]:
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
                             (base_pos[i].center+base_pos[j].center)/2))
-            
-
-
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
-
         """
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
         """
-
-
 
     
     def render_menu(self):
@@ -126,7 +122,7 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            self.title_counter = 0;
+            self.title_counter = 0
 
         # draw backround
         self.screen.fill(view_const.COLOR_BLACK)
@@ -146,7 +142,7 @@ class GraphicalView(object):
             gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
         else:
             gray = (255,) * 3
-       
+
         words_1 = titlefont.render("Fa", True, gray)
         words_2 = titlefont.render("Da", True, gray)
         words_3 = titlefont.render("Cai!", True, gray)
@@ -161,7 +157,8 @@ class GraphicalView(object):
         
         # update surface
         pg.display.flip()
-    
+
+
     def render_endgame(self):
         """
         Render the game menu.
@@ -169,7 +166,6 @@ class GraphicalView(object):
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
             self.endboard.draw(self.screen)
-
     
 
     def render_play(self):
@@ -180,10 +176,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_PLAY
         
         # draw background
-        self.screen.fill(view_const.COLOR_WHITE)
-        self.screen.blit(self.background_image, [0, 0])
-        self.screen.blit(self.priced_market, [322, 328])
-
+        self.background.draw(self.screen)
         self.bases.draw(self.screen)
 
         # draw animation
@@ -196,9 +189,7 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
-        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
-
 
         # draw time
         timefont = pg.font.Font(view_const.board_num_font, 60)
@@ -208,6 +199,7 @@ class GraphicalView(object):
         self.screen.blit(time, (950, 35))
         pg.display.flip()
         
+
     def render_stop(self):
         """
         Render the stop screen.
@@ -224,19 +216,10 @@ class GraphicalView(object):
             pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
             pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
             self.screen.blit(s,(0,0))
-            """
-            #write some word
-            somewords = self.smallfont.render(
-                        'the game is paused. space, escape to return the game.', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            """
 
             # update surface
             pg.display.flip()
+
 
     def render_end(self):
         if self.last_update != model.STATE_END:
@@ -255,12 +238,14 @@ class GraphicalView(object):
                 pg.display.flip()
                 pos_x += 50
 
+
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
             view_const.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
+        
         
     def initialize(self):
         """

@@ -27,10 +27,10 @@ dir_mapping = [
 
 # color
 colors = [ 
-    view_const.COLOR_BLUE,
-    view_const.COLOR_GREEN,
-    view_const.COLOR_RED,
-    view_const.COLOR_ORANGE
+    view_const.COLOR_PLAYER_BLUE,
+    view_const.COLOR_PLAYER_GREEN,
+    view_const.COLOR_PLAYER_RED,
+    view_const.COLOR_PLAYER_ORANGE
 ]
 
 # oil_const
