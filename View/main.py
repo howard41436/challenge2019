@@ -10,6 +10,7 @@ import View.const            as view_const
 import View.animations       as view_Animation
 import View.utils            as view_utils
 import View.staticobjects    as view_staticobjects
+import View.cutin            as view_cutin
 import Controller.const      as ctrl_const
 import Interface.const       as ifa_const
 from pygame.math import Vector2 as Vec
@@ -40,9 +41,11 @@ class GraphicalView(object):
 
         view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
+        view_cutin.init_cutin()
 
         self.animations = []
-
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(model)
         self.players = view_staticobjects.View_players(model)
         self.oils = view_staticobjects.View_oils(model)
         self.bases = view_staticobjects.View_bases(model)
@@ -52,7 +55,6 @@ class GraphicalView(object):
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
-
         self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
         self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
@@ -67,16 +69,15 @@ class GraphicalView(object):
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
                 self.render_play()
+            if cur_state == model.STATE_CUTIN:
+                self.cutin_manager.draw(self.screen)
             if cur_state == model.STATE_STOP:
                 self.render_stop()
             if cur_state == model.STATE_ENDGAME:
                 self.render_endgame()
-
             self.display_fps()
-            # limit the redraw speed to 30 frames per second
             self.clock.tick(view_const.frame_per_sec)
         elif isinstance(event, EventQuit):
-            # shut down the pygame graphics
             self.is_initialized = False
             pg.quit()
         elif isinstance(event, EventInitialize) or\
@@ -94,6 +95,7 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+
         elif isinstance(event, EventShuffleBases):
             base_pos = self.model.base_list
             for i in range(0, model_const.player_number):
@@ -105,11 +107,8 @@ class GraphicalView(object):
                         self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
                             (base_pos[i].center+base_pos[j].center)/2))
 
-            
-
-
-
-
+        elif isinstance(event, EventCutInStart):
+            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
 
 
     
@@ -193,6 +192,7 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
+        
         # draw background
         self.screen.fill(view_const.COLOR_WHITE)
         self.screen.blit(self.background_image, [0, 0])
@@ -213,13 +213,12 @@ class GraphicalView(object):
         pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
         self.scoreboard.draw(self.screen)
 
-
+        # draw time
         timefont = pg.font.Font(view_const.board_name_font, 60)
-
-
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        # update screen
         self.screen.blit(time, (950, 35))
-
         pg.display.flip()
         
     def render_stop(self):

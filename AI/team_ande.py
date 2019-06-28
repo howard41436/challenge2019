@@ -10,35 +10,41 @@ class TeamAI(BaseAI):
         self.skill = []
         self.last_dir = random.randint(1, 8)
 
-    def get_best_oil_vec(self):
+    def get_best_vec(self):
         my_speed = self.helper.get_player_speed()
         my_pos = self.helper.get_player_position()
         oils_pos = self.helper.get_oils()
         oils_value = self.helper.get_oils_level()
         players_speed = self.helper.get_players_speed()
         best_pos = None
-        best_cp = -1
+        best_cp = 0
         attack_cp, victim_id, victim_pos = self.attack()
-        home_cp = 9e-11*self.helper.get_player_value() * self.helper.get_distance(my_pos, self.helper.get_base_center())
+        home_cp = 1/10 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
         for i in range(len(oils_pos)):
             level = oils_value[i]
             cp = level / (self.helper.get_distance(oils_pos[i], my_pos) ** 2 / my_speed) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) ** (1/2))
             players_pos = self.helper.get_players_position()
+            """
             for i in range(len(players_pos)):
                 if self.helper.player_id == i:
                     continue
-                cp -= level/(5*self.helper.get_distance(players_pos[i], oils_pos[i]) ** 2) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) / abs(players_speed[i]))
+                print (level / (self.helper.get_distance(players_pos[i], oils_pos[i]) ** 2 / abs(players_speed[i])) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) ** (1/2)))
+                cp -= 1/10 * level / (self.helper.get_distance(players_pos[i], oils_pos[i]) ** 2 / abs(players_speed[i])) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) ** (1/2))
+            """
             if cp > best_cp:
                 best_cp = cp 
                 best_pos = oils_pos[i] 
-        print ("attack cp = ", attack_cp)
-        print ("best_oil cp = ", best_cp)
-        print ("home_cp = ", home_cp)
-        if max(attack_cp, best_cp, home_cp) == attack_cp:
-            return Vec(victim_pos) - Vec(my_pos)
-        elif max(attack_cp, best_cp, home_cp) == best_cp:
+        #print ("attack cp = ", attack_cp)
+        #print ("best_oil cp = ", best_cp)
+        #print ("home_cp = ", home_cp)
+        if max(attack_cp, best_cp, home_cp) == best_cp:
+            #print ("attack")
             return Vec(best_pos) - Vec(my_pos)
+        elif max(attack_cp, best_cp, home_cp) == attack_cp:
+            #print ("get oil")
+            return Vec(victim_pos) - Vec(my_pos)
         else:
+            #print ("home")
             return self.go_home()
         
     def go_home(self):
@@ -72,6 +78,8 @@ class TeamAI(BaseAI):
                 value_difference = (players_value[i] - self.helper.get_player_value()) / 2
                 level = (value_difference - 400) / 200 + 1
                 cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / abs(players_speed[i] - my_speed) )
+                if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
+                    cp = 0
                 if cp > best_cp:
                     best_cp = cp
                     victim_id = i
@@ -95,15 +103,15 @@ class TeamAI(BaseAI):
         return AI_move_dir
 
     def decide(self):
-        best_oil_vec = self.get_best_oil_vec()
+        best_vec = self.get_best_vec()
         my_pos = self.helper.get_player_position()
         if self.helper.get_nearest_oil() != None:
-            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 4*self.helper.player_radius:
+            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
                 return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
             else:
-                return self.direction(best_oil_vec)
+                return self.direction(best_vec)
         else:
-            return self.direction(best_oil_vec)
+            return self.direction(best_vec)
 
 """
 const of AI code use.

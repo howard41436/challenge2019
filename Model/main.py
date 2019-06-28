@@ -35,6 +35,7 @@ class GameEngine(object):
         self.AI_names = AI_names
         self.player_list = []
         self.colors = model_const.colors
+        self.cutin_enable = True
         self.pet_list = []
         self.oil_list = []
         self.base_list = []
@@ -42,6 +43,12 @@ class GameEngine(object):
         self.turn_to = 0
         self.timer = 0
         self.fadacai = False
+        self.za_warudo_id = None
+
+        for s in self.AI_names:
+            if s == '--debug':
+                self.cutin_enable = False
+                self.AI_names.remove(s)
 
         self.init_oil()
         self.init_pet()
@@ -62,6 +69,8 @@ class GameEngine(object):
             cur_state = self.state.peek()
             if cur_state == STATE_PLAY:
                 self.update_objects()
+            elif cur_state == STATE_CUTIN:
+                self.update_cutin()
         elif isinstance(event, EventStateChange):
             # if event.state is None >> pop state.
             if event.state is None:
@@ -77,11 +86,13 @@ class GameEngine(object):
         elif isinstance(event, EventMove):
             self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
-            player = self.player_list[event.player_index]
-            if player.item is not None:
-                player.use_item(self.ev_manager)
-            else:
-                player.buy(self.priced_market_list)
+            cur_state = self.state.peek()
+            if cur_state != STATE_CUTIN:
+                player = self.player_list[event.player_index]
+                if player.item is not None:
+                    player.use_item(self.ev_manager)
+                else:
+                    player.buy(self.priced_market_list)
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, (EventInitialize, EventRestart)):
@@ -90,6 +101,13 @@ class GameEngine(object):
             self.fadacai = True
         elif isinstance(event, EventFaDaCaiStop):
             self.fadacai = False
+        elif isinstance(event, EventTheWorldStart):
+            self.za_warudo_id = event.player_index
+        elif isinstance(event, EventTheWorldStop):
+            self.za_warudo_id = None
+        elif self.cutin_enable and isinstance(event, EventCutInStart):
+            self.cutin_timer = model_const.cutin_time
+            self.state.push(STATE_CUTIN)
 
     def init_player(self):
         # set AI Names List
@@ -137,33 +155,39 @@ class GameEngine(object):
                 player.direction_no = direction
 
     def update_objects(self):
-        # Update player_list
-        for oil in self.oil_list:
-            oil.update()
-        self.try_create_oil()
-        for player in self.player_list:
+        if self.za_warudo_id is not None:
+            pet = self.pet_list[self.za_warudo_id]
+            pet.update(self.player_list, self.base_list) 
+            player = self.player_list[self.za_warudo_id]
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
-
-        if self.timer % 2400 == 1000:
+        else:
+            self.try_create_oil()
+            for player in self.player_list:
+                player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            if self.timer % 2400 == 1000:
+                for pet in self.pet_list:
+                    pet.change_status(1)
+            
             for pet in self.pet_list:
-                pet.change_status(1)
-        
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
+                pet.update(self.player_list, self.base_list)
 
-        for oil in self.oil_list:
-            oil.update()
-        self.try_create_oil()
+            for oil in self.oil_list:
+                oil.update()
+            self.try_create_oil()
 
-        for market in self.priced_market_list:
-            market.update(self.player_list, self.oil_list, self.base_list, None)
+            for market in self.priced_market_list:
+                market.update(self.player_list, self.oil_list, self.base_list, None)
 
-        self.scoreboard.update()
+            self.scoreboard.update()
 
-        self.timer -= 1
-        if self.timer == 0:
-            print("End Game")
-            self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+            self.timer -= 1
+            if self.timer == 0:
+                self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+
+    def update_cutin(self):
+        self.cutin_timer -= 1
+        if self.cutin_timer == 0:
+            self.state.pop()  # pop out STATE_CUTIN
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
@@ -173,12 +197,10 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if self.fadacai:
-            if random.random() < model_const.fadacai_oil_probability:
-                self.create_oil()
-        else:
-            if random.random() < model_const.oil_probability:
-                self.create_oil()
+        p = model_const.fadacai_oil_probability if self.fadacai else model_const.oil_probability
+        p *= 2 * (max(model_const.max_oil_num - len(self.oil_list), 0)) / model_const.max_oil_num
+        if random.random() < p:
+            self.create_oil()
 
     def init_base(self) :
         # todo

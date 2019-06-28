@@ -1,6 +1,7 @@
 import View.const as view_const
 
 game_length = 60 * 60 * 4
+cutin_time = 90
 #dir const
 """
 DIR_U  = 1
@@ -41,6 +42,7 @@ oil_radius = 8
 price_max = 1200
 price_min = 50
 price_scale = 50
+max_oil_num = 100
 
 # player
 player_number = 4
@@ -77,14 +79,15 @@ insurance_idx = 2
 pet_carry_max_up_idx = 3
 pet_cd_down_idx = 4
 
-speed_multiplier = 1.2
-oil_multiplier = 1.2
-init_insurance = 50
+speed_multiplier = 1.1
+oil_multiplier = 1.1
+init_insurance = 500
 pet_carry_max_up_multiplier = 1.5
 pet_cd_down_multiplier = 0.8
 
+equipment_num = 5
 default_equipments = [
-    [0, 0, 0, 0, 10],
+    [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0]
@@ -98,14 +101,14 @@ market_generate_item_probability = 1 / 1
 market_refresh_item_probability = 1 / 4800
 
 item_price = {
-    'IGoHome': 100, 
-    'OtherGoHome': 200, 
-    'TheWorld': 300,
-    'MagnetAttract': 400,
-    'Invincible': 500,
-    'RadiusNotMove': 600,
-    'RadiationOil': 700,
-    'ShuffleBases': 800,
+    'IGoHome': 500, 
+    'OtherGoHome': 500, 
+    'TheWorld': 1500,
+    'MagnetAttract': 750,
+    'Invincible': 750,
+    'RadiusNotMove': 500,
+    'RadiationOil': 1000,
+    'ShuffleBases': 1,
     'FaDaCai': 0,
 }
 the_world_duration = 60 * 5
@@ -128,7 +131,7 @@ priced_item_activate = {
     'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,
-    'FaDaCai': False,
+    'FaDaCai': True,
 }
 
 
