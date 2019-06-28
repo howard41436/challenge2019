@@ -1,5 +1,6 @@
 # Window hyperparameters
 import os.path
+from pygame.math import Vector2
 
 game_caption = "Challenge 2019"
 screen_size  = (1280, 800)
@@ -84,3 +85,12 @@ board_num_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
 
 # Path
 IMAGE_PATH = os.path.join('View', 'image')
+
+# Cut-in parameters
+CUTIN_BACKGROUND_PHASE1_TOPLEFT = Vector2(-800, 200)
+CUTIN_BACKGROUND_PHASE2_TOPLEFT = Vector2(CUTIN_BACKGROUND_PHASE1_TOPLEFT[0] + 800, CUTIN_BACKGROUND_PHASE1_TOPLEFT[1])
+CUTIN_FRONT_PHASE1_TOPLEFT = Vector2(-500, 227)
+CUTIN_FRONT_PHASE2_TOPLEFT = Vector2(CUTIN_FRONT_PHASE1_TOPLEFT[0] + 800, CUTIN_FRONT_PHASE1_TOPLEFT[1])
+CUTIN_PHASE2_SHIFT = 50
+CUTIN_FRONT_PHASE3_TOPLEFT = Vector2(CUTIN_FRONT_PHASE2_TOPLEFT[0] + CUTIN_PHASE2_SHIFT, CUTIN_FRONT_PHASE2_TOPLEFT[1])
+

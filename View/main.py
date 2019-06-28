@@ -111,6 +111,8 @@ class GraphicalView(object):
                             (base_pos[i].center+base_pos[j].center)/2))
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+        elif isinstance(event, EventTheWorldStart):
+            self.post_animations.append(view_Animation.Animation_theworld(event.position))
         """
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
@@ -186,6 +188,11 @@ class GraphicalView(object):
         timefont = pg.font.Font(view_const.board_num_font, 60)
         time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
+        # draw post_animation
+        for ani in self.post_animations:
+            if ani.expired: self.post_animations.remove(ani)
+            else          : ani.draw(self.screen)
+
         # update screen
         self.screen.blit(time, (950, 35))
         pg.display.flip()
