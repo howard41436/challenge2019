@@ -78,6 +78,8 @@ class TeamAI(BaseAI):
                 value_difference = (players_value[i] - self.helper.get_player_value()) / 2
                 level = (value_difference - 400) / 200 + 1
                 cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / abs(players_speed[i] - my_speed) )
+                if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
+                    cp = 0
                 if cp > best_cp:
                     best_cp = cp
                     victim_id = i
