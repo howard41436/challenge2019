@@ -33,8 +33,8 @@ class __Object_base():
 
 
 class View_background(__Object_base):
-    background = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')), 1)
-    priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
+    background = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'background.png')), 1)
+    priced_market = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'market.png')), 0.3)
     
     @classmethod
     def init_convert(cls):
@@ -236,48 +236,27 @@ class View_scoreboard(__Object_base):
 
 
 class View_items(__Object_base):
-    backbag = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'backbag.png')), 0.2)
-    magnet = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'magnet.png')), 0.2)
-    star = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'star.png')), 0.2)
-    timer = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'clock.png')), 0.2)
-    hurricane = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'hurricane.png')), 0.2)
-    staff = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'staff.png')), 0.2)
-    bomb = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'bomb.png')), 0.15)
-    shuffle = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'shuffle.png')), 0.2)
-    marketcenter = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'marketcenter.png')), 0.0001)
+    images = {
+    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.2),
+    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.2),
+    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.2),
+    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.2),
+    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.2),
+    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
+    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
+    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
+    'marketcenter'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'marketcenter.png')), 0.0001)
+    }
 
     @classmethod
     def init_convert(cls):
-        backbag = cls.backbag.convert_alpha()
-        magnet = cls.magnet.convert_alpha()
-        star = cls.star.convert_alpha()
-        timer = cls.timer.convert_alpha()
-        hurricane = cls.hurricane.convert_alpha()
-        staff = cls.staff.convert_alpha()
-        bomb = cls.bomb.convert_alpha()
-        shuffle = cls.shuffle.convert_alpha()
-        marketcenter = cls.marketcenter.convert_alpha()
+        cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
 
     def draw(self, screen):
+        image = self.images['marketcenter']
         for market in self.model.priced_market_list:
-            if isinstance(market.item, model_item.IGoHome):
-                image = self.backbag
-            elif isinstance(market.item, model_item.MagnetAttract):
-                image = self.magnet
-            elif isinstance(market.item, model_item.Invincible):
-                image = self.star
-            elif isinstance(market.item, model_item.TheWorld):
-                image = self.timer
-            elif isinstance(market.item, model_item.OtherGoHome):
-                image = self.hurricane
-            elif isinstance(market.item, model_item.RadiationOil):
-                image = self.bomb
-            elif isinstance(market.item, model_item.RadiusNotMove):
-                image = self.staff
-            elif isinstance(market.item, model_item.ShuffleBases):
-                image = self.shuffle
-            else:
-                image = self.marketcenter
+            if market.item:
+                image = self.images[market.item.name]
             screen.blit(image, market.position+[5,5])
 
 
