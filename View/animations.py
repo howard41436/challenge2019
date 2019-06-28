@@ -4,7 +4,7 @@ import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
 import os.path
-from math import sqrt
+from math import *
 
 '''
 * How Animation works:
@@ -190,11 +190,39 @@ class Animation_shuffleBases_horizontal(Animation_raster):
 
 
 class Animation_endboard(Animation_raster):
-    def __init__(self, score, **pos):
-        super().__init__(1, 2*len(self.frames), **pos)
-        self.frames = tuple(
-            pg.Surface((200, i)).fill(view_const.COLOR_BLACK) for i in range(0, int(score), 10)
-        )
+    def __init__(self, color, max_height, midbottom, score, name):
+        super().__init__(1, 120, midbottom=midbottom)
+        self.midbottom = midbottom
+        self.height = 1
+        self.max_height = max_height
+        self.score = 0
+        self.max_score = score
+        self.vel = max_height / self.expire_time
+        self.color = color
+        self.name = name
+
+    def update(self):
+        if self.height + self.vel < self.max_height:
+            self.height += self.vel
+            self.score += self.max_score / self.expire_time
+        else:
+            self.height = self.max_height
+            self.score = self.max_score
+
+    def draw(self, screen):
+        col = pg.Rect(0,0,0,0)
+        col.w = 200
+        col.h = self.height
+        col.midbottom = self.midbottom
+        scorefont = pg.font.Font(view_const.board_name_font, 25)
+        score_num = scorefont.render(f'{int(self.score)}', True, view_const.COLOR_BLACK)
+        namefont = pg.font.Font(view_const.board_name_font, 30)
+        name = namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
+        screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
+        screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
+        pg.draw.rect(screen, self.color, col)
+        self.update()
+
 
 
 class Animation_theworld(Animation_raster):
@@ -245,18 +273,17 @@ class Animation_theworld(Animation_raster):
         pass
 
 
-"""class Animation_freeze(Animation_raster):
+class Animation_freeze(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')),
-            1/30 * i
+            pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png')), i*4),
+            1/60*i if i <= 30 else 1/2
         )
-        for i in range(1, 30)
+        for i in range(1, 300)
     )
 
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
-"""
 
 def init_animation():
     Animation_equalize.init_convert()
@@ -265,5 +292,5 @@ def init_animation():
     Animation_othergohome.init_convert()
     Animation_radiationOil.init_convert()
     Animation_theworld.init_convert()
-    """Animation_freeze.init_convert()"""
+    Animation_freeze.init_convert()
 

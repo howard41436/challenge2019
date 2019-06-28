@@ -57,9 +57,10 @@ class GraphicalView(object):
         self.pets = view_staticobjects.View_pets(model)
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
-        self.endboard = view_staticobjects.View_endboard(model)
         self.background = view_staticobjects.View_background(model)
         self.menu = view_staticobjects.View_menu(model)
+        self.characters = view_staticobjects.View_characters(model)
+
 
 
     def notify(self, event):
@@ -113,10 +114,8 @@ class GraphicalView(object):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position))
-        """
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
-        """
 
     
     def render_menu(self):
@@ -129,9 +128,10 @@ class GraphicalView(object):
 
         # draw backround
         self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.board_name_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.board_name_font, 40)
         if not title_loop_counter:
@@ -146,7 +146,7 @@ class GraphicalView(object):
         else:
             gray = (255,) * 3
 
-        self.title_counter += 1
+        self.title_counter += 1"""
         
         # update surface
         pg.display.flip()
@@ -156,10 +156,36 @@ class GraphicalView(object):
         """
         Render the game menu.
         """
-        if self.last_update != model.STATE_MENU:
-            self.last_update = model.STATE_MENU
-            self.endboard.draw(self.screen)
-    
+        if self.last_update != model.STATE_ENDGAME:
+            self.last_update = model.STATE_ENDGAME
+            self.screen.fill(view_const.COLOR_WHITE)
+            result = []
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, 
+                               base.value_sum,
+                               model_const.colors[base.owner_index]])
+
+            result.sort(key=(lambda item: item[1]), reverse=True)
+            pos_x = 256
+            prize = 1
+            first = result[0][1]
+            for player in result:
+                self.animations.append(view_Animation.Animation_endboard(player[2], player[1]/first*500, (pos_x, 680), player[1], player[0]))
+                pos_x += 256
+                prize += 1
+
+
+        if self.animations:
+            self.screen.fill(view_const.COLOR_WHITE)
+            titlefont = pg.font.Font(view_const.board_name_font, 60)
+            title = titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            self.screen.blit(title, title.get_rect(center=(645, 60)))
+            for ani in self.animations:
+                if ani.expired: self.animations.remove(ani)
+                else          : ani.draw(self.screen)
+
+        pg.display.flip()
+ 
 
     def render_play(self):
         """
@@ -219,22 +245,6 @@ class GraphicalView(object):
             pg.display.flip()
 
 
-    def render_end(self):
-        if self.last_update != model.STATE_END:
-            self.last_update = model.STATE_END
-            result = []
-            numfont = pg.font.Font(view_const.board_name_font, 30)
-
-            for player in self.model.player_list:
-                result.append((player.name, player.value_sum))
-            result.sort(key=takeSecond)
-            self.screen.fill(view_const.COLOR_WHITE)
-            pos_x = 0
-            for player in result:
-                line = self.animations.appendboardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
-                self.screen.blit(line, (50, 50 + pos_x))
-                pg.display.flip()
-                pos_x += 50
 
 
     def display_fps(self):

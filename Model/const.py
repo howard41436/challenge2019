@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 4
+game_length = 60 * 60 * 5
 cutin_time = 90
 #dir const
 """
@@ -136,13 +136,13 @@ fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
 
 priced_item_activate = {
-    'IGoHome': False,
-    'OtherGoHome': False,
+    'IGoHome': True,
+    'OtherGoHome': True,
     'TheWorld': True,
-    'MagnetAttract': False,
-    'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': False,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
     'ShuffleBases': True,
     'FaDaCai': False,
 }
