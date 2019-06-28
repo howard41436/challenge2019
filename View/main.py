@@ -101,15 +101,12 @@ class GraphicalView(object):
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
         elif isinstance(event, EventShuffleBases):
-            base_pos = self.model.base_list
-            for i in range(0, model_const.player_number):
-                for j in range(i+1, model_const.player_number):
-                    if base_pos[i].center[0] == base_pos[j].center[0]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
-                    if base_pos[i].center[1] == base_pos[j].center[1]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
+            ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
+            for pos in ani_pos:
+                if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
+                else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.bases.draw(self.screen)
+            pg.display.flip()
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
         elif isinstance(event, EventTheWorldStart):

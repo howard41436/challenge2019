@@ -160,7 +160,10 @@ class View_bases(__Object_base):
 
     def draw(self, screen):
         for _base in self.model.base_list:
-            pg.draw.circle(screen, self.model.player_list[_base.owner_index].color, view_const.corner[_base.owner_index] , 160)
+            pg.draw.circle(screen, 
+                          self.model.player_list[_base.owner_index].color, 
+                          (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                          160)
             screen.blit(self.images, self.images.get_rect(center=_base.center))
 
 
