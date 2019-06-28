@@ -6,6 +6,7 @@ import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
 import Model.const       as model_const
+import View.animations   as view_animation
 
 '''
 * "Static" object means that it is rendered every tick!
@@ -116,7 +117,7 @@ class View_players(__Object_base):
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = cls.image_freeze.convert_alpha()
-        cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color )
+        cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)
 
     def draw(self, screen):
         players = self.model.player_list
@@ -311,39 +312,7 @@ class View_items(__Object_base):
             screen.blit(image, market.position+[5,5])
 
 
-class View_endboard(__Object_base):
-    def draw(self, screen):
-        screen.fill(view_const.COLOR_WHITE)
-        # write some word
-        result = []
-        
-        titlefont = pg.font.Font(view_const.board_name_font, 70)
-        title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-        screen.blit(title, (400, 15))
-        numfont = pg.font.Font(view_const.board_name_font, 30)
-        numfont2 = pg.font.Font(view_const.board_name_font, 25)
-        for base in self.model.base_list:
-            result.append([self.model.player_list[base.owner_index].name, 
-                           base.value_sum,
-                           model_const.colors[base.owner_index]])
-        def takeSecond(item): return item[1]
-        result.sort(key=takeSecond, reverse=True)
-        pos_x = 256
-        prize = 1
-        first = result[0][1]
-        for player in result:
-            line = numfont.render(f'{prize}.{player[0]}', True, view_const.COLOR_BLACK)
-            num = numfont2.render(f'{int(player[1])}', True, view_const.COLOR_BLACK)
-            screen.blit(line, line.get_rect(center=(pos_x, 700)))
-            screen.blit(num, num.get_rect(center=(pos_x, 665-player[1]/first*500)))
-            num_rect = pg.Rect(0, 0, 0, 0)
-            num_rect.w = 200
-            num_rect.h = player[1]/first*500
-            num_rect.midbottom = (pos_x, 680)
-            pg.draw.rect(screen, player[2], num_rect)
-            pos_x += 256
-            prize += 1
-        pg.display.flip()
+
 
 def init_staticobjects():
     View_background.init_convert()
@@ -353,6 +322,5 @@ def init_staticobjects():
     View_pets.init_convert()
     View_items.init_convert()
     View_scoreboard.init_convert()
-    View_endboard.init_convert()
     View_menu.init_convert()
     View_characters.init_convert()
