@@ -112,10 +112,8 @@ class GraphicalView(object):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position))
-        """
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
-        """
 
     
     def render_menu(self):

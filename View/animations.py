@@ -4,7 +4,7 @@ import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
 import os.path
-from math import sqrt
+from math import *
 
 '''
 * How Animation works:
@@ -245,18 +245,17 @@ class Animation_theworld(Animation_raster):
         pass
 
 
-"""class Animation_freeze(Animation_raster):
+class Animation_freeze(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')),
-            1/30 * i
+            pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png')), i*4),
+            1/60*i if i <= 30 else 1/2
         )
-        for i in range(1, 30)
+        for i in range(1, 300)
     )
 
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
-"""
 
 def init_animation():
     Animation_equalize.init_convert()
@@ -265,5 +264,5 @@ def init_animation():
     Animation_othergohome.init_convert()
     Animation_radiationOil.init_convert()
     Animation_theworld.init_convert()
-    """Animation_freeze.init_convert()"""
+    Animation_freeze.init_convert()
 

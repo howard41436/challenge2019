@@ -116,7 +116,7 @@ magnet_attract_radius = 50
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
 radius_oil_multiplier = 0.8
-radius_not_move_radius = 100
+radius_not_move_radius = 160
 radius_not_move_duration = 60 * 5
 fadacai_duration = 60 * 5
 fadacai_oil_probability = 1 / 3
@@ -124,10 +124,10 @@ fadacai_oil_probability = 1 / 3
 priced_item_activate = {
     'IGoHome': False,
     'OtherGoHome': False,
-    'TheWorld': True,
+    'TheWorld': False,
     'MagnetAttract': False,
     'Invincible': False,
-    'RadiusNotMove': False,
+    'RadiusNotMove': True,
     'RadiationOil': False,
     'ShuffleBases': False,
     'FaDaCai': False,
