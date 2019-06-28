@@ -146,6 +146,17 @@ priced_item_activate = {
     'ShuffleBases': True,
     'FaDaCai': False,
 }
+cutin_enable = {
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': False,
+    'RadiationOil': True,
+    'ShuffleBases': True,
+    'FaDaCai': True,
+}
 
 
 # score
