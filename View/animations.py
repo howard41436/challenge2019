@@ -156,6 +156,7 @@ class Animation_radiationOil(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, 2*len(self.frames), **pos)
 
+
 # the countdown animation
 class Animation_start():
     pass
@@ -173,6 +174,7 @@ class Animation_shuffleBases_vertical(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, 2*len(self.frames), **pos)
 
+
 class Animation_shuffleBases_horizontal(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
@@ -184,9 +186,7 @@ class Animation_shuffleBases_horizontal(Animation_raster):
 
     def __init__(self, **pos):
         super().__init__(1, 2*len(self.frames), **pos)
-# the countdown animation
-class Animation_start():
-    pass
+
 
 class Animation_endboard(Animation_raster):
     def __init__(self, score, **pos):
@@ -207,10 +207,6 @@ class Animation_endboard(Animation_raster):
 
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
-
-# the countdown animation
-class Animation_start():
-    pass
 """
 
 def init_animation():

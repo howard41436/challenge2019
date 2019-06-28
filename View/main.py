@@ -122,7 +122,7 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            self.title_counter = 0;
+            self.title_counter = 0
 
         # draw backround
         self.screen.fill(view_const.COLOR_BLACK)
@@ -199,6 +199,7 @@ class GraphicalView(object):
         self.screen.blit(time, (950, 35))
         pg.display.flip()
         
+
     def render_stop(self):
         """
         Render the stop screen.
@@ -215,19 +216,10 @@ class GraphicalView(object):
             pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
             pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
             self.screen.blit(s,(0,0))
-            """
-            #write some word
-            somewords = self.smallfont.render(
-                        'the game is paused. space, escape to return the game.', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            """
 
             # update surface
             pg.display.flip()
+
 
     def render_end(self):
         if self.last_update != model.STATE_END:
