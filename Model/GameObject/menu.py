@@ -6,7 +6,7 @@ from Events.Manager import *
 class Menu_robot(object):
     def __init__(self, radius):
         self.radius = radius
-        self.position = Vec(200 + radius, -view_const.screen_size[0] + radius)
+        self.position = Vec(200 + radius, -view_const.screen_size[1] + radius)
         self.direction = Vec(1, 0)
         self.speed = player_normal_speed = 7
     def pick(self, oil_list):

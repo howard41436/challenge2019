@@ -52,6 +52,8 @@ class GraphicalView(object):
         self.pets = view_staticobjects.View_pets(model)
         self.scoreboard = view_staticobjects.View_scoreboard(model)
         self.items = view_staticobjects.View_items(model)
+        self.menu = view_staticobjects.View_menu(model)
+        self.characters = view_staticobjects.View_characters(model)
 
         self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
         self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
@@ -121,10 +123,11 @@ class GraphicalView(object):
             self.title_counter = 0;
 
         # draw backround
-        self.screen.fill(view_const.COLOR_BLACK)
+        self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.board_name_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.board_name_font, 40)
         if not title_loop_counter:
@@ -149,7 +152,7 @@ class GraphicalView(object):
         self.screen.blit(words_3, (570,450))
         self.screen.blit(words_4, (320,600))
 
-        self.title_counter += 1
+        self.title_counter += 1"""
         
         # update surface
         pg.display.flip()
