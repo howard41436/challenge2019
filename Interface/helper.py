@@ -94,10 +94,10 @@ class Helper(object):
     # Get market data
     def get_market(self):
         market = self.model.priced_market_list[0]
-        return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
+        return (None, None, None) if market.item is None else (market.item.name, market.item.price, 0)
     def player_in_market(self, player_id = None):
         if player_id == None: player_id = self.player_id
-        return True if self.model.player_list[player_id].check_market() is not None else False
+        return True if self.model.player_list[player_id].check_market(self.model.priced_market_list) is not None else False
     def get_market_center(self):
         market = self.model.priced_market_list[0]
         return market.position
