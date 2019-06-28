@@ -5,6 +5,7 @@ import math
 import Model.GameObject.item        as model_item
 import View.utils        as view_utils
 import View.const        as view_const
+import Model.const       as model_const
 
 '''
 * "Static" object means that it is rendered every tick!
@@ -244,7 +245,9 @@ class View_endboard(__Object_base):
         numfont = pg.font.Font(view_const.board_name_font, 30)
         numfont2 = pg.font.Font(view_const.board_name_font, 25)
         for base in self.model.base_list:
-            result.append([self.model.player_list[base.owner_index].name, base.value_sum])
+            result.append([self.model.player_list[base.owner_index].name, 
+                           base.value_sum,
+                           model_const.colors[base.owner_index]])
         def takeSecond(item): return item[1]
         result.sort(key=takeSecond, reverse=True)
         pos_x = 256
@@ -253,9 +256,13 @@ class View_endboard(__Object_base):
         for player in result:
             line = numfont.render(f'{prize}.{player[0]}', True, view_const.COLOR_BLACK)
             num = numfont2.render(f'{int(player[1])}', True, view_const.COLOR_BLACK)
-            screen.blit(line, (pos_x-100, 700))
-            screen.blit(num, (pos_x-60 , 665-player[1]/first*500))
-            pg.draw.rect(screen, view_const.COLOR_GRAY ,((pos_x-100, 700-player[1]/first*500), (160, player[1]/first*500)))
+            screen.blit(line, line.get_rect(center=(pos_x, 700)))
+            screen.blit(num, num.get_rect(center=(pos_x, 665-player[1]/first*500)))
+            num_rect = pg.Rect(0, 0, 0, 0)
+            num_rect.w = 200
+            num_rect.h = player[1]/first*500
+            num_rect.midbottom = (pos_x, 680)
+            pg.draw.rect(screen, player[2], num_rect)
             pos_x += 256
             prize += 1
         pg.display.flip()
