@@ -136,7 +136,7 @@ class TeamAI(BaseAI):
                             self.helper.get_player_item_name() == 'TheWorld' or \
                             self.helper.get_player_item_name() == 'Invincible'):
                 return 9
-            return self.ankle_break(self.get_dir(home, my_pos), carry, my_pos)
+            return self.get_dir(home, my_pos), carry, my_pos
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
