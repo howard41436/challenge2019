@@ -110,9 +110,10 @@ class TeamAI(BaseAI):
         return thief_pos, loss
 
     def eat_btw(self, dest, go_home, go_home_now):
-        nearest_oil = Vec(self.helper.get_nearest_oil())
+        nearest_oil = self.helper.get_nearest_oil()
         ongoing_vec = dest - self.pos
         if nearest_oil is not None:
+            nearest_oil = Vec(nearest_oil)
             nearest_vec = nearest_oil - self.pos
             if nearest_vec.length()/self.speed < 7: #7 ticks
                 if not go_home and not go_home_now or ongoing_vec.normalize().dot(nearest_vec.normalize()) > 1e-3:
