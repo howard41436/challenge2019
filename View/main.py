@@ -35,36 +35,6 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-        pg.init()
-        pg.font.init()
-        pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
-
-        view_staticobjects.init_staticobjects()
-        view_Animation.init_animation()
-        view_cutin.init_cutin()
-
-        # animations
-        self.animations = []
-        self.post_animations = [] # animations such as the world need to be rendered lastly
-
-        # about cutin
-        self.cutin_manager = view_cutin.Cutin_manager(model)
-
-        # static objects
-        self.players = view_staticobjects.View_players(model)
-        self.oils = view_staticobjects.View_oils(model)
-        self.bases = view_staticobjects.View_bases(model)
-        self.pets = view_staticobjects.View_pets(model)
-        self.scoreboard = view_staticobjects.View_scoreboard(model)
-        self.items = view_staticobjects.View_items(model)
-        self.background = view_staticobjects.View_background(model)
-        self.menu = view_staticobjects.View_menu(model)
-        self.characters = view_staticobjects.View_characters(model)
-
-        #Some font
-        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
-        self.timefont = pg.font.Font(view_const.notosans_font, 60)
 
 
     def notify(self, event):
@@ -260,6 +230,37 @@ class GraphicalView(object):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
+        pg.init()
+        pg.font.init()
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
+
         self.clock = pg.time.Clock()
         self.small = pg.font.Font(None, 40)
         self.is_initialized = True
+
+        view_staticobjects.init_staticobjects()
+        view_Animation.init_animation()
+        view_cutin.init_cutin()
+
+        # animations
+        self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
+
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(self.model)
+
+        # static objects
+        self.players = view_staticobjects.View_players(self.model)
+        self.oils = view_staticobjects.View_oils(self.model)
+        self.bases = view_staticobjects.View_bases(self.model)
+        self.pets = view_staticobjects.View_pets(self.model)
+        self.scoreboard = view_staticobjects.View_scoreboard(self.model)
+        self.items = view_staticobjects.View_items(self.model)
+        self.background = view_staticobjects.View_background(self.model)
+        self.menu = view_staticobjects.View_menu(self.model)
+        self.characters = view_staticobjects.View_characters(self.model)
+
+        #Some font
+        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
+        self.timefont = pg.font.Font(view_const.notosans_font, 60)

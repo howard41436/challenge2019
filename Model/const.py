@@ -120,7 +120,7 @@ item_weight = {
     'RadiusNotMove': 3,
     'RadiationOil': 2,
     'ShuffleBases': 2,
-    'FaDaCai': 0
+    'FaDaCai': 1
 }
 
 the_world_duration = 60 * 5
@@ -132,8 +132,9 @@ radiation_oil_range = 100
 radiation_oil_multiplier = 0.9
 radius_not_move_radius = 150
 radius_not_move_duration = 60 * 5
-fadacai_duration = 60 * 5
+fadacai_duration = 60 * 10
 fadacai_oil_probability = 1 / 3
+fadacai_max_oil_num = 300
 
 priced_item_activate = {
     'IGoHome': True,
@@ -148,20 +149,20 @@ priced_item_activate = {
 }
 cutin_enable = {
     'IGoHome': False,
-    'OtherGoHome': True,
-    'TheWorld': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
     'MagnetAttract': False,
     'Invincible': False,
     'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
+    'RadiationOil': True,
+    'ShuffleBases': True,
     'FaDaCai': True,
 }
 
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
-rank_str = ['1st', '2nd', '3rd', '4th']
+rank_str = ['', '', '', '']
 swap_duration = 60
 varition_vel = (0, -2)
 varition_duration = 60
