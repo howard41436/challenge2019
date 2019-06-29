@@ -251,7 +251,7 @@ class Animation_endboard(Animation_raster):
         col.h = self.height
         col.midbottom = self.midbottom
         score_num = self.scorefont.render(f'{int(self.score)}', True, view_const.COLOR_BLACK)
-        name = namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
+        name = self.namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
         pg.draw.rect(screen, self.color, col)
