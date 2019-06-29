@@ -58,40 +58,12 @@ class TeamAI(BaseAI):
             if maximum <= cp and players_speed[i] < my_speed:
                 maximum = cp
                 target = i
-        return maximum, players_position[target]
-
-    def ankle_break(self, my_dir, carry, my_pos):
-        players_position = self.helper.get_players_position()
-        new_dir = Vec(direct[my_dir])
-        for i in range(4):
-            if self.helper.player_id == i:
-                continue
-            distance = (Vec(players_position[i]) - Vec(my_pos)).length()
-            if distance <= 9 * self.helper.player_radius and self.helper.get_player_value(player_id = i) < self.helper.get_player_value():
-                vector_of_centers = (Vec(my_pos) - Vec(self.helper.get_player_position(player_id = i)))
-                new_dir = Vec(direct[my_dir]) +  vector_of_centers / vector_of_centers.length()
-        maximum = 0
-        togo = -1
-        for i in range(1, 9):
-            # print("new is {}".format(new_dir))
-            if maximum < new_dir.dot(Vec(direct[i])):
-                maximum = new_dir.dot(Vec(direct[i]))
-                togo = i
-        return togo
+        return maximum, players_position[target], target
 
     def pick_item(self, dest, my_pos, carry):
         if self.helper.get_player_item_name() or self.helper.get_player_item_is_active():
             return dest
-        total_value = carry + self.helper.get_base_value()
-        time_past = 60 * 60 * 4 - self.helper.get_timer()
         item = self.helper.get_market()
-        # print("{} / {} = {}".format(total_value, (time_past + 1e-9), total_value / (time_past + 1e-9)))
-        the_max = True
-        for i in range(4):
-            if i == self.helper.player_id:
-                continue
-            if total_value < self.helper.get_player_value(player_id=i) + self.helper.get_player_value(player_id=i):
-                the_max = False
         if (item[0] == 'RadiusNotMove' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
             if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius:
                 return PICK
@@ -112,21 +84,16 @@ class TeamAI(BaseAI):
         dest = best_pos
         if self.use(my_pos) == True:
             return PICK
-        home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
-                     <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
-                     else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)**0.8
+        home_cp =  4e-6 * carry if self.helper.get_player_item_name() == 'IGoHome' else 7.5e-6 * carry
 
-        attack_cp, target_pos = self.attack(carry, my_pos)
-        if attack_cp >= best_cp:
+        attack_cp, target_pos, target = self.attack(carry, my_pos)
+        if attack_cp >= best_cp and self.helper.get_player_item_name(target) != 'Invincible':
             dest = target_pos
         dest = self.pick_item(dest, my_pos, carry)
         if dest == PICK:
             return PICK
         if home_cp > best_cp:
-            if self.helper.get_player_item_duration() == 0 and (self.helper.get_player_item_name() == 'IGoHome' or \
-                            self.helper.get_player_item_name() == 'OtherGoHome' or \
-                            self.helper.get_player_item_name() == 'TheWorld' or \
-                            self.helper.get_player_item_name() == 'Invincible'):
+            if not self.helper.get_player_item_is_active() and self.helper.get_player_item_name() == 'IGoHome':
                 return 9
             return self.get_dir(home, my_pos)
         return self.get_dir(dest, my_pos)

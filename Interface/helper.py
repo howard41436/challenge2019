@@ -122,6 +122,9 @@ class Helper(object):
     def get_radius_not_move_radius(self):
         return model_const.radius_not_move_radius
 
+    def get_radius_of_radiation_oil(self):
+        return model_const.radiation_oil_range
+
     # Get game informations
     def get_timer(self):
         return self.model.timer
