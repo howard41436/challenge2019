@@ -247,7 +247,7 @@ class FaDaCai(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
 

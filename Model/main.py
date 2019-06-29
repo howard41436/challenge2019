@@ -214,7 +214,8 @@ class GameEngine(object):
 
     def try_create_oil(self):
         p = model_const.fadacai_oil_probability if self.fadacai else model_const.oil_probability
-        p *= 2 * (max(model_const.max_oil_num - len(self.oil_list), 0)) / model_const.max_oil_num
+        max_oil_num = model_const.fadacai_max_oil_num if self.fadacai else model_const.max_oil_num
+        p *= 2 * (max(max_oil_num - len(self.oil_list), 0)) / max_oil_num
         if random.random() < p:
             self.create_oil()
 

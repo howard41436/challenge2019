@@ -198,6 +198,7 @@ class View_scoreboard(__Object_base):
     'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
     'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
     'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
+    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
     }
 
     @classmethod
@@ -250,7 +251,8 @@ class View_items(__Object_base):
     'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
     'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
     'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
-    'marketcenter'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'marketcenter.png')), 0.0001)
+    'marketcenter'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'marketcenter.png')), 0.0001),
+    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2)
     }
 
     @classmethod
