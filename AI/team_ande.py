@@ -38,17 +38,18 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
-        if max(attack_cp, best_cp, home_cp) == best_cp:
-            #print ("attack")
-            return Vec(best_pos) - Vec(my_pos)
-        elif max(attack_cp, best_cp, home_cp) == attack_cp:
-            #print ("get oil")
-            return Vec(victim_pos) - Vec(my_pos)
-        else:
+        if max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
             if self.helper.get_player_item_name() == 'IGoHome':
                 return 9
             return self.go_home()
+        if max(attack_cp, best_cp, home_cp) == best_cp:
+            #print ("attack")
+            return Vec(best_pos) - Vec(my_pos)
+        else:
+            #print ("get oil")
+            return Vec(victim_pos) - Vec(my_pos)
+            
         
     def go_home(self):
         my_pos = self.helper.get_player_position()
@@ -87,10 +88,13 @@ class TeamAI(BaseAI):
                 cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / abs(players_speed[i] - my_speed) )
                 if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed+1) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
                     cp = 0
+                if self.helper.get_player_is_invincible(i) is True:
+                    cp = 0
                 if cp > best_cp:
                     best_cp = cp
                     victim_id = i
                     victim_pos = players_pos[i]
+            
         return (best_cp, victim_id, victim_pos)
 
     def avoid(self, player_id):
@@ -161,14 +165,11 @@ class TeamAI(BaseAI):
                 else:
                     return self.direction(best_vec)
         elif my_item == 'RadiationOil':
-            print ("1")
             bases_value = self.helper.get_bases_value()
             length = self.helper.get_radius_of_radiation_oil() + 1/2 * self.helper.base_length
             most_valuable_base_id = bases_value.index(max(bases_value))
-            print (most_valuable_base_id)
             base_center = self.helper.get_base_center(most_valuable_base_id)
             if self.helper.player_id == most_valuable_base_id:
-                print ("2")
                 if self.helper.get_nearest_oil() != None:
                     if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
                         return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
@@ -177,11 +178,9 @@ class TeamAI(BaseAI):
                 else:
                     return self.direction(best_vec)
             elif (Vec(base_center) - Vec(my_pos)).length() <= length:
-                print ("3")
                 return 9
             else:
-                print ("4")
-                return Vec(base_center) - Vec(my_pos)                
+                return self.direction(Vec(base_center) - Vec(my_pos))                
         elif my_item == 'MagnetAttract' or my_item == 'TheWorld':
             if self.helper.get_player_item_is_active() is False:
                 return 9
