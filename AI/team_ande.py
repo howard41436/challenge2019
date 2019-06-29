@@ -84,7 +84,7 @@ class TeamAI(BaseAI):
                 value_difference = (players_value[i] - self.helper.get_player_value()) / 2
                 level = (value_difference - 400) / 200 + 1
                 cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / abs(players_speed[i] - my_speed) )
-                if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
+                if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed+1) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
                     cp = 0
                 if cp > best_cp:
                     best_cp = cp
@@ -139,12 +139,42 @@ class TeamAI(BaseAI):
             else:
                 return self.direction(best_vec)
         elif my_item == 'RadiusNotMove':
-            return 9
-            pass
+            if self.helper.get_player_item_is_active is False:
+                if self.get_distance(self.helper.get_nearest_player(), my_pos) <= self.helper.model_const.radius_not_move_radius:
+                    return 9
+                else:
+                    if self.helper.get_nearest_oil() != None:
+                        if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                            return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                        else:
+                            return self.direction(best_vec)
+                    else:
+                        return self.direction(best_vec)
+            else:
+                if self.helper.get_nearest_oil() != None:
+                    if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                        return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                    else:
+                        return self.direction(best_vec)
+                else:
+                    return self.direction(best_vec)
         elif my_item == 'RadiationOil':
             return 9
+        elif my_item == 'MagnetAttract' or my_item == 'Invincible' or my_item == 'TheWorld':
+            if self.helper.get_player_item_is_active() is False:
+                return 9
+            else:
+                if self.helper.get_nearest_oil() != None:
+                    if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                        return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                    else:
+                        return self.direction(best_vec)
+                else:
+                    return self.direction(best_vec)
         else:
             return 9
+
+
 
 """
 const of AI code use.
