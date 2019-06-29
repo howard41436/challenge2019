@@ -203,8 +203,8 @@ class View_scoreboard(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
-        cls.namefont = pg.font.Font(view_const.board_name_font, 55)
-        cls.numfont = pg.font.Font(view_const.board_name_font, 25)
+        cls.namefont = pg.font.Font(view_const.notosans_font, 55)
+        cls.numfont = pg.font.Font(view_const.notosans_font, 25)
 
 
     def draw(self, screen):

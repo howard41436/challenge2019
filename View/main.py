@@ -35,7 +35,8 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-        pg.init(); pg.font.init()
+        pg.init()
+        pg.font.init()
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
 
@@ -61,6 +62,9 @@ class GraphicalView(object):
         self.menu = view_staticobjects.View_menu(model)
         self.characters = view_staticobjects.View_characters(model)
 
+        #Some font
+        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
+        self.timefont = pg.font.Font(view_const.notosans_font, 60)
 
 
     def notify(self, event):
@@ -129,9 +133,9 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
-        """titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
-        littlefont = pg.font.Font(view_const.board_name_font, 40)
+        littlefont = pg.font.Font(view_const.notosans_font, 40)
         if not title_loop_counter:
             self.darken_time = [random.randint(25, 35), random.randint(55,65)]
 
@@ -175,8 +179,7 @@ class GraphicalView(object):
 
         if self.animations:
             self.screen.fill(view_const.COLOR_WHITE)
-            titlefont = pg.font.Font(view_const.board_name_font, 60)
-            title = titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            title = self.titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
             self.screen.blit(title, title.get_rect(center=(645, 60)))
             for ani in self.animations:
                 if ani.expired: self.animations.remove(ani)
@@ -209,8 +212,8 @@ class GraphicalView(object):
         self.scoreboard.draw(self.screen)
 
         # draw time
-        timefont = pg.font.Font(view_const.board_num_font, 60)
-        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
         # draw post_animation
         for ani in self.post_animations:
@@ -258,5 +261,5 @@ class GraphicalView(object):
         Set up the pygame graphical display and loads graphical resources.
         """
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.small = pg.font.Font(None, 40)
         self.is_initialized = True

@@ -233,6 +233,8 @@ class Animation_endboard(Animation_raster):
         self.vel = max_height / self.expire_time
         self.color = color
         self.name = name
+        self.scorefont = pg.font.Font(view_const.notosans_font, 25)
+        self.namefont = pg.font.Font(view_const.notosans_font, 30)
 
     def update(self):
         if self.height + self.vel < self.max_height:
@@ -247,9 +249,7 @@ class Animation_endboard(Animation_raster):
         col.w = 200
         col.h = self.height
         col.midbottom = self.midbottom
-        scorefont = pg.font.Font(view_const.board_name_font, 25)
         score_num = scorefont.render(f'{int(self.score)}', True, view_const.COLOR_BLACK)
-        namefont = pg.font.Font(view_const.board_name_font, 30)
         name = namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
