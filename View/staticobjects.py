@@ -223,16 +223,16 @@ class View_scoreboard(__Object_base):
             screen.blit(player_value, score.position+[10,115])
         for new_score in self.model.scoreboard.p_varition_list:
             if new_score.varition >= 0:
-                carry_value = numfont.render(f'+{int(new_score.varition)}', True, view_const.COLOR_GOLD)
+                carry_value = self.numfont.render(f'+{int(new_score.varition)}', True, view_const.COLOR_BLACK)
             else:
-                carry_value = numfont.render(f'{int(new_score.varition)}', True, view_const.COLOR_TURQUOISE)
+                carry_value = self.numfont.render(f'{int(new_score.varition)}', True, view_const.COLOR_BLACK)
             screen.blit(carry_value, new_score.get_position()+[300, 160])
 
         for new_base_score in self.model.scoreboard.b_varition_list:
             if new_base_score.varition >= 0:    
-                base_value = numfont.render(f'+{int(new_base_score.varition)}', True, view_const.COLOR_GOLD)
+                base_value = numfont.render(f'+{int(new_base_score.varition)}', True, view_const.COLOR_BLACK)
             else:
-                base_value = numfont.render(f'{int(new_base_score.varition)}', True, view_const.COLOR_TURQUOISE)
+                base_value = numfont.render(f'{int(new_base_score.varition)}', True, view_const.COLOR_BLACK)
             screen.blit(base_value, new_base_score.get_position()+[300, 120])
         
         
