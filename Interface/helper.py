@@ -119,6 +119,9 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
 
+    def get_radius_not_move_radius(self):
+        return model_const.radius_not_move_radius
+
     # Get game informations
     def get_timer(self):
         return self.model.timer

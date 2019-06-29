@@ -27,7 +27,7 @@ class Player(object):
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False
-        self.collide_list = [False] * 4
+        self.collide_list = [i == index for i in range(4)]
 
     def get_name(self):
         return self.name
@@ -86,7 +86,7 @@ class Player(object):
             if new_collide_list[idx] and not self.collide_list[idx] and idx > self.index:
                 ev_manager.post(EventEqualize((player_list[idx].position + self.position) / 2))
         self.collide_list = new_collide_list
-        
+
 
     def check_market(self, market_list):
         for market in market_list:
@@ -123,5 +123,8 @@ class Player(object):
             self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
+
+    def update_collision(self, players, ev_manager):
         if not self.is_invincible:
             self.check_collide(players, ev_manager)
+
