@@ -18,11 +18,6 @@ class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
         self.equipments = [0, 0, 0, 0, 0]
-<<<<<<< HEAD
-=======
-        self.color = (255, 212, 76)
->>>>>>> 0046f3264ee795d91a2759c20fdc564898e031bc
-        self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):
         my_pos = self.helper.get_player_position()
@@ -97,33 +92,26 @@ class TeamAI(BaseAI):
                 continue
             if total_value < self.helper.get_player_value(player_id=i) + self.helper.get_player_value(player_id=i):
                 the_max = False
-        if (item[0] == 'OtherGoHome' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
+        if (item[0] == 'RadiusNotMove' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
             if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius:
                 return PICK
             return self.helper.get_market_center()
         return dest
-
-    def use_item(self, my_pos):
-        use = False
-        if self.helper.get_player_item_name() == 'RadiusNotMove' and not self.helper.get_player_item_is_active():
-            for i in range(4):
-                if (Vec(my_pos) - Vec(self.helper.get_player_position(player_id=i))).length() <= model_const.radius_not_move_radius:
-                    use = True
-        elif (self.helper.get_player_item_name() == 'ShuffleBases' or self.helper.get_player_item_name() == 'MagnetAttract') and \
-             not self.helper.get_player_item_is_active():
-            use = True
-        elif self.helper.get_player_item_name() == 'RadiationOil' and not self.helper.get_player_item_is_active():
-            use = True
-        return use
-
+    def use(self, my_pos):
+        if not self.helper.get_player_item_is_active():
+            if self.helper.get_player_item_name() == 'TheWorld':
+                return True
+            elif self.helper.get_player_item_name() == 'RadiusNotMove':
+                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < model_const.radius_not_move_radius:
+                    return True
+        return False
     def decide(self):
-        radius = self.helper.player_radius
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
-        if self.use_item(my_pos) == True:
-            return 9
+        if self.use(my_pos) == True:
+            return PICK
         home_cp = 5e-6 * carry if self.helper.get_distance(self.helper.get_base_center(), my_pos) \
                      <= self.helper.get_distance_to_center(self.helper.get_base_center()) \
                      else 3e-8 * carry * self.helper.get_distance(self.helper.get_base_center(), my_pos)**0.8
@@ -140,7 +128,7 @@ class TeamAI(BaseAI):
                             self.helper.get_player_item_name() == 'TheWorld' or \
                             self.helper.get_player_item_name() == 'Invincible'):
                 return 9
-            return self.get_dir(home, my_pos), carry, my_pos
+            return self.get_dir(home, my_pos)
         return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
