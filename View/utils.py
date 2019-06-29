@@ -1,6 +1,7 @@
 import pygame as pg
 from PIL import Image
 import numpy as np
+from View.transforms import RGBTransform
 
 class PureText():
     def __init__(self, text, size, font, color, **pos):
@@ -38,3 +39,16 @@ def replace_color(path, origin, target):
     im = Image.fromarray(data)
     im2 = pg.image.fromstring(im.tobytes(), im.size, im.mode)
     return im2
+
+def overlay_color(im_path, color,scale ,transparency):
+    im = Image.open(im_path)
+    im = im.resize((int(im.width*scale), int(im.height*scale)), Image.ANTIALIAS)
+    im = im.convert('RGB')
+    im1 = RGBTransform().mix_with(color, transparency).applied_to(im)
+    #im2 = RGBTransform().multiply_with(color, transparency).applied_to(im)
+    #im3 = RGBTransform().desaturate(color, transparency, (0.5, 0.5, 0.5)).applied_to(im)
+    mode = im1.mode
+    size = im1.size
+    data = im1.tobytes()
+    im1 = pg.image.fromstring(data, size, mode)
+    return im1
