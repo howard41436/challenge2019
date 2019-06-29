@@ -8,6 +8,7 @@ class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
         self.skill = []
+        self.color = (230, 190, 255)
         self.last_dir = random.randint(1, 8)
 
     def get_best_vec(self):
