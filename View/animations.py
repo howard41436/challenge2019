@@ -258,7 +258,6 @@ class Animation_endboard(Animation_raster):
         self.update()
 
 
-
 class Animation_theworld(Animation_raster):
     '''
     There are two phases in "the world" skill.
@@ -268,53 +267,71 @@ class Animation_theworld(Animation_raster):
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
     inside_cache = dict()
+    image_gray = tuple()
     t = 0
+    max_radius = int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2)) # = 1509
 
     @classmethod
     def init_convert(cls):
         cls.image_inside = cls.image_inside.convert()
-        for r in range(1, int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2))+60+1, 60):
+        for r in range(1, cls.max_radius+60+1, 60):
             cls.inside_cache[r] = pg.transform.scale(cls.image_inside, (2*r, 2*r))
-
-    def __get_max_radius(self):
-        x1 = self.center[0]
-        x2 = view_const.screen_size[0] - self.center[0]
-        y1 = self.center[1]
-        y2 = view_const.screen_size[1] - self.center[1]
-        return max(map(sqrt, (x1**2+y1**2, x1**2+y2**2, x2**2+y1**2, x2**2+y2**2)))
+        tmp = []
+        for i in range(1, 180+180//27, 180//27):
+            sur = pg.Surface(view_const.screen_size)
+            sur.fill((22, 82, 117))
+            sur = sur.convert()
+            sur.set_alpha(i)
+            tmp.append(sur)
+        cls.image_gray = tuple(tmp)
     
     def __init__(self, center):
         '''
         Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
         '''
+        self.tick_count = 0
         self.expired = False
+        self.draw_twist = True
+        self.gray_index = 0
         self.center = center
         self.radius = 1
         self.radius_vel = 60
-        self.max_radius = self.__get_max_radius()
         self.dt = 0.02
         self.radius_vel = 60
 
     def update(self):
         self.t += self.dt
         self.radius += self.radius_vel
+        self.tick_count += 1
         if self.radius > self.max_radius: self.radius_vel = -self.radius_vel
-        if self.radius == 1: self.expired = True
+        if self.radius == 1: self.draw_twist = False
+        if self.tick_count == model_const.the_world_duration: self.expired = True
+        if self.radius_vel < 0 and self.draw_twist: self.gray_index += 1
 
     def draw(self, screen):
-        mask = self.inside_cache[self.radius].copy()
-        source = pg.surfarray.array2d(screen)
+        if self.draw_twist:
+            mask_inside = self.inside_cache[self.radius].copy()
 
-        # twist along y axis
-        twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 30*np.sin(np.arange(view_const.screen_size[0])/100 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
-        # twist along x axis
-        twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 30*np.cos(np.arange(view_const.screen_size[1])/100 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
+            # draw outside
+            if self.radius_vel < 0:
+                screen.blit(self.image_gray[self.gray_index], (0, 0))
+            
+            source = pg.surfarray.array2d(screen)
 
-        tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
-        pg.surfarray.blit_array(tmpsurf, twisted)
-        mask.blit(tmpsurf, tmpsurf.get_rect(topleft=(self.radius-self.center[0], self.radius-self.center[1])), None, pg.BLEND_RGBA_MULT)
-        mask.set_alpha(128)
-        screen.blit(mask, mask.get_rect(center=self.center))
+            # twist along y axis
+            twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 30*np.sin(np.arange(view_const.screen_size[0])/100 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
+            # twist along x axis
+            twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 30*np.cos(np.arange(view_const.screen_size[1])/100 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
+
+            # draw inside
+            tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
+            pg.surfarray.blit_array(tmpsurf, twisted)
+            mask_inside.blit(tmpsurf, tmpsurf.get_rect(topleft=(self.radius-self.center[0], self.radius-self.center[1])), None, pg.BLEND_RGBA_MULT)
+            mask_inside.set_alpha(128)
+
+            screen.blit(mask_inside, mask_inside.get_rect(center=self.center))
+        
+        else: screen.blit(self.image_gray[self.gray_index], (0, 0))
 
         self.update()
 
