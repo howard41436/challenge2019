@@ -35,28 +35,7 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-        pg.init(); pg.font.init()
-        pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
 
-        view_staticobjects.init_staticobjects()
-        view_Animation.init_animation()
-        view_cutin.init_cutin()
-
-        self.animations = []
-        # about cutin
-        self.cutin_manager = view_cutin.Cutin_manager(model)
-        self.players = view_staticobjects.View_players(model)
-        self.oils = view_staticobjects.View_oils(model)
-        self.bases = view_staticobjects.View_bases(model)
-        self.pets = view_staticobjects.View_pets(model)
-        self.scoreboard = view_staticobjects.View_scoreboard(model)
-        self.items = view_staticobjects.View_items(model)
-
-        self.base_image = pg.transform.scale(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ),(95,95))
-        self.pet_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'pet_bug.png')), 0.2)
-        self.priced_market = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'market.png')), 0.3)
-        self.background_image = view_utils.scaled_surface(pg.image.load(os.path.join('View', 'image', 'background.png')).convert(), 1)
 
     def notify(self, event):
         """
@@ -95,21 +74,20 @@ class GraphicalView(object):
                     self.animations.append(view_Animation.Animation_othergohome(center=player.position))
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
-
         elif isinstance(event, EventShuffleBases):
-            base_pos = self.model.base_list
-            for i in range(0, model_const.player_number):
-                for j in range(i+1, model_const.player_number):
-                    if base_pos[i].center[0] == base_pos[j].center[0]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
-                    if base_pos[i].center[1] == base_pos[j].center[1]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
-
+            ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
+            for pos in ani_pos:
+                if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
+                else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.animations.append(view_Animation.Animation_shuffleBases(self.model))
+            self.bases.draw(self.screen)
+            pg.display.flip()
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
-
+        elif isinstance(event, EventTheWorldStart):
+            self.post_animations.append(view_Animation.Animation_theworld(event.position))
+        elif isinstance(event, EventRadiusNotMoveStart):
+            self.animations.append(view_Animation.Animation_freeze(center=event.position))
 
     
     def render_menu(self):
@@ -118,15 +96,16 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            self.title_counter = 0;
+            self.title_counter = 0
 
         # draw backround
-        self.screen.fill(view_const.COLOR_BLACK)
+        self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
-        littlefont = pg.font.Font(view_const.board_name_font, 40)
+        littlefont = pg.font.Font(view_const.notosans_font, 40)
         if not title_loop_counter:
             self.darken_time = [random.randint(25, 35), random.randint(55,65)]
 
@@ -138,53 +117,46 @@ class GraphicalView(object):
             gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
         else:
             gray = (255,) * 3
-       
-        words_1 = titlefont.render("Fa", True, gray)
-        words_2 = titlefont.render("Da", True, gray)
-        words_3 = titlefont.render("Cai!", True, gray)
-        words_4 = littlefont.render("presented by 2019 NTU CSIE CAMP", True, gray)
 
-        self.screen.blit(words_1, (595,150))
-        self.screen.blit(words_2, (595,300))
-        self.screen.blit(words_3, (570,450))
-        self.screen.blit(words_4, (320,600))
-
-        self.title_counter += 1
+        self.title_counter += 1"""
         
         # update surface
         pg.display.flip()
-    
+
+
     def render_endgame(self):
         """
         Render the game menu.
         """
-        if self.last_update != model.STATE_MENU:
-            self.last_update = model.STATE_MENU
-
-            # draw background
+        if self.last_update != model.STATE_ENDGAME:
+            self.last_update = model.STATE_ENDGAME
             self.screen.fill(view_const.COLOR_WHITE)
-            # write some word
             result = []
-            
-            titlefont = pg.font.Font(view_const.board_name_font, 70)
-            title = titlefont.render("Score Board", True, view_const.COLOR_BLACK)
-            self.screen.blit(title, (400, 15))
-            numfont = pg.font.Font(view_const.board_name_font, 30)
             for base in self.model.base_list:
-                result.append([self.model.player_list[base.owner_index].name, base.value_sum])
-            def takeSecond(item): return item[1]
-            result.sort(key=takeSecond, reverse=True)
-            pos_x = 0
+                result.append([self.model.player_list[base.owner_index].name, 
+                               base.value_sum,
+                               self.model.player_list[base.owner_index].color])
+
+            result.sort(key=(lambda item: item[1]), reverse=True)
+            pos_x = 256
             prize = 1
+            first = result[0][1]
             for player in result:
-                line = numfont.render(str(prize)+". "+(player[0] + ":" + str(int(player[1]))), True, view_const.COLOR_BLACK)
-                self.screen.blit(line, (400, 200 + pos_x))
-                pg.display.flip()
-                pos_x += 100
+                self.animations.append(view_Animation.Animation_endboard(player[2], player[1]/first*500, (pos_x, 680), player[1], player[0]))
+                pos_x += 256
                 prize += 1
-            # update surface
-            pg.display.flip()
-    
+
+
+        if self.animations:
+            self.screen.fill(view_const.COLOR_WHITE)
+            title = self.titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            self.screen.blit(title, title.get_rect(center=(645, 60)))
+            for ani in self.animations:
+                if ani.expired: self.animations.remove(ani)
+                else          : ani.draw(self.screen)
+
+        pg.display.flip()
+ 
 
     def render_play(self):
         """
@@ -194,10 +166,7 @@ class GraphicalView(object):
             self.last_update = model.STATE_PLAY
         
         # draw background
-        self.screen.fill(view_const.COLOR_WHITE)
-        self.screen.blit(self.background_image, [0, 0])
-        self.screen.blit(self.priced_market, [322, 328])
-
+        self.background.draw(self.screen)
         self.bases.draw(self.screen)
 
         # draw animation
@@ -210,17 +179,23 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
-        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
+        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
         self.scoreboard.draw(self.screen)
 
         # draw time
-        timefont = pg.font.Font(view_const.board_name_font, 60)
-        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
+        time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        # draw post_animation
+        for ani in self.post_animations:
+            if ani.expired: self.post_animations.remove(ani)
+            else          : ani.draw(self.screen)
+
         # update screen
         self.screen.blit(time, (950, 35))
         pg.display.flip()
         
+
     def render_stop(self):
         """
         Render the stop screen.
@@ -237,36 +212,11 @@ class GraphicalView(object):
             pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
             pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
             self.screen.blit(s,(0,0))
-            """
-            #write some word
-            somewords = self.smallfont.render(
-                        'the game is paused. space, escape to return the game.', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            """
 
             # update surface
             pg.display.flip()
 
-    def render_end(self):
-        if self.last_update != model.STATE_END:
-            self.last_update = model.STATE_END
-            result = []
-            numfont = pg.font.Font(view_const.board_name_font, 30)
 
-            for player in self.model.player_list:
-                result.append((player.name, player.value_sum))
-            result.sort(key=takeSecond)
-            self.screen.fill(view_const.COLOR_WHITE)
-            pos_x = 0
-            for player in result:
-                line = boardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
-                self.screen.blit(line, (50, 50 + pos_x))
-                pg.display.flip()
-                pos_x += 50
 
 
     def display_fps(self):
@@ -276,10 +226,42 @@ class GraphicalView(object):
         )
         pg.display.set_caption(caption)
         
+        
     def initialize(self):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
+        pg.init()
+        pg.font.init()
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
+
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.small = pg.font.Font(None, 40)
         self.is_initialized = True
+
+        view_staticobjects.init_staticobjects()
+        view_Animation.init_animation()
+        view_cutin.init_cutin()
+
+        # animations
+        self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
+
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(self.model)
+
+        # static objects
+        self.players = view_staticobjects.View_players(self.model)
+        self.oils = view_staticobjects.View_oils(self.model)
+        self.bases = view_staticobjects.View_bases(self.model)
+        self.pets = view_staticobjects.View_pets(self.model)
+        self.scoreboard = view_staticobjects.View_scoreboard(self.model)
+        self.items = view_staticobjects.View_items(self.model)
+        self.background = view_staticobjects.View_background(self.model)
+        self.menu = view_staticobjects.View_menu(self.model)
+        self.characters = view_staticobjects.View_characters(self.model)
+
+        #Some font
+        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
+        self.timefont = pg.font.Font(view_const.notosans_font, 60)

@@ -14,7 +14,7 @@ class Player(object):
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.value = 0
-        self.color = random.choice(view_const.playerColor)
+        self.color = random.choice(view_const.PLAYER_COLORS)
         self.is_AI = is_AI
         self.direction = Vec(0, 0)
         self.direction_no = model_const.player_initial_direction_no[index]
@@ -45,7 +45,7 @@ class Player(object):
         self.oil_multiplier = model_const.oil_multiplier ** equipments[model_const.oil_up_idx]
         self.insurance_value = model_const.init_insurance * equipments[model_const.insurance_idx]
         self.pet.carry_max *= model_const.pet_carry_max_up_multiplier ** equipments[model_const.pet_carry_max_up_idx]
-        self.pet.cd_time *= model_const.pet_cd_down_multiplier ** equipments[model_const.pet_cd_down_idx]
+        self.pet.cd_time *= int(model_const.pet_cd_down_multiplier ** equipments[model_const.pet_cd_down_idx])
         self.pet.cd = self.pet.cd_time
 
     def use_item(self, ev_manager):

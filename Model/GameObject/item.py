@@ -1,5 +1,5 @@
 import random
-
+import math
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
@@ -10,7 +10,7 @@ class Item(object):
     Base Item
     '''
     def __init__(self, player_list, oil_list, base_list, player_index, item_name):
-        self.active = False  # taking effect or not
+        self.active = False # taking effect or not
         self.duration = 0
         self.position = None
         self.player_index = player_index
@@ -18,9 +18,13 @@ class Item(object):
         self.oil_list = oil_list
         self.base_list = base_list
         self.name = item_name
+        self.is_activate = model_const.priced_item_activate[item_name]
         self.price = model_const.item_price[item_name]
+        self.weight = model_const.item_weight[item_name]
+        
     def trigger(self, ev_manager):
-        ev_manager.post(EventCutInStart(self.player_index, self.name))
+        if model_const.cutin_enable[self.name]:
+            ev_manager.post(EventCutInStart(self.player_index, self.name))
 
 class IGoHome(Item):
     '''
@@ -30,6 +34,7 @@ class IGoHome(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'IGoHome')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventIGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index == player.index:
@@ -44,6 +49,7 @@ class OtherGoHome(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'OtherGoHome')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventOtherGoHome(self.player_list[self.player_index]))
         for player in self.player_list:
             if self.player_index != player.index:
@@ -91,6 +97,7 @@ class MagnetAttract(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'MagnetAttract')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventMagnetAttractStart(self.player_list[self.player_index]))
         self.duration = model_const.magnet_attract_duration
         self.active = True
@@ -119,12 +126,13 @@ class RadiationOil(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'RadiationOil')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventRadiationOil(self.player_list[self.player_index]))
         position = self.player_list[self.player_index].position
         for base in self.base_list:
-            if base.center.x - base.length/2 <= position.x <= base.center.x + base.length/2 and \
-               base.center.y - base.length/2 <= position.y <= base.center.y + base.length/2:
-                base.value_sum *= model_const.radius_oil_multiplier
+            length = model_const.radiation_oil_range + base.length / 2
+            if max(abs(position.x - base.center.x), abs(position.y - base.center.y)) <= length:
+                base.value_sum *= model_const.radiation_oil_multiplier
         self.player_list[self.player_index].item = None
                
 class Invincible(Item):
@@ -135,6 +143,7 @@ class Invincible(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'Invincible')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventInvincibleStart(self.player_list[self.player_index]))
         self.duration = model_const.invincible_duration
         self.active = True
@@ -161,6 +170,7 @@ class RadiusNotMove(Item):
         self.freeze_list = []
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventRadiusNotMoveStart(self.player_list[self.player_index]))
         self.duration = model_const.radius_not_move_duration
         self.active = True
@@ -183,13 +193,14 @@ class RadiusNotMove(Item):
         for player in self.freeze_list:
             player.freeze = False
 
-def get_disarrangement(n):
+def get_disarrangement(origin):
+    n = len(origin)
     ls = [i for i in range(n)]
     while True:
         random.shuffle(ls)
         flag = True
         for i in range(n):
-            if i == ls[i]: 
+            if origin[i] == ls[i]: 
                 flag = False
                 break
         if flag:
@@ -204,8 +215,14 @@ class ShuffleBases(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'ShuffleBases')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
-        disarrangement = get_disarrangement(model_const.player_number)
+        origin = []
+        for i in range(model_const.player_number):
+            for j in range(model_const.player_number):
+                if self.base_list[i].center == model_const.base_center[j]:
+                    origin.append(j)
+        disarrangement = get_disarrangement(origin)
         for index in range(model_const.player_number):
             self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
             self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
@@ -219,6 +236,7 @@ class FaDaCai(Item):
         super().__init__(player_list, oil_list, base_list, player_index, 'FaDaCai')
 
     def trigger(self, ev_manager):
+        super().trigger(ev_manager)
         ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
         self.duration = model_const.fadacai_duration
         self.active = True
@@ -229,7 +247,7 @@ class FaDaCai(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
 
