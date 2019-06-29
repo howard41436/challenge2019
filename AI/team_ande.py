@@ -161,8 +161,28 @@ class TeamAI(BaseAI):
                 else:
                     return self.direction(best_vec)
         elif my_item == 'RadiationOil':
-            return 9
-        elif my_item == 'MagnetAttract' or my_item == or my_item == 'TheWorld':
+            print ("1")
+            bases_value = self.helper.get_bases_value()
+            length = self.helper.get_radius_of_radiation_oil() + 1/2 * self.helper.base_length
+            most_valuable_base_id = bases_value.index(max(bases_value))
+            print (most_valuable_base_id)
+            base_center = self.helper.get_base_center(most_valuable_base_id)
+            if self.helper.player_id == most_valuable_base_id:
+                print ("2")
+                if self.helper.get_nearest_oil() != None:
+                    if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                        return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                    else:
+                        return self.direction(best_vec)
+                else:
+                    return self.direction(best_vec)
+            elif (Vec(base_center) - Vec(my_pos)).length() <= length:
+                print ("3")
+                return 9
+            else:
+                print ("4")
+                return Vec(base_center) - Vec(my_pos)                
+        elif my_item == 'MagnetAttract' or my_item == 'TheWorld':
             if self.helper.get_player_item_is_active() is False:
                 return 9
             else:
@@ -174,7 +194,13 @@ class TeamAI(BaseAI):
                 else:
                     return self.direction(best_vec)
         else:
-            return 9
+            if self.helper.get_nearest_oil() != None:
+                if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                    return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                else:
+                    return self.direction(best_vec)
+            else:
+                return self.direction(best_vec)
 
 
 
