@@ -119,7 +119,7 @@ class Animation_magnetattract(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'mag.png')),
-            1 / 40 * i
+            1 / 20 * i
         )
         for i in range(1, 11)
     )
@@ -131,7 +131,7 @@ class Animation_magnetattract(Animation_raster):
     
     def update(self):
         super().update()
-        self.pos[ next(iter(self.pos)) ] = self.model.player_list[self.player_index].position
+        self.pos[ next(iter(self.pos)) ] = self.model.player_list[self.player_index].position + (10, 0)
 
 
 class Animation_othergohome(Animation_raster):
