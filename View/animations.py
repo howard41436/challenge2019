@@ -25,6 +25,10 @@ while True:
     tick += 1
 '''
 
+os.environ['FFMPEG_BINARY'] = 'ffmpeg'
+import moviepy
+import moviepy.editor
+
 class Animation_base():
     '''
     Base class of all animation.
@@ -266,6 +270,7 @@ class Animation_theworld(Animation_raster):
     '''
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
+    the_world_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1])
 
     @classmethod
     def init_convert(cls):
@@ -287,6 +292,7 @@ class Animation_theworld(Animation_raster):
         self.radius = 1
         self.radius_vel = 60
         self.max_radius = self.__get_max_radius()
+        self.has_played_video = False
 
     def update(self):
         self.radius += self.radius_vel
@@ -294,6 +300,10 @@ class Animation_theworld(Animation_raster):
         if self.radius == 1: self.expired = True
 
     def draw(self, screen):
+        if not self.has_played_video:
+            self.the_world_video.preview()
+            self.has_played_video = True
+
         cur_inside = pg.transform.scale(self.image_inside, (2*self.radius, 2*self.radius))
         screen.blit(cur_inside, cur_inside.get_rect(center=self.center))
 

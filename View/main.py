@@ -184,6 +184,7 @@ class GraphicalView(object):
         # draw time
         
         time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        self.screen.blit(time, (950, 35))
         
         # draw post_animation
         for ani in self.post_animations:
@@ -191,7 +192,6 @@ class GraphicalView(object):
             else          : ani.draw(self.screen)
 
         # update screen
-        self.screen.blit(time, (950, 35))
         pg.display.flip()
         
 

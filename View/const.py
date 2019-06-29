@@ -77,6 +77,7 @@ notosans_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
 
 # Path
 IMAGE_PATH = os.path.join('View', 'image')
+VIDEO_PATH = os.path.join('View', 'video')
 
 # Cut-in parameters
 CUTIN_BACKGROUND_PHASE1_TOPLEFT = Vector2(-800, 200)
