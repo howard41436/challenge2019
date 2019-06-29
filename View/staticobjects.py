@@ -208,11 +208,13 @@ class View_scoreboard(__Object_base):
 
 
     def draw(self, screen):
-        pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 1280, 800])
+        pg.draw.rect(screen, view_const.COLOR_KHAKI, [800, 0, 480, 160])
+        pg.draw.rect(screen, view_const.COLOR_BLACK, ((800, 0),(480,160)), 5)
         for score in self.model.scoreboard.score_list:
             pg.draw.rect(screen, score.player.color, (score.position,(480,160)))
+            pg.draw.rect(screen, view_const.COLOR_BLACK, (score.position,(480,160)), 5)
         for score in self.model.scoreboard.score_list:
-            name = self.namefont.render(f'{score.get_rank_str()} {score.player.name}', True, view_const.COLOR_BLACK)
+            name = self.namefont.render(f'{score.player.name}', True, view_const.COLOR_BLACK)
             base_value = self.numfont.render(f'Base : {int(score.base.value_sum)}', True, view_const.COLOR_BLACK)
             player_value = self.numfont.render(f'Carried Value : {int(score.player.value)}', True, view_const.COLOR_BLACK)
             if score.player.item:

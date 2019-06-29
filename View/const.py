@@ -31,6 +31,7 @@ COLOR_MAROON    = (128, 0, 0)
 COLOR_RED       = (230, 25, 75)
 COLOR_PINK      = (250, 190, 190)
 COLOR_GOLD      = (255, 212, 76)
+COLOR_KHAKI     = (233, 178, 138)
 
 
 
