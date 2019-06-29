@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 4
+game_length = 60 * 60 * 5
 cutin_time = 90
 #dir const
 """
@@ -27,10 +27,10 @@ dir_mapping = [
 
 # color
 colors = [ 
-    view_const.COLOR_BLUE,
-    view_const.COLOR_GREEN,
-    view_const.COLOR_RED,
-    view_const.COLOR_ORANGE
+    view_const.COLOR_PLAYER_BLUE,
+    view_const.COLOR_PLAYER_GREEN,
+    view_const.COLOR_PLAYER_RED,
+    view_const.COLOR_PLAYER_ORANGE
 ]
 
 # oil_const
@@ -97,38 +97,63 @@ priced_market_positions = [
     (376, 373.5)
 ]
 market_radius = 70
-market_generate_item_probability = 1 / 1
-market_refresh_item_probability = 1 / 4800
+market_cd_time = 60 * 5
 
 item_price = {
     'IGoHome': 500, 
     'OtherGoHome': 500, 
-    'TheWorld': 1500,
-    'MagnetAttract': 750,
-    'Invincible': 750,
+    'TheWorld': 1450,
+    'MagnetAttract': 689,
+    'Invincible': 500,
     'RadiusNotMove': 500,
     'RadiationOil': 1000,
     'ShuffleBases': 1,
     'FaDaCai': 0,
 }
+
+item_weight = {
+    'IGoHome': 4,
+    'OtherGoHome': 4,
+    'TheWorld': 2,
+    'MagnetAttract': 4,
+    'Invincible': 3,
+    'RadiusNotMove': 3,
+    'RadiationOil': 2,
+    'ShuffleBases': 2,
+    'FaDaCai': 1
+}
+
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
-magnet_attract_radius = 50
+magnet_attract_radius = 100
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
-radius_oil_multiplier = 0.8
-radius_not_move_radius = 100
+radiation_oil_range = 100
+radiation_oil_multiplier = 0.9
+radius_not_move_radius = 150
 radius_not_move_duration = 60 * 5
-fadacai_duration = 60 * 5
+fadacai_duration = 60 * 10
 fadacai_oil_probability = 1 / 3
+fadacai_max_oil_num = 300
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': True,
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': False,
     'MagnetAttract': True,
-    'Invincible': True,
-    'RadiusNotMove': True,
+    'Invincible': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': False,
+    'FaDaCai': False,
+}
+cutin_enable = {
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
+    'MagnetAttract': False,
+    'Invincible': False,
+    'RadiusNotMove': False,
     'RadiationOil': True,
     'ShuffleBases': True,
     'FaDaCai': False,
@@ -137,5 +162,7 @@ priced_item_activate = {
 
 # score
 score_position = [ (800, 160 * (i + 1)) for i in range(player_number) ]
-rank_str = ['1st', '2nd', '3rd', '4th']
+rank_str = ['', '', '', '']
 swap_duration = 60
+varition_vel = (0, -2)
+varition_duration = 60

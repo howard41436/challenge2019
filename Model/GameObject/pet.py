@@ -25,7 +25,7 @@ class Pet(object):
         self.cd = self.cd_time
     
     def check_collide_with_player(self, player):
-        if Vec(self.position - player.position).length() <= player.radius + self.radius:
+        if self.status == 1 and Vec(self.position - player.position).length() <= player.radius + self.radius:
             delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta
@@ -47,7 +47,7 @@ class Pet(object):
         if self.status == 0:
             self.direction = Vec(0, 0)
             self.cd -= 1
-            if self.cd < 0:
+            if self.cd == 0:
                 self.change_status(1)
         else:
             target = (player_list[self.owner_index].position if self.status == 1 \
