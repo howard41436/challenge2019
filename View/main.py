@@ -1,12 +1,20 @@
 import pygame as pg
-import pygame.gfxdraw as gfxdraw
 import Model.main as model
 from Events.Manager import *
+import os, math
+import random
 
-import Model.const       as model_const
-import View.const        as view_const
-import Controller.const  as ctrl_const
-import Interface.const   as ifa_const
+import Model.GameObject.item as model_item
+import Model.const           as model_const
+import View.const            as view_const
+import View.animations       as view_Animation
+import View.utils            as view_utils
+import View.staticobjects    as view_staticobjects
+import View.cutin            as view_cutin
+import Controller.const      as ctrl_const
+import Interface.const       as ifa_const
+from pygame.math import Vector2 as Vec
+
 
 class GraphicalView(object):
     """
@@ -27,7 +35,8 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-    
+
+
     def notify(self, event):
         """
         Receive events posted to the message queue. 
@@ -39,21 +48,47 @@ class GraphicalView(object):
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
                 self.render_play()
+            if cur_state == model.STATE_CUTIN:
+                self.cutin_manager.draw(self.screen)
             if cur_state == model.STATE_STOP:
                 self.render_stop()
             if cur_state == model.STATE_ENDGAME:
                 self.render_endgame()
-
             self.display_fps()
-            # limit the redraw speed to 30 frames per second
             self.clock.tick(view_const.frame_per_sec)
         elif isinstance(event, EventQuit):
-            # shut down the pygame graphics
             self.is_initialized = False
             pg.quit()
         elif isinstance(event, EventInitialize) or\
              isinstance(event, EventRestart):
             self.initialize()
+        elif isinstance(event, EventEqualize):
+            self.animations.append(view_Animation.Animation_equalize(center=event.position))
+        elif isinstance(event, EventIGoHome):
+            self.animations.append(view_Animation.Animation_gohome(center=event.position))
+        elif isinstance(event, EventMagnetAttractStart):
+            self.animations.append(view_Animation.Animation_magnetattract(event.player_index, self.model))
+        elif isinstance(event, EventOtherGoHome):
+            for player in self.model.player_list:
+                if player.index != event.player_index:
+                    self.animations.append(view_Animation.Animation_othergohome(center=player.position))
+        elif isinstance(event, EventRadiationOil):
+            self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
+        elif isinstance(event, EventShuffleBases):
+            ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
+            for pos in ani_pos:
+                if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
+                else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.animations.append(view_Animation.Animation_shuffleBases(self.model))
+            self.bases.draw(self.screen)
+            pg.display.flip()
+        elif isinstance(event, EventCutInStart):
+            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+        elif isinstance(event, EventTheWorldStart):
+            self.post_animations.append(view_Animation.Animation_theworld(event.position))
+        elif isinstance(event, EventRadiusNotMoveStart):
+            self.animations.append(view_Animation.Animation_freeze(center=event.position))
+
     
     def render_menu(self):
         """
@@ -61,60 +96,67 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
+            self.title_counter = 0
 
-            # draw backgound
-            self.screen.fill(view_const.COLOR_BLACK)
-            # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Menu', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            # update surface
-            pg.display.flip()
-    
+        # draw backround
+        self.menu.draw(self.screen)
+        self.characters.draw(self.screen)
+
+        # word animation
+        """titlefont = pg.font.Font(view_const.notosans_font, 90)
+        title_loop_counter = self.title_counter % 80
+        littlefont = pg.font.Font(view_const.notosans_font, 40)
+        if not title_loop_counter:
+            self.darken_time = [random.randint(25, 35), random.randint(55,65)]
+
+        if self.title_counter <= 10:
+            gray = (155 + int(self.title_counter / 10 * 100),) * 3
+        elif self.darken_time[0] <= title_loop_counter <= self.darken_time[0] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[0]) / 5 * 100),) * 3
+        elif self.darken_time[1] <= title_loop_counter <= self.darken_time[1] + 5:
+            gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
+        else:
+            gray = (255,) * 3
+
+        self.title_counter += 1"""
+        
+        # update surface
+        pg.display.flip()
+
+
     def render_endgame(self):
         """
         Render the game menu.
         """
-        if self.last_update != model.STATE_MENU:
-            self.last_update = model.STATE_MENU
+        if self.last_update != model.STATE_ENDGAME:
+            self.last_update = model.STATE_ENDGAME
+            self.screen.fill(view_const.COLOR_WHITE)
+            result = []
+            for base in self.model.base_list:
+                result.append([self.model.player_list[base.owner_index].name, 
+                               base.value_sum,
+                               self.model.player_list[base.owner_index].color])
 
-            # draw backgound
-            self.screen.fill(view_const.COLOR_BLACK)
-            # write some word
-            somewords = self.smallfont.render(
-                        'You are in the Endgame', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
-            # update surface
-            pg.display.flip()
-    
-    def draw_player(self):
-        for player in self.model.player_list:
-            pos = tuple(map(int, player.position))
-            radius = player.radius
-            color = player.color
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(radius), player.color)
+            result.sort(key=(lambda item: item[1]), reverse=True)
+            pos_x = 256
+            prize = 1
+            first = result[0][1]
+            for player in result:
+                self.animations.append(view_Animation.Animation_endboard(player[2], player[1]/first*500, (pos_x, 680), player[1], player[0]))
+                pos_x += 256
+                prize += 1
 
-    def draw_oil(self):
-        for oil in self.model.oil_list:
-            pos = tuple(map(int, oil.position))
-            radius = oil.radius
-            gfxdraw.filled_circle(self.screen, *pos,
-                                  int(oil.radius), view_const.COLOR_BLACK)
 
-    def draw_base(self):
-        for base in self.model.base_list:
-            center = base.center
-            length = base.length
-            pg.draw.rect(self.screen, view_const.COLOR_GRAY, [center[0]-length/2, center[1]-length/2, length, length], 2)       
+        if self.animations:
+            self.screen.fill(view_const.COLOR_WHITE)
+            title = self.titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            self.screen.blit(title, title.get_rect(center=(645, 60)))
+            for ani in self.animations:
+                if ani.expired: self.animations.remove(ani)
+                else          : ani.draw(self.screen)
+
+        pg.display.flip()
+ 
 
     def render_play(self):
         """
@@ -122,42 +164,38 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
-        # draw backgound
-        s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-        self.screen.fill(view_const.COLOR_WHITE)
+        
+        # draw background
+        self.background.draw(self.screen)
+        self.bases.draw(self.screen)
 
-        #draw player
-        self.draw_player()
-        self.draw_oil()
-        self.draw_base()
+        # draw animation
+        for ani in self.animations:
+            if ani.expired: self.animations.remove(ani)
+            else          : ani.draw(self.screen)
 
-        pg.draw.rect(s,view_const.COLOR_BLACK,[800,0,5,800])
-        pg.draw.rect(s,view_const.COLOR_BLACK,[1275,0,5,800])
-        namefont = pg.font.Font(view_const.board_name_font, 40)
-        numfont = pg.font.Font(view_const.board_name_font, 30)
-        timefont = pg.font.Font(view_const.board_name_font, 60)
-        for i in range(0,4,1):
-            pg.draw.rect(s,view_const.COLOR_BLACK,[800,157+i*160,480,5])
-        i = 0
-        for player in self.model.player_list:
-            name  = namefont.render(player.name, True, view_const.COLOR_BLACK)
-            value = numfont.render(str(round(player.value,3)), True, view_const.COLOR_BLACK)
-            self.screen.blit(name,(850, 170+i*160))
-            self.screen.blit(value,(850, 240+i*160))
-            i += 1
-        i = 0
-        for base in self.model.base_list:
-            value_sum =	numfont.render(str(round(base.value_sum,3)), True, view_const.COLOR_BLACK)
-            self.screen.blit(value_sum,(1000, 240+i*160))
-            i += 1
+        # draw static objects
+        self.oils.draw(self.screen)
+        self.items.draw(self.screen)
+        self.pets.draw(self.screen)
+        self.players.draw(self.screen)
+        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
+        self.scoreboard.draw(self.screen)
 
-        time = timefont.render(str(round(self.model.timer/60, 0)), True, view_const.COLOR_BLACK)
-        self.screen.blit(time,(950, 35))
+        # draw time
+        
+        time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        # draw post_animation
+        for ani in self.post_animations:
+            if ani.expired: self.post_animations.remove(ani)
+            else          : ani.draw(self.screen)
 
-        self.screen.blit(s,(0,0))
-        # update surface
+        # update screen
+        self.screen.blit(time, (950, 35))
         pg.display.flip()
         
+
     def render_stop(self):
         """
         Render the stop screen.
@@ -167,36 +205,18 @@ class GraphicalView(object):
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
-            s.fill((0, 0, 0, 128)); self.screen.blit(s, (0,0))
-
-            # write some word
-            somewords = self.smallfont.render(
-                        'the game is paused. space, escape to return the game.', 
-                        True, (0, 255, 0))
-            (SurfaceX, SurfaceY) = somewords.get_size()
-            pos_x = (view_const.screen_size[0] - SurfaceX)/2
-            pos_y = (view_const.screen_size[1] - SurfaceY)/2
-            self.screen.blit(somewords, (pos_x, pos_y))
+            s.fill((255, 255, 255, 128)); self.screen.blit(s, (0,0))
+            
+            # draw pause botton
+            pg.draw.circle(s, view_const.COLOR_BLACK, (640,400), 300)
+            pg.draw.rect(s, view_const.COLOR_WHITE, [690, 250, 60, 300])
+            pg.draw.rect(s, view_const.COLOR_WHITE, [510, 250, 60, 300])
+            self.screen.blit(s,(0,0))
 
             # update surface
             pg.display.flip()
 
-    def render_end(self):
-        if self.last_update != model.STATE_END:
-            self.last_update = model.STATE_END
-            result = []
-            boardfont = pg.font.SysFont("Ubuntu", 30)
 
-            for player in seld.model.player_list:
-                result.append((player.name, player.value_sum))
-            result.sort(key=takeSecond)
-            self.screen.fill(view_const.COLOR_WHITE)
-            pos_x = 0
-            for player in result:
-                line = boardfont.render((player[0] + ":" + str(player[1])), True, (0, 128, 0))
-                self.screen.blit(line, (50, 50 + pos_x))
-                pg.display.flip()
-                pos_x += 50
 
 
     def display_fps(self):
@@ -206,13 +226,42 @@ class GraphicalView(object):
         )
         pg.display.set_caption(caption)
         
+        
     def initialize(self):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
-        pg.init(); pg.font.init()
+        pg.init()
+        pg.font.init()
         pg.display.set_caption(view_const.game_caption)
         self.screen = pg.display.set_mode(view_const.screen_size)
+
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.small = pg.font.Font(None, 40)
         self.is_initialized = True
+
+        view_staticobjects.init_staticobjects()
+        view_Animation.init_animation()
+        view_cutin.init_cutin()
+
+        # animations
+        self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
+
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(self.model)
+
+        # static objects
+        self.players = view_staticobjects.View_players(self.model)
+        self.oils = view_staticobjects.View_oils(self.model)
+        self.bases = view_staticobjects.View_bases(self.model)
+        self.pets = view_staticobjects.View_pets(self.model)
+        self.scoreboard = view_staticobjects.View_scoreboard(self.model)
+        self.items = view_staticobjects.View_items(self.model)
+        self.background = view_staticobjects.View_background(self.model)
+        self.menu = view_staticobjects.View_menu(self.model)
+        self.characters = view_staticobjects.View_characters(self.model)
+
+        #Some font
+        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
+        self.timefont = pg.font.Font(view_const.notosans_font, 60)

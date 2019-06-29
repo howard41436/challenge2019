@@ -41,9 +41,13 @@ class Interface(object):
         for player in self.model.player_list:
             if player.is_AI:
                 AI_dir = self.player_AI[player.index].decide()
-                if AI_dir not in range(9):
-                    AI_dir = 0
-                self.ev_manager.post(EventMove(player.index, AI_dir))
+                if AI_dir in range(9):
+                    self.ev_manager.post(EventMove(player.index, AI_dir))
+                elif AI_dir == 9:
+                    self.ev_manager.post(EventMove(player.index, 0))
+                    self.ev_manager.post(EventTriggerItem(player.index))
+                else:
+                    self.ev_manager.post(EventMove(player.index, 0))
         
     def initialize(self):
         if self.is_init_AI: return
@@ -70,6 +74,15 @@ class Interface(object):
                 player.name, player.is_AI, player.ai = "Error", False, None
                 continue
             self.load_msg(str(index), player.name, "Successful to Load")
+            #if self.player_AI[player.index].equipments and len(self.player_AI[player.index].equipments) == model_const.equipment_num:
+            try: 
+                player.equip_equipments(self.player_AI[player.index].equipments)
+            except:
+                pass
+            try:
+                player.color = self.player_AI[player.index].color
+            except:
+                pass
 
     def load_msg(self, index, name ,msg):
         print(f"[{str(index)}] team_{name}.py: {msg}")

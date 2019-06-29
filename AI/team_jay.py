@@ -18,6 +18,10 @@ class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
         self.equipments = [0, 0, 0, 0, 0]
+<<<<<<< HEAD
+=======
+        self.color = (255, 212, 76)
+>>>>>>> 0046f3264ee795d91a2759c20fdc564898e031bc
         self.last_dir = random.randint(1, 8)
 
     def get_best_oil_position(self):

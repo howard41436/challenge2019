@@ -10,6 +10,7 @@ class Pet(object):
         self.position = Vec(position)
         self.radius = model_const.pet_radius
         self.color = [ random.randint(0, 255) for _ in range(3) ]
+        self.direction = Vec(0, 0)
         """
         Pet is a circle
         """
@@ -20,9 +21,11 @@ class Pet(object):
         2 for going base
         """
         self.speed = model_const.pet_normal_speed
+        self.cd_time = model_const.pet_cd_time
+        self.cd = self.cd_time
     
     def check_collide_with_player(self, player):
-        if (self.position - player.position).length() <= player.radius + self.radius:
+        if self.status == 1 and Vec(self.position - player.position).length() <= player.radius + self.radius:
             delta = min(self.carry_max - self.carry_now, player.value)
             self.carry_now += delta
             player.value -= delta
@@ -32,9 +35,9 @@ class Pet(object):
         self.status = new_status
     
     def check_collide_with_base(self, base):
-        if base.center[0] - base.length / 2 <= self.position[0] <= base.center[0] + base.length / 2 and \
-            base.center[1] - base.length / 2 <= self.position[1] <= base.center[1] + base.length / 2:
+        if self.status == 2 and Vec(self.position - base.center).length() <= self.radius:
             self.status = 0
+            self.cd = self.cd_time
             base.value_sum += self.carry_now
             self.carry_now = 0
     
@@ -42,10 +45,13 @@ class Pet(object):
         self.check_collide_with_player(player_list[self.owner_index])
         self.check_collide_with_base(base_list[self.owner_index])
         if self.status == 0:
-            # do nothing
-            pass
+            self.direction = Vec(0, 0)
+            self.cd -= 1
+            if self.cd == 0:
+                self.change_status(1)
         else:
-            target = (player_list[self.owner_index].position if status == 1 \
-                      else base_list[self.owner_index].position)
-            self.position += Vec.normalize(target - self.position) * self.speed
+            target = (player_list[self.owner_index].position if self.status == 1 \
+                      else base_list[self.owner_index].center)
+            self.direction = Vec.normalize(target - self.position)
+            self.position += self.direction * self.speed
 

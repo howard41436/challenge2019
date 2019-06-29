@@ -88,8 +88,8 @@ class Control(object):
             # player control
             for player in self.model.player_list:
                 if not player.is_AI:
-                    if event.key == self.control_keys[player.index][4]:
-                        self.ev_manager.post(EventBuy(player.index))
+                    if event.key in self.control_keys[player.index][4:6] : # item
+                        self.ev_manager.post(EventTriggerItem(player.index))
 
         # player direction control
         for player in self.model.player_list: 

@@ -1,10 +1,13 @@
 import time, random, sys
 
+from Model.GameObject.menu import *
 from Model.StateMachine import *
 from Model.GameObject.player import *
 from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
+from Model.GameObject.market import *
+from Model.GameObject.scoreboard import Scoreboard
 
 import Model.const       as model_const
 import View.const        as view_const
@@ -32,16 +35,32 @@ class GameEngine(object):
         self.state = StateMachine()
         self.AI_names = AI_names
         self.player_list = []
+        self.colors = model_const.colors
+        self.cutin_enable = True
         self.pet_list = []
         self.oil_list = []
+        self.menu_robot_list = []
+        self.menu_oil_list = []
+        self.menu_timer = 0
         self.base_list = []
+        self.priced_market_list = []
         self.turn_to = 0
         self.timer = 0
+        self.fadacai = False
+        self.za_warudo_id = None
 
+        for s in self.AI_names:
+            if s == '--debug':
+                self.cutin_enable = False
+                self.AI_names.remove(s)
+        self.init_menu()
         self.init_oil()
         self.init_pet()
         self.init_player()
         self.init_base()
+        self.init_markets()
+
+        self.scoreboard = Scoreboard(self.player_list, self.base_list)
 
         random.seed(time.time())
         
@@ -52,8 +71,13 @@ class GameEngine(object):
         """
         if isinstance(event, EventEveryTick):
             cur_state = self.state.peek()
-            if cur_state == STATE_PLAY:
+            if cur_state == STATE_MENU:
+                self.update_menu()
+            elif cur_state == STATE_PLAY:
                 self.update_objects()
+            elif cur_state == STATE_CUTIN:
+                self.update_cutin()
+            
         elif isinstance(event, EventStateChange):
             # if event.state is None >> pop state.
             if event.state is None:
@@ -68,11 +92,29 @@ class GameEngine(object):
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
             self.set_player_direction(event.player_index, event.direction)
+        elif isinstance(event, EventTriggerItem):
+            cur_state = self.state.peek()
+            if cur_state != STATE_CUTIN:
+                player = self.player_list[event.player_index]
+                if player.item is not None:
+                    player.use_item(self.ev_manager)
+                else:
+                    player.buy(self.priced_market_list)
         elif isinstance(event, EventQuit):
             self.running = False
-        elif isinstance(event, EventInitialize) or \
-            isinstance(event, EventRestart):
+        elif isinstance(event, (EventInitialize, EventRestart)):
             pass  # self.initialize()
+        elif isinstance(event, EventFaDaCaiStart):
+            self.fadacai = True
+        elif isinstance(event, EventFaDaCaiStop):
+            self.fadacai = False
+        elif isinstance(event, EventTheWorldStart):
+            self.za_warudo_id = event.player_index
+        elif isinstance(event, EventTheWorldStop):
+            self.za_warudo_id = None
+        elif self.cutin_enable and isinstance(event, EventCutInStart):
+            self.cutin_timer = model_const.cutin_time
+            self.state.push(STATE_CUTIN)
 
     def init_player(self):
         # set AI Names List
@@ -97,11 +139,11 @@ class GameEngine(object):
         for index in range(model_const.player_number):
             print(self.AI_names[index])
             if self.AI_names[index] in ["~" or "Error"]:
-                Tmp_P = Player("manual", index, model_const.default_equipments[index])
+                Tmp_P = Player("manual", index, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
-                Tmp_P = Player("default", index, is_AI = True)
+                Tmp_P = Player("default", index, self.pet_list, is_AI = True)
             else:
-                Tmp_P = Player(self.AI_names[index], index, is_AI = True)
+                Tmp_P = Player(self.AI_names[index], index, self.pet_list, is_AI = True)
             self.player_list.append(Tmp_P)
             
     def init_pet(self):
@@ -109,29 +151,59 @@ class GameEngine(object):
         for index in range(model_const.player_number):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
+    def init_markets(self):
+        self.priced_market_list = [ Market(position) for position in model_const.priced_market_positions ]
+
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
             player = self.player_list[player_index]
             player.direction = Vec(model_const.dir_mapping[direction]) 
-
+            if direction > 0:
+                player.direction_no = direction
+    def init_menu(self):
+        robot = Menu_robot(100)
+        menu_oil = Menu_oil(100)
+        self.menu_robot_list.append(robot)
+        self.menu_oil_list.append(menu_oil)
     def update_objects(self):
-        # Update player_list
-        for player in self.player_list:
-            player.update(self.oil_list, self.base_list, self.player_list)
-
-        for pet in self.pet_list:
-            pet.update(self.player_list, self.base_list)
-        if self.timer % 2400 == 1200:
+        if self.za_warudo_id is not None:
+            pet = self.pet_list[self.za_warudo_id]
+            pet.update(self.player_list, self.base_list) 
+            player = self.player_list[self.za_warudo_id]
+            player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+        else:
+            self.try_create_oil()
+            for player in self.player_list:
+                player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
             for pet in self.pet_list:
-                pet.change_status(1)
+                pet.update(self.player_list, self.base_list)
 
-        for oil in self.oil_list:
-            oil.update()
-        self.try_create_oil()
+            for oil in self.oil_list:
+                oil.update()
+            self.try_create_oil()
 
-        self.timer -= 1
-        if self.timer == 0:
-            self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+            for market in self.priced_market_list:
+                market.update(self.player_list, self.oil_list, self.base_list, None)
+
+            self.scoreboard.update()
+
+            self.timer -= 1
+            if self.timer == 0:
+                self.ev_manager.post(EventStateChange(STATE_ENDGAME))
+
+    def update_cutin(self):
+        self.cutin_timer -= 1
+        if self.cutin_timer == 0:
+            self.state.pop()  # pop out STATE_CUTIN
+
+    def update_menu(self):
+        self.menu_timer += 1
+        if self.menu_oil_list:
+            self.menu_robot_list[0].pick(self.menu_oil_list)
+        else:
+            self.menu_robot_list[0].go_home()
+        if self.menu_timer % 1200 == 0:
+            self.menu_oil_list.append(Menu_oil(100))
 
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
@@ -141,7 +213,10 @@ class GameEngine(object):
         self.oil_list.append(new_oil())
 
     def try_create_oil(self):
-        if random.random() < model_const.oil_probability:
+        p = model_const.fadacai_oil_probability if self.fadacai else model_const.oil_probability
+        max_oil_num = model_const.fadacai_max_oil_num if self.fadacai else model_const.max_oil_num
+        p *= 2 * (max(max_oil_num - len(self.oil_list), 0)) / max_oil_num
+        if random.random() < p:
             self.create_oil()
 
     def init_base(self) :
@@ -149,6 +224,7 @@ class GameEngine(object):
         for index in range(model_const.player_number) :
             self.base_list.append(Base(index, model_const.base_center[index]))
     
+
     def run(self):
         """
         Starts the game engine loop.
@@ -163,4 +239,3 @@ class GameEngine(object):
         while self.running:
             newTick = EventEveryTick()
             self.ev_manager.post(newTick)
-

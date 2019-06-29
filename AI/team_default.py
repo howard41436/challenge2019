@@ -17,28 +17,43 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = -1
         for i in range(len(oil_poses)):
-            cp = 1 / (oil_prices[i] * (Vec(my_pos) - Vec(oil_poses[i])).length()**2)
+            cp = 1/(Vec(my_pos) - Vec(oil_poses[i])).length()
             if cp > best_cp:
-                cp = best_cp
+                best_cp = cp
                 best_pos = oil_poses[i]
-        return best_pos, my_pos
+        return best_pos, my_pos, best_cp
+    def get_dir(self, dest, my_pos):
+        direct = [
+        [0, 0],             #steady
+        [0, -1],             #up
+        [0.707, -0.707],     #up right
+        [1, 0],             #right
+        [0.707, 0.707],    #right down
+        [0, 1],            #down
+        [-0.707, 0.707],   #left down
+        [-1, 0],            #left
+        [-0.707, -0.707],    #left up
+        ]
+        new = Vec(dest) - Vec(my_pos)
+        maximum = 0
+        record = 0
+        for i in range(9):
+            if maximum < (new).dot(Vec(direct[i])):
+                maximum = (new).dot(Vec(direct[i]))
+                record = i
+        return record
 
     def decide(self):
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
-        best_pos, my_pos = self.get_best_oil_position()
+        best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
+        if dest is None:
+            return 0
         if carry > 5000:
             dest = home
-        togo = [DIR_U, DIR_RU, DIR_LU] if dest[1] - my_pos[1] < -radius else [DIR_D, DIR_RD, DIR_LD]
-        if dest[0] - my_pos[0] > radius:
-            togo = togo[1]
-        elif dest[0] - my_pos[0] < -radius:
-            togo = togo[2]
-        else:
-            togo = togo[0]
-        return togo
+        return self.get_dir(dest, my_pos)
 """
 DIR_stop = 0
 DIR_U    = 1

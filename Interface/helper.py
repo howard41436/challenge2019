@@ -4,6 +4,7 @@ define Application Programming Interface(API)
 from pygame.math import Vector2 as Vec
 
 import Model.const as model_const
+import Model.GameObject.item as Item
 import View.const as view_const
 
 class Helper(object):
@@ -17,6 +18,7 @@ class Helper(object):
         self.player_normal_speed = model_const.player_normal_speed
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
+        self.market_position = tuple(model_const.priced_market_positions[0])
 
     # Get player data
     def get_self_id(self):
@@ -57,6 +59,19 @@ class Helper(object):
         if player_id == None: player_id = self.player_id
         return self.model.player_list[player_id].speed
 
+    def get_players_is_invincible(self):
+        return [player.in_invincible for player in self.model.player_list]
+    def get_player_is_invincible(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].is_invincible
+    
+    def get_players_insurance_value(self):
+        return [player.insurance_value for player in self.model.player_list]
+    def get_player_insurance_value(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return self.model.player_list[player_id].insurance_value
+
+
     # Get pet data
 
     # Get oil data
@@ -67,7 +82,7 @@ class Helper(object):
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+        return sorted(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data 
     def get_bases_center(self):
@@ -75,6 +90,34 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+    def get_base_value(self):
+        return self.model.base_list[self.player_id].value_sum
+    def get_bases_value(self):
+        return [base.value_sum for base in self.model.base_list]
+
+    # Get market data
+    def get_market(self):
+        market = self.model.priced_market_list[0]
+        return (None, None, None) if market.item is None else (market.item.name, market.item.price, 0)
+    def player_in_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return True if self.model.player_list[player_id].check_market(self.model.priced_market_list) is not None else False
+    def get_market_center(self):
+        market = self.model.priced_market_list[0]
+        return market.position
+
+    # Get item data
+    def get_player_item_name(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return None if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.name
+
+    def get_player_item_is_active(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return False if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.active
+
+    def get_player_item_duration(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
 
     # Get game informations
     def get_timer(self):
@@ -107,11 +150,10 @@ class Helper(object):
     def get_most_valuable_player(self):
         return max(range(4), key=lambda i: self.get_player_value(i))
 
+
     # Useful (?) functions
     def get_distance(self, p1, p2):
         return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
-    
-
 

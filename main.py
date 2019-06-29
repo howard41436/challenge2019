@@ -10,12 +10,12 @@ def main(argv):
     evManager = EventManager.EventManager()
     gamemodel = model.GameEngine(evManager, argv[1:])
     Control   = controller.Control(evManager, gamemodel)
-    graphics  = view.GraphicalView(evManager, gamemodel)
     interface = helper.Interface(evManager, gamemodel)
+    graphics  = view.GraphicalView(evManager, gamemodel)
 
     gamemodel.run()
-
+ 
     return 0
-
+  
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

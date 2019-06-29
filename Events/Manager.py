@@ -73,22 +73,203 @@ class EventMove(BaseEvent):
     """
     Move event.
     """
-    def __init__(self, player, direction):
+    def __init__(self, player_index, direction):
         self.name = "Move event"
-        self.player_index = player
+        self.player_index = player_index
         self.direction = direction
     def __str__(self):
         return "{0} => player_index = {1}, DirectionTo: {2}".format(self.name, self.player_index, self.direction)
 
-class EventBuy(BaseEvent):
+class EventTriggerItem(BaseEvent):
     """
-    Buy event.
+    Buy/Use item.
     """
-    def __init__(self, player):
-        self.name = "Buy event"
-        self.player_index = player
+    def __init__(self, player_index):
+        self.name = "Trigger item event"
+        self.player_index = player_index
     def __str__(self):
         return f"{self.name} => player_index = {player}"
+
+
+class EventEqualize(BaseEvent):
+    """
+    Equalize event.
+    This event should be triggered when two player bump into each other.
+    """
+    def __init__(self, position):
+        """
+        position : tuple(x, y) or vec2(x, y) indicates the collision position
+        """
+        self.name = "Equalize event"
+        self.position = position
+    def __str__(self):
+        return f"{self.name} => collision_position = {self.position}"
+        
+
+class EventIGoHome(BaseEvent):
+    def __init__(self, player):
+        self.name = "I Go Home"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventOtherGoHome(BaseEvent):
+    def __init__(self, player):
+        self.name = "Other Go Home"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+
+class EventShuffleBases(BaseEvent):
+    def __init__(self, player):
+        self.name = "Shuffle Bases"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+
+class EventTheWorldStart(BaseEvent):
+    '''
+    A player trigger 'The World'(time stop)
+    '''
+    def __init__(self, player):
+        self.name = f"Player {player.index} triggers The World"
+        self.position = tuple(player.position)
+        self.player_index = player.index
+    def __str__(self):
+        return self.name
+
+class EventTheWorldStop(BaseEvent):
+    '''
+    The duration of 'The world' ends
+    '''
+    def __init__(self, player):
+        self.name = "The World Ends"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventMagnetAttractStart(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' starts
+    '''
+    def __init__(self, player):
+        self.name = "Magnet Attract Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventMagnetAttractStop(BaseEvent):
+    '''
+    The duration of 'Magnet Attract' ends
+    '''
+    def __init__(self, player):
+        self.name = "Magnet AttractEnd"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventRadiationOil(BaseEvent):
+    def __init__(self, player):
+        self.name = "Radiation Oil"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventRadiusNotMoveStart(BaseEvent):
+    def __init__(self, player):
+        self.name = "RadiusNotMove Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventRadiusNotMoveStop(BaseEvent):
+    def __init__(self, player):
+        self.name = "RadiusNotMove End"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventInvincibleStart(BaseEvent):
+    '''
+    A player trigger 'Invincible'
+    '''
+    def __init__(self, player):
+        self.name = "Invincible Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventInvincibleStop(BaseEvent):
+    '''
+    The duration of 'Invincible' ends
+    '''
+    def __init__(self, player):
+        self.name = "Invincible End"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventFaDaCaiStart(BaseEvent):
+    '''
+    A player trigger 'FaDaCai'
+    '''
+    def __init__(self, player):
+        self.name = "FaDaCai Start"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventFaDaCaiStop(BaseEvent):
+    '''
+    The duration of 'FaDaCai' ends
+    '''
+    def __init__(self, player):
+        self.name = "FaDaCai End"
+        self.player_index = player.index
+        self.position = tuple(player.position)
+    def __str__(self):
+        return self.name
+
+class EventEqualize(BaseEvent):
+    """
+    Equalize event.
+    This event should be triggered when two player bump into each other.
+    """
+    def __init__(self, position):
+        """
+        position : tuple(x, y) or vec2(x, y) indicates the collision position
+        """
+        self.name = "Equalize event"
+        self.position = position
+    def __str__(self):
+        return f"{self.name} => collision_position = {self.position}"
+
+
+class EventCutInStart(BaseEvent):
+    '''
+    A player triggers a strong skill.
+    '''
+    def __init__(self, player_index, skill_name):
+        self.name = "Cut-In Start"
+        self.player_index = player_index
+        self.skill_name = skill_name
+    def __str__(self):
+        return self.name
+
 
 class EventManager(object):
     """
