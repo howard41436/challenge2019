@@ -84,7 +84,7 @@ class TeamAI(BaseAI):
         dest = best_pos
         if self.use(my_pos) == True:
             return PICK
-        home_cp =  2.5e-6 if self.helper.get_player_item_name() == 'IGoHome' else 7.5e-6 * carry
+        home_cp =  4e-6 if self.helper.get_player_item_name() == 'IGoHome' else 7.5e-6 * carry
 
         attack_cp, target_pos, target = self.attack(carry, my_pos)
         if attack_cp >= best_cp and self.helper.get_player_item_name(target) != 'Invincible':
