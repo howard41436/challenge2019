@@ -82,7 +82,7 @@ class Helper(object):
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+        return sorted(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data 
     def get_bases_center(self):
@@ -90,11 +90,21 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+    def get_base_value(self):
+        return self.model.base_list[self.player_id].value_sum
+    def get_bases_value(self):
+        return [base.value_sum for base in self.model.base_list]
 
     # Get market data
     def get_market(self):
         market = self.model.priced_market_list[0]
-        return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
+        return (None, None, None) if market.item is None else (market.item.name, market.item.price, 0)
+    def player_in_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return True if self.model.player_list[player_id].check_market(self.model.priced_market_list) is not None else False
+    def get_market_center(self):
+        market = self.model.priced_market_list[0]
+        return market.position
 
     # Get item data
     def get_player_item_name(self, player_id = None):

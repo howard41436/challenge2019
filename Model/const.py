@@ -131,7 +131,7 @@ priced_item_activate = {
     'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,
-    'FaDaCai': True,
+    'FaDaCai': False,
 }
 
 

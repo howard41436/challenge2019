@@ -45,13 +45,19 @@ class TeamAI(BaseAI):
             return Vec(victim_pos) - Vec(my_pos)
         else:
             #print ("home")
+            if self.helper.get_player_item_name() == 'IGoHome':
+                return 9
             return self.go_home()
         
     def go_home(self):
         my_pos = self.helper.get_player_position()
         nearest_player_id = self.helper.get_nearest_player()
         nearest_player_pos = self.helper.get_player_position(nearest_player_id)
-        if self.helper.get_distance(nearest_player_pos, my_pos) < 10*self.helper.player_radius and \
+        if self.helper.get_distance(nearest_player_pos, my_pos) < 2*self.helper.player_radius and \
+            self.helper.get_player_bag(nearest_player_id) < self.helper.get_player_bag():
+            if self.helper.get_player_item_name() == 'IGoHome':
+                return 9
+        elif self.helper.get_distance(nearest_player_pos, my_pos) < 10*self.helper.player_radius and \
             self.helper.get_player_bag(nearest_player_id) < self.helper.get_player_bag():
             return (self.avoid(nearest_player_id))
         elif self.helper.get_nearest_oil() != None:
@@ -91,9 +97,11 @@ class TeamAI(BaseAI):
         player_pos = self.helper.get_player_position(player_id)
         vec1 = Vec(my_pos) - Vec(player_pos)
         vec2 = Vec(self.helper.get_base_center()) - Vec(my_pos)
-        return (2*vec1 + vec2)
+        return (vec1 + 5*vec2)
 
     def direction(self, pos_vec):
+        if pos_vec == 9:
+            return 9
         AI_move_dir = 0
         vec_dot = 0
         for dir_vec in AI_dir_mapping:
@@ -102,16 +110,41 @@ class TeamAI(BaseAI):
                 AI_move_dir = AI_dir_mapping.index(dir_vec)
         return AI_move_dir
 
+    def get_item(self):
+        my_pos = self.helper.get_player_position()
+        item_name, item_price, market_timer = self.helper.get_market()
+        if item_name != None:
+            if self.helper.get_player_item_name() == None and self.helper.get_player_value() >= item_price:
+                if self.helper.player_in_market() is False:
+                    return Vec(self.helper.get_market_center()) - Vec(my_pos)
+                else:
+                    return 9
+            else:
+                return None
+        else:
+            return None
+            
     def decide(self):
         best_vec = self.get_best_vec()
         my_pos = self.helper.get_player_position()
-        if self.helper.get_nearest_oil() != None:
-            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
-                return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+        my_item = self.helper.get_player_item_name()
+        if self.get_item() is not None:
+            return self.direction(self.get_item())
+        elif my_item == 'IGoHome' or my_item is None:
+            if self.helper.get_nearest_oil() != None:
+                if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 2*self.helper.player_radius:
+                    return self.direction(Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+                else:
+                    return self.direction(best_vec)
             else:
                 return self.direction(best_vec)
+        elif my_item == 'RadiusNotMove':
+            return 9
+            pass
+        elif my_item == 'RadiationOil':
+            return 9
         else:
-            return self.direction(best_vec)
+            return 9
 
 """
 const of AI code use.
