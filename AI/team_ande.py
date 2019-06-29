@@ -114,7 +114,8 @@ class TeamAI(BaseAI):
     def get_item(self):
         my_pos = self.helper.get_player_position()
         item_name, item_price, market_timer = self.helper.get_market()
-        if item_name != None:
+        if item_name == 'IGoHome' or item_name == 'TheWorld' or item_name == 'MagnetAttract' \
+            or item_name == 'RadiusNotMove' or item_name == 'RadiationOil':
             if self.helper.get_player_item_name() == None and self.helper.get_player_value() >= item_price:
                 if self.helper.player_in_market() is False:
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
@@ -140,8 +141,8 @@ class TeamAI(BaseAI):
             else:
                 return self.direction(best_vec)
         elif my_item == 'RadiusNotMove':
-            if self.helper.get_player_item_is_active is False:
-                if self.get_distance(self.helper.get_nearest_player(), my_pos) <= self.helper.model_const.radius_not_move_radius:
+            if self.helper.get_player_item_is_active() is False:
+                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_nearest_player()), my_pos) <= self.helper.get_radius_not_move_radius():
                     return 9
                 else:
                     if self.helper.get_nearest_oil() != None:
@@ -161,7 +162,7 @@ class TeamAI(BaseAI):
                     return self.direction(best_vec)
         elif my_item == 'RadiationOil':
             return 9
-        elif my_item == 'MagnetAttract' or my_item == 'Invincible' or my_item == 'TheWorld':
+        elif my_item == 'MagnetAttract' or my_item == or my_item == 'TheWorld':
             if self.helper.get_player_item_is_active() is False:
                 return 9
             else:
