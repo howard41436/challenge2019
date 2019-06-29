@@ -1,4 +1,5 @@
 import pygame as pg
+import numpy as np
 import Model.main as model
 import Model.const as model_const
 import View.const as view_const
@@ -266,16 +267,20 @@ class Animation_theworld(Animation_raster):
     '''
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
+    inside_cache = dict()
+    t = 0
 
     @classmethod
     def init_convert(cls):
-        cls.image_inside = cls.image_inside.convert_alpha()
+        cls.image_inside = cls.image_inside.convert()
+        for r in range(1, int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2))+60+1, 60):
+            cls.inside_cache[r] = pg.transform.scale(cls.image_inside, (2*r, 2*r))
 
     def __get_max_radius(self):
         x1 = self.center[0]
-        x2 = 1200 - self.center[0]
+        x2 = view_const.screen_size[0] - self.center[0]
         y1 = self.center[1]
-        y2 = 800 - self.center[1]
+        y2 = view_const.screen_size[1] - self.center[1]
         return max(map(sqrt, (x1**2+y1**2, x1**2+y2**2, x2**2+y1**2, x2**2+y2**2)))
     
     def __init__(self, center):
@@ -287,23 +292,31 @@ class Animation_theworld(Animation_raster):
         self.radius = 1
         self.radius_vel = 60
         self.max_radius = self.__get_max_radius()
+        self.dt = 0.02
+        self.radius_vel = 60
 
     def update(self):
+        self.t += self.dt
         self.radius += self.radius_vel
         if self.radius > self.max_radius: self.radius_vel = -self.radius_vel
         if self.radius == 1: self.expired = True
 
     def draw(self, screen):
-        cur_inside = pg.transform.scale(self.image_inside, (2*self.radius, 2*self.radius))
-        screen.blit(cur_inside, cur_inside.get_rect(center=self.center))
+        mask = self.inside_cache[self.radius].copy()
+        source = pg.surfarray.array2d(screen)
+
+        # twist along y axis
+        twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 30*np.sin(np.arange(view_const.screen_size[0])/100 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
+        # twist along x axis
+        twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 30*np.cos(np.arange(view_const.screen_size[1])/100 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
+
+        tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
+        pg.surfarray.blit_array(tmpsurf, twisted)
+        mask.blit(tmpsurf, tmpsurf.get_rect(topleft=(self.radius-self.center[0], self.radius-self.center[1])), None, pg.BLEND_RGBA_MULT)
+        mask.set_alpha(128)
+        screen.blit(mask, mask.get_rect(center=self.center))
 
         self.update()
-
-    def twist_inside(self, screen):
-        pass
-    
-    def twist_outskirts(self, screen):
-        pass
 
 
 class Animation_freeze(Animation_raster):
