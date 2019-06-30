@@ -103,6 +103,24 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
+        titlefont = pg.font.Font(view_const.latin_font, 130)
+        titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
+        words_1 = titlefont.render(
+                    'OIL', 
+                    True, view_const.COLOR_BLACK)
+
+        words_2 = titlefont.render(
+                    'TYCOON', 
+                    True, view_const.COLOR_BLACK)
+
+        words_3 = titlesmallfont.render(
+                    'presented by 2019 NTU CSIE CAMP',
+                    True, view_const.COLOR_BLACK)
+
+
+        self.screen.blit(words_1, (405, 100))
+        self.screen.blit(words_2, (110, 250))
+        self.screen.blit(words_3, (300, 400))
         """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.notosans_font, 40)
