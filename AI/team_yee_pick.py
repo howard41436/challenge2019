@@ -7,7 +7,9 @@ from pygame.math import Vector2 as Vec
 import random
 from datetime import datetime
 
-market_pos = Vec(view_const.game_size) / 2
+market_pos = Vec(view_const.game_size)/2
+init_speed = [0] * 4
+got_init_speed = False
 
 class TeamAI(BaseAI):
     def __init__(self, helper):
@@ -28,6 +30,14 @@ class TeamAI(BaseAI):
         self.half_game_size = self.helper.game_size[0] // 2
         self.id = self.helper.get_self_id()
     
+    def get_init_speed(self):
+        '''get the model_const.speed_multiplier ** self.equipments[model_const.speed_up_idx] for every players'''
+        init_speed[self.id] = model_const.speed_multiplier ** self.equipments[model_const.speed_up_idx]
+        for i, speed in enumerate(self.helper.get_players_speed()):
+            init_speed[i] = max(init_speed[i], speed/model_const.player_normal_speed)
+        if all(init_speed):
+            got_init_speed = True
+
     def calc_expected_value_integral(self, mu, sd, high, low):
         return sd / np.sqrt(2 * np.pi) * (np.exp(-0.5 * low ** 2) - np.exp(-0.5 * high ** 2)) + mu * (norm.cdf(high, mu, sd) - norm.cdf(low, mu, sd))
     
@@ -52,14 +62,16 @@ class TeamAI(BaseAI):
         best_cp = -1
         for pos, oil_level in oils:
             cp = self.get_oil_expected_value(pos, oil_level) * (1 if (pos - self.home).length() <= self.half_game_size * 1.2 else (1 - 0.5 * (pos - self.home).length() / (self.helper.game_size[0] * 1.414))**2) \
-                 / ((self.pos - pos).length_squared()/(self.speed + 1e-5))
+                 / ((self.pos - pos).length_squared()/self.speed + 1e-5)
             if cp > best_cp:
                 best_cp = cp
                 best_pos = pos
         return best_pos, best_cp
     
-    def get_speed_by_value(self, val):
-        return model_const.speed_multiplier ** self.equipments[model_const.speed_up_idx] * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * val)
+    def get_speed_by_value(self, val, player_id=None):
+        if player_id is None:
+            player_id = self.id
+        return init_speed[player_id] * max(model_const.player_speed_min, model_const.player_normal_speed - model_const.player_speed_decreasing_rate * val)
 
     def attack(self, players):
         #return None, -2
@@ -137,12 +149,35 @@ class TeamAI(BaseAI):
         else:
             dist_cp = 1 / (to_home_dist * (to_home_dist / self.speed + 1))
         return other_threat + loss + carry_transform * dist_cp
+    
+    def get_pick_cp(self, players):
+        name, price, _ = self.helper.get_market()
+        if name is not None and name in ('IGoHome', 'RadiusNotMove') and self.carry >= price \
+             and not self.item and not self.item_active:
+            return 2000 / ((self.pos-market_pos).length_squared()/self.speed) - self.get_other_threat(players)
+        else:
+            return -1
+
+    def pick_item(self):
+        name, price, _ = self.helper.get_market()
+        if name is not None and name in ('IGoHome', 'RadiusNotMove') and self.carry >= price:
+            if (self.pos - market_pos).length() <= self.radius:
+                return True
+        return False
+
 
     def decide(self):
+        if not got_init_speed:
+            self.get_init_speed()
+
         self.carry = self.helper.get_player_value()
         self.home = Vec(self.helper.get_base_center())
         self.pos = Vec(self.helper.get_player_position())
         self.speed = self.helper.get_player_speed()
+        self.item, self.item_active = self.helper.get_player_item_name(), self.helper.get_player_item_is_active()
+        
+        if not self.item and not self.item_active and self.pick_item():
+            return 9
         
         players = list(zip(list(map(Vec, self.helper.get_players_position())),
             [i*j for i,j in zip(self.helper.get_players_speed(), list(map(Vec, self.helper.get_players_direction())))],
@@ -152,22 +187,45 @@ class TeamAI(BaseAI):
         attack_pos, attack_cp = self.attack(players)
         thief_pos, loss = self.be_chased(players)
         home_cp = self.get_home_cp(loss, players)
+        pick_cp = self.get_pick_cp(players)
 
+        if not self.item_active:
+            if self.item == 'IGoHome':
+                for i, item in enumerate(players):
+                    pos, v, val = item
+                    if i == self.id:
+                        continue
+                    if self.carry > 6000 or \
+                        (self.pos - pos).length() <= 2*self.radius + self.speed + self.get_speed_by_value(val,i) and (self.carry-val)/2>500:
+                        return 9
+            elif self.item == 'RadiusNotMove':
+                # sort by value and exclude myself
+                valuable = np.argsort([player[2] for player in players])[::-1]
+                valuable_pos, valuable_v, valuable_val = players[valuable[0] if valuable[0] != self.id else valuable[1]]
+                
+                if ((thief_pos - self.pos).length() < model_const.radius_not_move_radius and loss > 500) \
+                    or ((valuable_pos - self.pos).length() < model_const.radius_not_move_radius and valuable_v.length()!=0):
+                    return 9
+        
         #print(best_cp, attack_cp)
         dest, best_cp = oil_pos, oil_cp
         action = 'oil'
         
+        if pick_cp > best_cp:
+            dest, best_cp = market_pos, pick_cp
+            action = 'pick'
+
         if attack_cp > best_cp:
             #print('attack '+str(datetime.now().time())[:8],end=' ')
             dest, best_cp = attack_pos, attack_cp
             action = 'attack'
 
         go_home = go_straight = False
-        if home_cp > best_cp or self.carry >= 5000:
+        if self.item != 'IGoHome' and (home_cp > best_cp or self.carry >= 5000):
             dest, best_cp = self.home, home_cp
             go_home = True
             go_straight = (loss >= 1000)
-            # if go_straight:
+            # if go_home_now:
             #     print('go_home_now ' + str(datetime.now().time())[:8], end=' ')
             # else:
             #     print('go home', end=' ')
