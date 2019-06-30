@@ -75,6 +75,8 @@ class TeamAI(BaseAI):
     def use_radiation(self, my_pos):
         target = self.helper.get_most_valuable_player()
         dest = self.helper.get_base_center(target)
+        if self.helper.get_distance(dest, my_pos) < self.helper.get_radius_of_radiation_oil() + self.helper.base_length:
+            return 9
         return self.get_dir(dest, my_pos)
 
     def use(self, my_pos):
@@ -82,9 +84,10 @@ class TeamAI(BaseAI):
             if self.helper.get_player_item_name() == 'TheWorld':
                 return True
             elif self.helper.get_player_item_name() == 'RadiusNotMove':
-                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < model_const.radius_not_move_radius:
+                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < self.helper.get_radius_not_move_radius():
                     return True
-            elif self.helper.get_player_item_name() == 'RadiationOil' and self.helper.player_id != self.helper.get_most_valuable_player():
+            elif self.helper.get_player_item_name() == 'RadiationOil' \
+                and self.helper.player_id != self.helper.get_most_valuable_player():
                 return True
         return False
 
