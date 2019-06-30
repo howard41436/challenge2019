@@ -67,7 +67,7 @@ class View_characters(__Object_base):
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'move_{_index}.png')),
             0.6
         )
-        for _index in ('1', '2', '3', '4', '5', '6', '7')
+        for _index in map(str, range(1, 8))
     )
     image_oil = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'oil_black.png')),0.4)
 
@@ -104,6 +104,7 @@ class View_players(__Object_base):
         )
         for _rainbow in range(0,19,1)
     )"""
+    image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
 
     def __init__(self, model):
@@ -122,6 +123,7 @@ class View_players(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
+        cls.image_freeze = cls.image_freeze.convert_alpha()
         cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)"""
 
     def draw(self, screen):
@@ -134,6 +136,7 @@ class View_players(__Object_base):
                 """image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)"""
                 self.color_switch[_i] += 1
             screen.blit(image, image.get_rect(center=players[_i].position))
+            if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-17, -50])
 
 
 class View_oils(__Object_base):
