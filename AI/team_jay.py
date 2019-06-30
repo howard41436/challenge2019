@@ -64,11 +64,19 @@ class TeamAI(BaseAI):
         if self.helper.get_player_item_name() or self.helper.get_player_item_is_active():
             return dest
         item = self.helper.get_market()
-        if (item[0] == 'RadiusNotMove' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
-            if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius:
+        if (item[0] == 'RadiationOil' or item[0] == 'RadiusNotMove' or item[0] == 'TheWorld' or item[0] == 'IGoHome') \
+            and carry > item[1] \
+            and not self.helper.get_player_item_name():
+            if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius + self.helper.market_radius:
                 return PICK
             return self.helper.get_market_center()
         return dest
+
+    def use_radiation(self, my_pos):
+        target = self.helper.get_most_valuable_player()
+        dest = self.helper.get_base_center(target)
+        return self.get_dir(dest, my_pos)
+
     def use(self, my_pos):
         if not self.helper.get_player_item_is_active():
             if self.helper.get_player_item_name() == 'TheWorld':
@@ -76,13 +84,18 @@ class TeamAI(BaseAI):
             elif self.helper.get_player_item_name() == 'RadiusNotMove':
                 if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < model_const.radius_not_move_radius:
                     return True
+            elif self.helper.get_player_item_name() == 'RadiationOil' and self.helper.player_id != self.helper.get_most_valuable_player():
+                return True
         return False
+
     def decide(self):
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
         dest = best_pos
         if self.use(my_pos) == True:
+            if self.helper.get_player_item_name() == 'RadiationOil':
+                return self.use_radiation(my_pos)
             return PICK
         home_cp =  4e-6 * carry if self.helper.get_player_item_name() == 'IGoHome' else 7.5e-6 * carry
 

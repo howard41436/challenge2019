@@ -19,6 +19,7 @@ class Helper(object):
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
         self.market_position = tuple(model_const.priced_market_positions[0])
+        self.market_radius = model_const.market_radius
 
     # Get player data
     def get_self_id(self):
