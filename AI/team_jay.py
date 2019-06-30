@@ -72,7 +72,8 @@ class TeamAI(BaseAI):
         return dest
 
     def use_radiation(self, my_pos):
-        target = self.helper.get_most_valuable_player()
+        bases_value = self.helper.get_bases_value()
+        target = bases_value.index(max(bases_value))
         dest = self.helper.get_base_center(player_id=target)
         if self.helper.get_distance(dest, my_pos) < self.helper.get_radius_of_radiation_oil():
             return 9
