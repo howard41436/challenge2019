@@ -74,7 +74,7 @@ class TheWorld(Item):
         self.active = True
         for player in self.player_list:
             if player.index != self.player_index:
-                player.freeze = True
+                player.theworld = True
                 self.freeze_list.append(player)
 
     def update(self, ev_manager):
@@ -87,7 +87,7 @@ class TheWorld(Item):
         self.active = False
         self.player_list[self.player_index].item = None
         for player in self.freeze_list:
-            player.freeze = False
+            player.theworld = False
 
 class MagnetAttract(Item):
     '''
