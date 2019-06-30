@@ -165,6 +165,7 @@ class GameEngine(object):
         menu_oil = Menu_oil(100)
         self.menu_robot_list.append(robot)
         self.menu_oil_list.append(menu_oil)
+        
     def update_objects(self):
         if self.za_warudo_id is not None:
             pet = self.pet_list[self.za_warudo_id]
