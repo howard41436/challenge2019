@@ -339,7 +339,7 @@ class Animation_theworld(Animation_raster):
 class Animation_freeze(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png')), i*4),
+            pg.transform.rotate(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png') ), 1.1), i*4),
             1/60*i if i <= 30 else 1/2
         )
         for i in range(1, 300)

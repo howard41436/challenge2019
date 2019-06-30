@@ -137,14 +137,14 @@ fadacai_oil_probability = 1 / 3
 fadacai_max_oil_num = 300
 
 priced_item_activate = {
-    'IGoHome': True,
-    'OtherGoHome': True,
-    'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': True,
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': False,
+    'MagnetAttract': False,
+    'Invincible': False,
     'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
+    'RadiationOil': False,
+    'ShuffleBases': False,
     'FaDaCai': False,
 }
 cutin_enable = {
