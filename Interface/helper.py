@@ -19,6 +19,7 @@ class Helper(object):
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
         self.market_position = tuple(model_const.priced_market_positions[0])
+        self.market_radius = model_const.market_radius
 
     # Get player data
     def get_self_id(self):
@@ -98,7 +99,13 @@ class Helper(object):
     # Get market data
     def get_market(self):
         market = self.model.priced_market_list[0]
-        return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
+        return (None, None, None) if market.item is None else (market.item.name, market.item.price, 0)
+    def player_in_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return True if self.model.player_list[player_id].check_market(self.model.priced_market_list) is not None else False
+    def get_market_center(self):
+        market = self.model.priced_market_list[0]
+        return market.position
 
     # Get item data
     def get_player_item_name(self, player_id = None):
@@ -112,6 +119,14 @@ class Helper(object):
     def get_player_item_duration(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
+
+    def get_radius_not_move_radius(self):
+        return model_const.radius_not_move_radius
+
+    def get_radius_of_radiation_oil(self):
+        return model_const.radiation_oil_range
+    def get_radius_of_magnetic_attract(self):
+        return model_const.magnet_attract_radius
 
     # Get game informations
     def get_timer(self):
@@ -150,4 +165,13 @@ class Helper(object):
         return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
+    def get_direction(self, vector_to_go):
+        move_dir = 0 #default
+        vec_dot = 0
+        for dir_vec in model_const.dir_mapping:
+            if Vec(dir_vec).dot(vector_to_go) > vec_dot:
+                vec_dot = Vec(dir_vec).dot(vector_to_go)
+                move_dir = model_const.dir_mapping.index(dir_vec)
+        return move_dir
+
 

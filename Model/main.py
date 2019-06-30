@@ -1,5 +1,6 @@
 import time, random, sys
 
+from Model.GameObject.menu import *
 from Model.StateMachine import *
 from Model.GameObject.player import *
 from Model.GameObject.oil import *
@@ -38,6 +39,9 @@ class GameEngine(object):
         self.cutin_enable = True
         self.pet_list = []
         self.oil_list = []
+        self.menu_robot_list = []
+        self.menu_oil_list = []
+        self.menu_timer = 0
         self.base_list = []
         self.priced_market_list = []
         self.turn_to = 0
@@ -49,7 +53,7 @@ class GameEngine(object):
             if s == '--debug':
                 self.cutin_enable = False
                 self.AI_names.remove(s)
-
+        self.init_menu()
         self.init_oil()
         self.init_pet()
         self.init_player()
@@ -67,10 +71,13 @@ class GameEngine(object):
         """
         if isinstance(event, EventEveryTick):
             cur_state = self.state.peek()
-            if cur_state == STATE_PLAY:
+            if cur_state == STATE_MENU:
+                self.update_menu()
+            elif cur_state == STATE_PLAY:
                 self.update_objects()
             elif cur_state == STATE_CUTIN:
                 self.update_cutin()
+            
         elif isinstance(event, EventStateChange):
             # if event.state is None >> pop state.
             if event.state is None:
@@ -145,7 +152,7 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.priced_market_list = [ Market(position, is_free=False) for position in model_const.priced_market_positions ]
+        self.priced_market_list = [ Market(position) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
@@ -153,7 +160,12 @@ class GameEngine(object):
             player.direction = Vec(model_const.dir_mapping[direction]) 
             if direction > 0:
                 player.direction_no = direction
-
+    def init_menu(self):
+        robot = Menu_robot(100)
+        menu_oil = Menu_oil(100)
+        self.menu_robot_list.append(robot)
+        self.menu_oil_list.append(menu_oil)
+        
     def update_objects(self):
         if self.za_warudo_id is not None:
             pet = self.pet_list[self.za_warudo_id]
@@ -164,10 +176,11 @@ class GameEngine(object):
             self.try_create_oil()
             for player in self.player_list:
                 player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            for player in self.player_list:
+                player.update_collision(self.player_list, self.ev_manager)
             if self.timer % 2400 == 1000:
                 for pet in self.pet_list:
                     pet.change_status(1)
-            
             for pet in self.pet_list:
                 pet.update(self.player_list, self.base_list)
 
@@ -189,6 +202,15 @@ class GameEngine(object):
         if self.cutin_timer == 0:
             self.state.pop()  # pop out STATE_CUTIN
 
+    def update_menu(self):
+        self.menu_timer += 1
+        if self.menu_oil_list:
+            self.menu_robot_list[0].pick(self.menu_oil_list)
+        else:
+            self.menu_robot_list[0].go_home()
+        if self.menu_timer % 1200 == 0:
+            self.menu_oil_list.append(Menu_oil(100))
+
     def init_oil(self):
         for _ in range(model_const.init_oil_number):
             self.create_oil()
@@ -198,7 +220,8 @@ class GameEngine(object):
 
     def try_create_oil(self):
         p = model_const.fadacai_oil_probability if self.fadacai else model_const.oil_probability
-        p *= 2 * (max(model_const.max_oil_num - len(self.oil_list), 0)) / model_const.max_oil_num
+        max_oil_num = model_const.fadacai_max_oil_num if self.fadacai else model_const.max_oil_num
+        p *= 2 * (max(max_oil_num - len(self.oil_list), 0)) / max_oil_num
         if random.random() < p:
             self.create_oil()
 
@@ -207,6 +230,7 @@ class GameEngine(object):
         for index in range(model_const.player_number) :
             self.base_list.append(Base(index, model_const.base_center[index]))
     
+
     def run(self):
         """
         Starts the game engine loop.
