@@ -193,13 +193,14 @@ class RadiusNotMove(Item):
         for player in self.freeze_list:
             player.freeze = False
 
-def get_disarrangement(n):
+def get_disarrangement(origin):
+    n = len(origin)
     ls = [i for i in range(n)]
     while True:
         random.shuffle(ls)
         flag = True
         for i in range(n):
-            if i == ls[i]: 
+            if origin[i] == ls[i]: 
                 flag = False
                 break
         if flag:
@@ -216,7 +217,12 @@ class ShuffleBases(Item):
     def trigger(self, ev_manager):
         super().trigger(ev_manager)
         ev_manager.post(EventShuffleBases(self.player_list[self.player_index]))
-        disarrangement = get_disarrangement(model_const.player_number)
+        origin = []
+        for i in range(model_const.player_number):
+            for j in range(model_const.player_number):
+                if self.base_list[i].center == model_const.base_center[j]:
+                    origin.append(j)
+        disarrangement = get_disarrangement(origin)
         for index in range(model_const.player_number):
             self.base_list[index].center.x = model_const.base_center[disarrangement[index]][0]
             self.base_list[index].center.y = model_const.base_center[disarrangement[index]][1]
@@ -241,7 +247,7 @@ class FaDaCai(Item):
             self.close(ev_manager)
 
     def close(self, ev_manager):
-        # ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
+        ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
         self.player_list[self.player_index].item = None
 

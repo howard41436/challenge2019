@@ -14,7 +14,7 @@ class Player(object):
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.value = 0
-        self.color = random.choice(view_const.playerColor)
+        self.color = random.choice(view_const.PLAYER_COLORS)
         self.is_AI = is_AI
         self.direction = Vec(0, 0)
         self.direction_no = model_const.player_initial_direction_no[index]

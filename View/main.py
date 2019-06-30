@@ -35,32 +35,6 @@ class GraphicalView(object):
         self.small_font = None
 
         self.last_update = 0
-        pg.init(); pg.font.init()
-        pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
-
-        view_staticobjects.init_staticobjects()
-        view_Animation.init_animation()
-        view_cutin.init_cutin()
-
-        # animations
-        self.animations = []
-        self.post_animations = [] # animations such as the world need to be rendered lastly
-
-        # about cutin
-        self.cutin_manager = view_cutin.Cutin_manager(model)
-
-        # static objects
-        self.players = view_staticobjects.View_players(model)
-        self.oils = view_staticobjects.View_oils(model)
-        self.bases = view_staticobjects.View_bases(model)
-        self.pets = view_staticobjects.View_pets(model)
-        self.scoreboard = view_staticobjects.View_scoreboard(model)
-        self.items = view_staticobjects.View_items(model)
-        self.background = view_staticobjects.View_background(model)
-        self.menu = view_staticobjects.View_menu(model)
-        self.characters = view_staticobjects.View_characters(model)
-
 
 
     def notify(self, event):
@@ -101,15 +75,13 @@ class GraphicalView(object):
         elif isinstance(event, EventRadiationOil):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
         elif isinstance(event, EventShuffleBases):
-            base_pos = self.model.base_list
-            for i in range(0, model_const.player_number):
-                for j in range(i+1, model_const.player_number):
-                    if base_pos[i].center[0] == base_pos[j].center[0]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
-                    if base_pos[i].center[1] == base_pos[j].center[1]:
-                        self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=\
-                            (base_pos[i].center+base_pos[j].center)/2))
+            ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
+            for pos in ani_pos:
+                if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
+                else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.animations.append(view_Animation.Animation_shuffleBases(self.model))
+            self.bases.draw(self.screen)
+            pg.display.flip()
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
         elif isinstance(event, EventTheWorldStart):
@@ -131,9 +103,9 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
-        """titlefont = pg.font.Font(view_const.board_name_font, 90)
+        """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
-        littlefont = pg.font.Font(view_const.board_name_font, 40)
+        littlefont = pg.font.Font(view_const.notosans_font, 40)
         if not title_loop_counter:
             self.darken_time = [random.randint(25, 35), random.randint(55,65)]
 
@@ -163,7 +135,7 @@ class GraphicalView(object):
             for base in self.model.base_list:
                 result.append([self.model.player_list[base.owner_index].name, 
                                base.value_sum,
-                               model_const.colors[base.owner_index]])
+                               self.model.player_list[base.owner_index].color])
 
             result.sort(key=(lambda item: item[1]), reverse=True)
             pos_x = 256
@@ -177,8 +149,7 @@ class GraphicalView(object):
 
         if self.animations:
             self.screen.fill(view_const.COLOR_WHITE)
-            titlefont = pg.font.Font(view_const.board_name_font, 60)
-            title = titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
+            title = self.titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
             self.screen.blit(title, title.get_rect(center=(645, 60)))
             for ani in self.animations:
                 if ani.expired: self.animations.remove(ani)
@@ -208,11 +179,12 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
+        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
         self.scoreboard.draw(self.screen)
 
         # draw time
-        timefont = pg.font.Font(view_const.board_num_font, 60)
-        time = timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        
+        time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
         
         # draw post_animation
         for ani in self.post_animations:
@@ -259,6 +231,37 @@ class GraphicalView(object):
         """
         Set up the pygame graphical display and loads graphical resources.
         """
+        pg.init()
+        pg.font.init()
+        pg.display.set_caption(view_const.game_caption)
+        self.screen = pg.display.set_mode(view_const.screen_size)
+
         self.clock = pg.time.Clock()
-        self.smallfont = pg.font.Font(None, 40)
+        self.small = pg.font.Font(None, 40)
         self.is_initialized = True
+
+        view_staticobjects.init_staticobjects()
+        view_Animation.init_animation()
+        view_cutin.init_cutin()
+
+        # animations
+        self.animations = []
+        self.post_animations = [] # animations such as the world need to be rendered lastly
+
+        # about cutin
+        self.cutin_manager = view_cutin.Cutin_manager(self.model)
+
+        # static objects
+        self.players = view_staticobjects.View_players(self.model)
+        self.oils = view_staticobjects.View_oils(self.model)
+        self.bases = view_staticobjects.View_bases(self.model)
+        self.pets = view_staticobjects.View_pets(self.model)
+        self.scoreboard = view_staticobjects.View_scoreboard(self.model)
+        self.items = view_staticobjects.View_items(self.model)
+        self.background = view_staticobjects.View_background(self.model)
+        self.menu = view_staticobjects.View_menu(self.model)
+        self.characters = view_staticobjects.View_characters(self.model)
+
+        #Some font
+        self.titlefont = pg.font.Font(view_const.notosans_font, 60)
+        self.timefont = pg.font.Font(view_const.notosans_font, 60)

@@ -79,6 +79,10 @@ class Interface(object):
                 player.equip_equipments(self.player_AI[player.index].equipments)
             except:
                 pass
+            try:
+                player.color = self.player_AI[player.index].color
+            except:
+                pass
 
     def load_msg(self, index, name ,msg):
         print(f"[{str(index)}] team_{name}.py: {msg}")
