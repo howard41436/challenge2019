@@ -157,6 +157,8 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_ENDGAME:
             self.last_update = model.STATE_ENDGAME
+            self.animations = []
+            self.post_animations = []
             self.screen.fill(view_const.COLOR_WHITE)
             result = []
             for base in self.model.base_list:
