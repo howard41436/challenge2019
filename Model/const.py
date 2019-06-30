@@ -138,10 +138,10 @@ fadacai_max_oil_num = 300
 
 priced_item_activate = {
     'IGoHome': True,
-    'OtherGoHome': True,
+    'OtherGoHome': False,
     'TheWorld': True,
     'MagnetAttract': True,
-    'Invincible': True,
+    'Invincible': False,
     'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,

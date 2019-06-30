@@ -20,8 +20,8 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = 0
         attack_cp, victim_id, victim_pos = self.attack()
-        attack_cp *= 1.2
-        home_cp = 1/16 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
+        attack_cp *= 1.3
+        home_cp = 1/10 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
         magnetic_attract = 0
         for i in range(len(oils_pos)):
             if self.helper.get_distance(oils_pos[i], my_pos) <= 5/4*self.helper.get_radius_of_magnetic_attract():
@@ -42,19 +42,12 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
-<<<<<<< HEAD
-        print (magnetic_attract)
-        if magnetic_attract >= 8 and self.helper.get_player_item_name() == 'MagnetAttract' and \
-            self.helper.get_player_item_is_active() is False:
-            print ("hell ",magnetic_attract)
-=======
         #print (magnetic_attract)
         if self.helper.get_player_item_name() == 'IGoHome':
-            home_cp *= 0.6
+            home_cp *= 0.4
         if magnetic_attract >= 6 and self.helper.get_player_item_name() == 'MagnetAttract' and \
             self.helper.get_player_item_is_active() is False:
             #print ("hell ",magnetic_attract)
->>>>>>> 63e548ea6322f2798216377ef9e866c06dd61f54
             return 9
         elif max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
@@ -148,7 +141,7 @@ class TeamAI(BaseAI):
                     return 9
             elif self.helper.get_player_item_name() is not None and self.helper.get_player_value() >= item_price:
                 return 9
-        elif item_name == 'RadiationOil' and self.helper.get_timer() <= 4500:
+        elif item_name == 'RadiationOil' and self.helper.get_timer() <= 10000:
             if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
                 if self.helper.player_in_market() is False:
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
@@ -160,7 +153,7 @@ class TeamAI(BaseAI):
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
                 else:
                     return 9
-        elif item_name == 'MagnetAttract':
+        elif item_name == 'MagnetAttract' and len(self.helper.get_oils()) >= 50:
             if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
                 if self.helper.player_in_market() is False:
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
@@ -206,8 +199,15 @@ class TeamAI(BaseAI):
                     return 9
         elif my_item == 'RadiationOil':
             bases_value = self.helper.get_bases_value()
+            most_valuable_base_value = 0
+            most_valuable_base_id = None
             length = self.helper.get_radius_of_radiation_oil() + 1/2 * self.helper.base_length
-            most_valuable_base_id = bases_value.index(max(bases_value))
+            for i in range(len(bases_value)):
+                if i == self.helper.player_id:
+                    continue
+                elif bases_value[i] >= most_valuable_base_value:
+                    most_valuable_base_id = i
+                    most_valuable_base_value = bases_value[i]
             base_center = self.helper.get_base_center(most_valuable_base_id)
             if self.helper.player_id == most_valuable_base_id:
                 return self.returned_dir()
