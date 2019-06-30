@@ -42,12 +42,19 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
+<<<<<<< HEAD
+        print (magnetic_attract)
+        if magnetic_attract >= 8 and self.helper.get_player_item_name() == 'MagnetAttract' and \
+            self.helper.get_player_item_is_active() is False:
+            print ("hell ",magnetic_attract)
+=======
         #print (magnetic_attract)
         if self.helper.get_player_item_name() == 'IGoHome':
             home_cp *= 0.6
         if magnetic_attract >= 6 and self.helper.get_player_item_name() == 'MagnetAttract' and \
             self.helper.get_player_item_is_active() is False:
             #print ("hell ",magnetic_attract)
+>>>>>>> 63e548ea6322f2798216377ef9e866c06dd61f54
             return 9
         elif max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
@@ -116,7 +123,7 @@ class TeamAI(BaseAI):
         player_pos = self.helper.get_player_position(player_id)
         vec1 = Vec(my_pos) - Vec(player_pos)
         vec2 = Vec(self.helper.get_base_center()) - Vec(my_pos)
-        return (vec1 + 5*vec2)
+        return (vec1 + 2*vec2)
 
     def direction(self, pos_vec):
         if pos_vec == 9:
