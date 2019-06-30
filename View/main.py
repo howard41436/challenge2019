@@ -72,10 +72,10 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
         elif isinstance(event, EventShuffleBases):
             ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
-            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[0]))
-            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[1]))
-            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[2]))
-            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[3]))
+            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[0]))
+            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[1]))
+            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[2]))
+            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[3]))
             self.animations.append(view_Animation.Animation_shuffleBases(self.model))
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)

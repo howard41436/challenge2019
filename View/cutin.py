@@ -34,7 +34,7 @@ class Cutin_manager():
                 view_utils.overlay_color(
                     os.path.join(view_const.IMAGE_PATH,'cutin_back_outfit.png'),
                     player.color,
-                    1.5,
+                    1.504,
                     0.7
                 )
             )
