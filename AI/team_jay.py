@@ -80,6 +80,7 @@ class TeamAI(BaseAI):
         return self.get_dir(dest, my_pos)
 
     def use(self, my_pos):
+        bases_value = self.helper.get_bases_value()
         if not self.helper.get_player_item_is_active() and self.helper.get_player_item_name():
             if self.helper.get_player_item_name() == 'TheWorld':
                 return True
@@ -96,7 +97,7 @@ class TeamAI(BaseAI):
                 if self.helper.get_distance(self.helper.get_player_position(target), my_pos) < self.helper.get_radius_not_move_radius():
                     return True
             elif self.helper.get_player_item_name() == 'RadiationOil' \
-                and self.helper.player_id != self.helper.get_most_valuable_player():
+                and self.helper.player_id != bases_value.index(max(bases_value)):
                 return True
         return False
 
