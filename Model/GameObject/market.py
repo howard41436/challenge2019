@@ -21,8 +21,8 @@ class Market(object):
         self.timer = model_const.market_cd_time
 
     def update(self, player_list, oil_list, base_list, player_index):
-        if self.item is None:
-            if self.timer == 0:
-                self.generate_item(player_list, oil_list, base_list, player_list)
-            self.timer -= 1
+        if self.timer == 0:
+            self.sell()
+            self.generate_item(player_list, oil_list, base_list, player_list)
+        self.timer -= 1
 
