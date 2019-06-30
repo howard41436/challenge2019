@@ -30,11 +30,14 @@ class Cutin_manager():
     def __init__(self, model):
         self.model = model
         for player in self.model.player_list:
-            self.images[f'{player.index}']=(view_utils.overlay_color(
-                                           os.path.join(view_const.IMAGE_PATH,'cutin_back_outfit.png'),
-                                           player.color,
-                                           1.5,
-                                           0.7))
+            self.images[f'{player.index}'] = (
+                view_utils.overlay_color(
+                    os.path.join(view_const.IMAGE_PATH,'cutin_back_outfit.png'),
+                    player.color,
+                    1.5,
+                    0.7
+                )
+            )
 
     def update_state(self, player_index, skill_name, prev_screen):
         self.player_index = player_index
