@@ -63,12 +63,17 @@ class TeamAI(BaseAI):
             self.helper.get_player_bag(nearest_player_id) < self.helper.get_player_bag():
             return (self.avoid(nearest_player_id))
         elif self.helper.get_nearest_oil() != None:
-            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 3*self.helper.player_radius:
+            if self.helper.get_distance(self.helper.get_nearest_oil(), my_pos) < 4*self.helper.player_radius:
                 return (Vec(self.helper.get_nearest_oil()) - Vec(my_pos))
+            elif self.helper.get_player_item_name == 'IGoHome':
+                return 9
             else:
                 return (Vec(self.helper.get_base_center()) - Vec(my_pos))
         else:
-            return (Vec(self.helper.get_base_center()) - Vec(my_pos))
+            if self.helper.get_player_item_name == 'IGoHome':
+                return 9
+            else:
+                return (Vec(self.helper.get_base_center()) - Vec(my_pos))
 
     def attack(self):
         my_pos = self.helper.get_player_position()
@@ -107,6 +112,9 @@ class TeamAI(BaseAI):
     def direction(self, pos_vec):
         if pos_vec == 9:
             return 9
+        elif pos_vec is None:
+            print ("broken")
+            return random.randint(1, 8)
         AI_move_dir = 0
         vec_dot = 0
         for dir_vec in AI_dir_mapping:
@@ -117,16 +125,28 @@ class TeamAI(BaseAI):
 
     def get_item(self):
         my_pos = self.helper.get_player_position()
+        my_item = self.helper.get_player_item_name()
         item_name, item_price, market_timer = self.helper.get_market()
-        if item_name == 'IGoHome' or item_name == 'TheWorld' or item_name == 'MagnetAttract' \
-            or item_name == 'RadiusNotMove' or item_name == 'RadiationOil':
-            if self.helper.get_player_item_name() == None and self.helper.get_player_value() >= item_price:
+        if item_name == 'TheWorld' or item_name == "RadiusNotMove":
+            if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
                 if self.helper.player_in_market() is False:
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
                 else:
                     return 9
-            else:
-                return None
+            elif self.helper.get_player_item_name() is not None and self.helper.get_player_value() >= item_price:
+                return 9
+        elif item_name == 'RadiationOil' and self.helper.get_timer() <= 4500:
+            if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
+                if self.helper.player_in_market() is False:
+                    return Vec(self.helper.get_market_center()) - Vec(my_pos)
+                else:
+                    return 9
+        elif item_name == 'IGoHome':
+            if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
+                if self.helper.player_in_market() is False:
+                    return Vec(self.helper.get_market_center()) - Vec(my_pos)
+                else:
+                    return 9
         else:
             return None
             
