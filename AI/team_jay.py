@@ -84,9 +84,10 @@ class TeamAI(BaseAI):
             if self.helper.get_player_item_name() == 'TheWorld':
                 return True
             elif self.helper.get_player_item_name() == 'RadiusNotMove':
-                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < model_const.radius_not_move_radius:
+                if self.helper.get_distance(self.helper.get_player_position(self.helper.get_most_valuable_player()), my_pos) < self.helper.get_radius_not_move_radius():
                     return True
-            elif self.helper.get_player_item_name() == 'RadiationOil' and self.helper.player_id != self.helper.get_most_valuable_player():
+            elif self.helper.get_player_item_name() == 'RadiationOil' \
+                and self.helper.player_id != self.helper.get_most_valuable_player():
                 return True
         return False
 
