@@ -97,18 +97,19 @@ class View_characters(__Object_base):
 
 
 class View_players(__Object_base):
-    images_color = tuple(
+    """images_color = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
             0.2
         )
         for _rainbow in range(0,19,1)
-    )
+    )"""
+    image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
 
     def __init__(self, model):
         self.model = model
         self.color_switch = [0, 0, 0, 0]
-        self.images = tuple(
+        """self.images = tuple(
             view_utils.scaled_surface(
                 view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'player_outfit.png'),
                                         view_const.COLOR_WHITE,
@@ -121,16 +122,16 @@ class View_players(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)
+        cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)"""
 
     def draw(self, screen):
         players = self.model.player_list
         for _i in range(len(players)):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
-            image = pg.transform.rotate(self.images[_i], angle)
-            if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
+            image = pg.transform.rotate(self.image, angle)
+            if not players[_i].is_invincible: image = pg.transform.rotate(self.image, angle)
             else: 
-                image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
+                """image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)"""
                 self.color_switch[_i] += 1
             screen.blit(image, image.get_rect(center=players[_i].position))
 
