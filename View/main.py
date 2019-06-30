@@ -103,7 +103,7 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.hack_font, 250)
+        titlefont = pg.font.Font(view_const.digitalt_font, 250)
         titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
         words_1 = titlefont.render(
                     'OIL', 
