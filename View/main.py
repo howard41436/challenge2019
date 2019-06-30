@@ -210,6 +210,7 @@ class GraphicalView(object):
         self.small = pg.font.Font(None, 40)
         self.is_initialized = True
 
+        # convert images
         view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
         view_cutin.init_cutin()
