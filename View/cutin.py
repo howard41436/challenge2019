@@ -25,7 +25,8 @@ class Cutin_manager():
 
     @classmethod
     def init_convert(cls):
-        cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
+        cls.images = { _name: cls.images[_name].convert() for _name in cls.images }
+        for _name in cls.images: cls.images[_name].set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def __init__(self, model):
         self.model = model

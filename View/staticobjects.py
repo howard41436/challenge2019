@@ -26,7 +26,8 @@ class __Object_base():
 
     @classmethod
     def init_convert(cls):
-        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
+        cls.images = tuple( _image.convert() for _image in cls.images )
+        for _image in cls.images: _image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
     
     def __init__(self, model):
         self.model = model
@@ -39,12 +40,14 @@ class View_background(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.background = cls.background.convert()
+        cls.background.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
         cls.priced_market = cls.priced_market.convert()
+        cls.priced_market.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
     
     def draw(self, screen): 
         screen.fill(view_const.COLOR_WHITE)
-        screen.blit(self.background, [0, 0])
-        screen.blit(self.priced_market, [322, 328])
+        screen.blit(self.background, (0, 0))
+        screen.blit(self.priced_market, (322, 328))
 
 
 class View_menu(__Object_base):
@@ -54,11 +57,13 @@ class View_menu(__Object_base):
     @classmethod
     def init_convert(cls):
         cls.menu = cls.menu.convert()
-        cls.base = cls.base.convert_alpha()
+        cls.menu.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
+        cls.base = cls.base.convert()
+        cls.base.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
-        screen.blit(self.menu, [0, 0])
-        screen.blit(self.base, [10, 645])
+        screen.blit(self.menu, (0, 0))
+        screen.blit(self.base, (10, 645))
 
 
 class View_characters(__Object_base):
@@ -81,14 +86,16 @@ class View_characters(__Object_base):
 
     @classmethod
     def init_convert(cls):
-        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.image_oil = pg.Surface.convert_alpha( cls.image_oil )
+        cls.images = tuple( _image.convert() for _image in cls.images )
+        for _image in cls.images: _image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
+        cls.image_oil = cls.image_oil.convert()
+        cls.image_oil.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
         image = self.images[self.picture_switch[self.index]]
         screen.blit(image, [self.position_switch[self.index], 520])
         if self.index < 10:
-            screen.blit(self.image_oil, [1220, 700])
+            screen.blit(self.image_oil, (1220, 700))
         if self.counter == 20:
             self.index += 1
             self.index %= 19
@@ -102,26 +109,33 @@ class View_players(__Object_base):
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
             0.2
         )
-        for _rainbow in range(0,19,1)
+        for _rainbow in range(0, 19)
     )
+
+    @classmethod
+    def init_convert(cls):
+        cls.images_color = tuple( _image.convert() for _image in cls.images_color)
+        for _image in cls.images_color: _image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def __init__(self, model):
         self.model = model
         self.color_switch = [0, 0, 0, 0]
-        self.images = tuple(
+        tmp_images = tuple(
             view_utils.scaled_surface(
-                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'player_outfit.png'),
-                                        view_const.COLOR_WHITE,
-                                        player.color),
+                view_utils.replace_color(
+                    os.path.join(view_const.IMAGE_PATH, 'player_outfit.png'),
+                    view_const.COLOR_WHITE,
+                    player.color
+                ),
                 0.2
             )
             for player in self.model.player_list
         )
 
-    @classmethod
-    def init_convert(cls):
-        cls.images = tuple( _image.convert_alpha() for _image in cls.images )
-        cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)
+        # The two lines below has to be in __init__(), since self.images is not a static member.
+        # In case of ANY QUESTION, please contact <Chi-Feng Tsai>
+        self.images = tuple( _image.convert() for _image in tmp_images )
+        for _image in self.images: _image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
         players = self.model.player_list
@@ -152,35 +166,44 @@ class View_oils(__Object_base):
             screen.blit(image, image.get_rect(center=_oil.position))
 
 
-
 class View_bases(__Object_base):
-    images = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
+    image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
     
     @classmethod
     def init_convert(cls):
-        cls.images = cls.images.convert_alpha()
+        cls.image = cls.image.convert()
+        cls.image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
         for _base in self.model.base_list:
-            pg.draw.circle(screen, 
-                          self.model.player_list[_base.owner_index].color, 
-                          (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
-                          160)
-            screen.blit(self.images, self.images.get_rect(center=_base.center))
+            pg.draw.circle(
+                screen, 
+                self.model.player_list[_base.owner_index].color, 
+                (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                160
+            )
+            screen.blit(self.image, self.image.get_rect(center=_base.center))
 
 
 class View_pets(__Object_base):
     def __init__(self, model):
         self.model = model
-        self.images = tuple(
+        tmp_images = tuple(
             view_utils.scaled_surface(
-                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'pet_robot_outfit.png'),
-                                        view_const.COLOR_WHITE,
-                                        player.color),
+                view_utils.replace_color(
+                    os.path.join(view_const.IMAGE_PATH,'pet_robot_outfit.png'),
+                    view_const.COLOR_WHITE,
+                    player.color
+                ),
                 0.08
             )
             for player in self.model.player_list
         )
+
+        # The two lines below has to be in __init__(), since self.images is not a static member.
+        # In case of ANY QUESTION, please contact <Chi-Feng Tsai>
+        self.images = tuple( _image.convert() for _image in tmp_images )
+        for _image in self.images: _image.set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
         pets = self.model.pet_list
@@ -192,28 +215,28 @@ class View_pets(__Object_base):
 
 class View_scoreboard(__Object_base):
     images = {
-    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3),
-    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3),
-    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3),
-    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3),
-    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3),
-    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
-    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
-    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
-    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
+        'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3),
+        'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3),
+        'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3),
+        'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3),
+        'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3),
+        'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
+        'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
+        'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
+        'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
     }
 
     @classmethod
     def init_convert(cls):
-        cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
+        cls.images = { _name: cls.images[_name].convert() for _name in cls.images }
+        for _name in cls.images: cls.images[_name].set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
         cls.namefont = pg.font.Font(view_const.notosans_font, 55)
         cls.numfont = pg.font.Font(view_const.notosans_font, 25)
 
-
     def draw(self, screen):
-        pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
-        pg.draw.rect(screen, view_const.COLOR_KHAKI, [800, 0, 480, 160])
-        pg.draw.rect(screen, view_const.COLOR_BLACK, ((800, 0),(480,160)), 5)
+        pg.draw.rect(screen, view_const.COLOR_WHITE, (800, 0, 480, 800))
+        pg.draw.rect(screen, view_const.COLOR_KHAKI, (800, 0, 480, 160))
+        pg.draw.rect(screen, view_const.COLOR_BLACK, (800, 0, 480, 160), 5)
         for score in self.model.scoreboard.score_list:
             pg.draw.rect(screen, score.player.color, (score.position,(480,160)))
             pg.draw.rect(screen, view_const.COLOR_BLACK, (score.position,(480,160)), 5)
@@ -240,38 +263,30 @@ class View_scoreboard(__Object_base):
             else:
                 base_value = self.numfont.render(f'{int(new_base_score.varition)}', True, view_const.COLOR_GOLD)
             screen.blit(base_value, new_base_score.get_position()+[300, 120])
-        
-        
-
-
 
 
 class View_items(__Object_base):
     images = {
-    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.2),
-    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.2),
-    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.2),
-    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.2),
-    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.2),
-    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
-    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
-    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
-    'marketcenter'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'marketcenter.png')), 0.0001),
-    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2)
+        'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.2),
+        'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.2),
+        'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.2),
+        'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.2),
+        'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.2),
+        'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
+        'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
+        'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
+        'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2)
     }
 
     @classmethod
     def init_convert(cls):
-        cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
+        cls.images = { _name: cls.images[_name].convert() for _name in cls.images }
+        for _name in cls.images: cls.images[_name].set_colorkey(view_const.DEFAULT_BACKGROUND_COLOR, pg.RLEACCEL)
 
     def draw(self, screen):
-        image = self.images['marketcenter']
         for market in self.model.priced_market_list:
             if market.item:
-                image = self.images[market.item.name]
-            screen.blit(image, market.position+[5,5])
-
-
+                screen.blit(self.images[market.item.name], market.position+[5,5])
 
 
 def init_staticobjects():

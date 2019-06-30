@@ -34,6 +34,8 @@ COLOR_GOLD      = (255, 212, 76)
 COLOR_KHAKI     = (233, 178, 138)
 
 
+# the default background color for all images in View/image
+DEFAULT_BACKGROUND_COLOR = (128, 140, 126)
 
 
 # Colors of four players
