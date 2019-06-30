@@ -151,10 +151,10 @@ cutin_enable = {
     'IGoHome': False,
     'OtherGoHome': False,
     'TheWorld': True,
-    'MagnetAttract': False,
+    'MagnetAttract': True,
     'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': True,
+    'RadiusNotMove': True,
+    'RadiationOil': False,
     'ShuffleBases': True,
     'FaDaCai': False,
 }
