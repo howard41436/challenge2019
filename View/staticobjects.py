@@ -38,15 +38,13 @@ class View_background(__Object_base):
     
     @classmethod
     def init_convert(cls):
-        background = cls.background.convert_alpha()
-        priced_market = cls.priced_market.convert_alpha()
+        cls.background = cls.background.convert()
+        cls.priced_market = cls.priced_market.convert()
     
-    def draw(self, screen):
-        image_background = self.background
-        image_priced_market = self.priced_market
+    def draw(self, screen): 
         screen.fill(view_const.COLOR_WHITE)
-        screen.blit(image_background, [0, 0])
-        screen.blit(image_priced_market, [322, 328])
+        screen.blit(self.background, [0, 0])
+        screen.blit(self.priced_market, [322, 328])
 
 
 class View_menu(__Object_base):
