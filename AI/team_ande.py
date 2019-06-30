@@ -41,10 +41,10 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
-        print (magnetic_attract)
+        #print (magnetic_attract)
         if magnetic_attract >= 8 and self.helper.get_player_item_name() == 'MagnetAttract' and \
-            self.helper.get_player_item_is_active is False:
-            print ("hell ",magnetic_attract)
+            self.helper.get_player_item_is_active() is False:
+            #print ("hell ",magnetic_attract)
             return 9
         elif max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
