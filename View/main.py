@@ -103,7 +103,7 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
-        titlefont = pg.font.Font(view_const.latin_font, 130)
+        titlefont = pg.font.Font(view_const.hack_font, 250)
         titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
         words_1 = titlefont.render(
                     'OIL', 
@@ -117,10 +117,19 @@ class GraphicalView(object):
                     'presented by 2019 NTU CSIE CAMP',
                     True, view_const.COLOR_BLACK)
 
+        (size_x_1, size_y_1) = words_1.get_size()
+        (size_x_2, size_y_2) = words_2.get_size()
+        (size_x_3, size_y_3) = words_3.get_size()
+        pos_x_1 = (view_const.screen_size[0] - size_x_1)/2
+        pos_y_1 = (view_const.screen_size[1] - size_y_1 - 450 - size_y_3)/2
+        pos_x_2 = (view_const.screen_size[0] - size_x_2)/2
+        pos_y_2 = (view_const.screen_size[1] - size_y_2 - size_y_3)/2
+        pos_x_3 = (view_const.screen_size[0] - size_x_3)/2
+        pos_y_3 = (400 + size_y_3)
 
-        self.screen.blit(words_1, (405, 100))
-        self.screen.blit(words_2, (110, 250))
-        self.screen.blit(words_3, (300, 400))
+        self.screen.blit(words_1, (pos_x_1, pos_y_1))
+        self.screen.blit(words_2, (pos_x_2, pos_y_2))
+        self.screen.blit(words_3, (pos_x_3, pos_y_3))
         """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.notosans_font, 40)

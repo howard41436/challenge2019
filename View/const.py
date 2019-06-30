@@ -74,7 +74,7 @@ player_width = 100
 
 # Font
 notosans_font = os.path.join('Font', 'Noto', 'NotoSansCJK-Black.ttc')
-latin_font = os.path.join('Font', 'latin', 'LATINWD.ttf')
+hack_font = os.path.join('Font', 'hack', 'HACKED.ttf')
 
 # Path
 IMAGE_PATH = os.path.join('View', 'image')
