@@ -20,10 +20,11 @@ class TeamAI(BaseAI):
         best_pos = None
         best_cp = 0
         attack_cp, victim_id, victim_pos = self.attack()
-        home_cp = 1/20 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
+        attack_cp *= 1.2
+        home_cp = 1/16 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
         magnetic_attract = 0
         for i in range(len(oils_pos)):
-            if self.helper.get_distance(oils_pos[i], my_pos) <= 3/2*self.helper.get_radius_of_magnetic_attract():
+            if self.helper.get_distance(oils_pos[i], my_pos) <= 5/4*self.helper.get_radius_of_magnetic_attract():
                 magnetic_attract += 1
             level = oils_value[i]
             cp = level / (self.helper.get_distance(oils_pos[i], my_pos) ** 2 / my_speed) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) ** (1/2))
@@ -41,10 +42,19 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
+<<<<<<< HEAD
         print (magnetic_attract)
         if magnetic_attract >= 8 and self.helper.get_player_item_name() == 'MagnetAttract' and \
             self.helper.get_player_item_is_active() is False:
             print ("hell ",magnetic_attract)
+=======
+        #print (magnetic_attract)
+        if self.helper.get_player_item_name() == 'IGoHome':
+            home_cp *= 0.6
+        if magnetic_attract >= 6 and self.helper.get_player_item_name() == 'MagnetAttract' and \
+            self.helper.get_player_item_is_active() is False:
+            #print ("hell ",magnetic_attract)
+>>>>>>> 63e548ea6322f2798216377ef9e866c06dd61f54
             return 9
         elif max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
@@ -100,6 +110,8 @@ class TeamAI(BaseAI):
                     cp = 0
                 if self.helper.get_player_is_invincible(i) is True:
                     cp = 0
+                if self.helper.get_player_item_name(i) == 'RadiusNotMove':
+                    cp = 0
                 if cp > best_cp:
                     best_cp = cp
                     victim_id = i
@@ -154,6 +166,12 @@ class TeamAI(BaseAI):
                     return Vec(self.helper.get_market_center()) - Vec(my_pos)
                 else:
                     return 9
+        elif item_name == 'ShuffleBases':
+            if self.helper.get_player_item_name() is None and self.helper.get_player_value() >= item_price:
+                if self.helper.player_in_market() is False:
+                    return Vec(self.helper.get_market_center()) - Vec(my_pos)
+                else:
+                    return 9
         else:
             return None
             
@@ -196,6 +214,8 @@ class TeamAI(BaseAI):
             elif (Vec(base_center) - Vec(my_pos)).length() <= length:
                 return 9              
         elif my_item == 'TheWorld' and self.helper.get_player_item_is_active() is False:
+            return 9
+        elif my_item == 'ShuffleBases':
             return 9
         return self.returned_dir()
 
