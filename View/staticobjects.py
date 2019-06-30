@@ -49,10 +49,16 @@ class View_background(__Object_base):
 
 class View_menu(__Object_base):
     menu = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'menu.png')), 1)
+    base = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'base.png')), 0.5)
+
+    @classmethod
+    def init_convert(cls):
+        cls.menu = cls.menu.convert()
+        cls.base = cls.base.convert_alpha()
 
     def draw(self, screen):
-        image = self.menu
-        screen.blit(image, [0, 0])
+        screen.blit(self.menu, [0, 0])
+        screen.blit(self.base, [10, 645])
 
 
 class View_characters(__Object_base):
@@ -67,8 +73,9 @@ class View_characters(__Object_base):
 
     def __init__(self, model):
         self.model = model
-        self.picture_switch = [0, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 6]
-        self.position_switch = [200, 335, 470, 605, 740, 875, 1010, 1010, 875, 740, 605, 470, 335, 200, 200]
+        self.picture_switch = [0, 1, 2, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 4, 5, 6]
+        self.position_switch = [130, 240, 350, 460, 570, 680, 790, 900, 1010,
+                                1010, 900, 790, 680, 570, 460, 350, 240, 130, 120]
         self.index = 0
         self.counter = 0
 
@@ -80,11 +87,11 @@ class View_characters(__Object_base):
     def draw(self, screen):
         image = self.images[self.picture_switch[self.index]]
         screen.blit(image, [self.position_switch[self.index], 520])
-        if self.index < 8:
+        if self.index < 10:
             screen.blit(self.image_oil, [1220, 700])
         if self.counter == 20:
             self.index += 1
-            self.index %= 15
+            self.index %= 19
         self.counter %= 20
         self.counter += 1
 
@@ -204,6 +211,7 @@ class View_scoreboard(__Object_base):
 
 
     def draw(self, screen):
+        pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
         pg.draw.rect(screen, view_const.COLOR_KHAKI, [800, 0, 480, 160])
         pg.draw.rect(screen, view_const.COLOR_BLACK, ((800, 0),(480,160)), 5)
         for score in self.model.scoreboard.score_list:

@@ -125,6 +125,8 @@ class Helper(object):
 
     def get_radius_of_radiation_oil(self):
         return model_const.radiation_oil_range
+    def get_radius_of_magnetic_attract(self):
+        return model_const.magnet_attract_radius
 
     # Get game informations
     def get_timer(self):
