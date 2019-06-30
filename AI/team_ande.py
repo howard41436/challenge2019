@@ -23,7 +23,7 @@ class TeamAI(BaseAI):
         home_cp = 1/20 * (self.helper.get_player_value()/200) ** 2 / (self.helper.get_distance(my_pos, self.helper.get_base_center()) + 1) ** 2
         magnetic_attract = 0
         for i in range(len(oils_pos)):
-            if self.helper.get_distance(oils_pos[i], my_pos) <= self.helper.get_radius_of_magnetic_attract():
+            if self.helper.get_distance(oils_pos[i], my_pos) <= 3/2*self.helper.get_radius_of_magnetic_attract():
                 magnetic_attract += 1
             level = oils_value[i]
             cp = level / (self.helper.get_distance(oils_pos[i], my_pos) ** 2 / my_speed) / (self.helper.get_distance(oils_pos[i], self.helper.get_base_center()) ** (1/2))
@@ -41,16 +41,18 @@ class TeamAI(BaseAI):
         #print ("attack cp = ", attack_cp)
         #print ("best_oil cp = ", best_cp)
         #print ("home_cp = ", home_cp)
-        if max(attack_cp, best_cp, home_cp) == home_cp:
+        print (magnetic_attract)
+        if magnetic_attract >= 8 and self.helper.get_player_item_name() == 'MagnetAttract' and \
+            self.helper.get_player_item_is_active is False:
+            print ("hell ",magnetic_attract)
+            return 9
+        elif max(attack_cp, best_cp, home_cp) == home_cp:
             #print ("home")
             if self.helper.get_player_item_name() == 'IGoHome':
                 return 9
             return self.go_home()
         elif max(attack_cp, best_cp, home_cp) == best_cp:
             #print ("get_oil")
-            if magnetic_attract >= 20 and self.helper.get_player_item_name() == 'MagnetAttract' and \
-                self.helper.get_player_item_is_active is False:
-                return 9
             return Vec(best_pos) - Vec(my_pos)
         else:
             #print ("attack")
@@ -93,7 +95,7 @@ class TeamAI(BaseAI):
             if players_value[i] > self.helper.get_player_value() and players_speed[i] != my_speed:
                 value_difference = (players_value[i] - self.helper.get_player_value()) / 2
                 level = (value_difference - 400) / 200 + 1
-                cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / abs(players_speed[i] - my_speed) )
+                cp = level / (self.helper.get_distance(players_pos[i], my_pos)) / (self.helper.get_distance(players_pos[i], self.helper.get_base_center()) / (abs(players_speed[i] - my_speed)+1) )
                 if self.helper.get_distance(players_pos[i], my_pos) / abs(players_speed[i] - my_speed+1) > 2/3*self.helper.get_distance(players_pos[i], self.helper.get_base_center(i)) / players_speed[i]:
                     cp = 0
                 if self.helper.get_player_is_invincible(i) is True:
@@ -114,9 +116,6 @@ class TeamAI(BaseAI):
     def direction(self, pos_vec):
         if pos_vec == 9:
             return 9
-        elif pos_vec is None:
-            print ("broken")
-            return random.randint(1, 8)
         AI_move_dir = 0
         vec_dot = 0
         for dir_vec in AI_dir_mapping:
@@ -184,7 +183,7 @@ class TeamAI(BaseAI):
             for i in range(len(players_pos)):
                 if i == my_id:
                     pass
-                if (players_value[i] > players_value[my_id] or bases_value[i] >= bases_value[my_id]) and \
+                if (players_value[i] > players_value[my_id] or bases_value[i] > bases_value[my_id]) and \
                     self.helper.get_distance(players_pos[i],players_pos[my_id]) <= self.helper.get_radius_not_move_radius():
                     return 9
         elif my_item == 'RadiationOil':
@@ -196,7 +195,7 @@ class TeamAI(BaseAI):
                 return self.returned_dir()
             elif (Vec(base_center) - Vec(my_pos)).length() <= length:
                 return 9              
-        elif (my_item == 'MagnetAttract' or my_item == 'TheWorld') and self.helper.get_player_item_is_active() is False:
+        elif my_item == 'TheWorld' and self.helper.get_player_item_is_active() is False:
             return 9
         return self.returned_dir()
 

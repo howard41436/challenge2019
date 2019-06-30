@@ -165,4 +165,13 @@ class Helper(object):
         return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
+    def get_direction(self, vector_to_go):
+        move_dir = 0 #default
+        vec_dot = 0
+        for dir_vec in model_const.dir_mapping:
+            if Vec(dir_vec).dot(vector_to_go) > vec_dot:
+                vec_dot = Vec(dir_vec).dot(vector_to_go)
+                move_dir = model_const.dir_mapping.index(dir_vec)
+        return move_dir
+
 
