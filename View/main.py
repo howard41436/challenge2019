@@ -103,6 +103,33 @@ class GraphicalView(object):
         self.characters.draw(self.screen)
 
         # word animation
+        titlefont = pg.font.Font(view_const.hack_font, 250)
+        titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
+        words_1 = titlefont.render(
+                    'OIL', 
+                    True, view_const.COLOR_BLACK)
+
+        words_2 = titlefont.render(
+                    'TYCOON', 
+                    True, view_const.COLOR_BLACK)
+
+        words_3 = titlesmallfont.render(
+                    'presented by 2019 NTU CSIE CAMP',
+                    True, view_const.COLOR_BLACK)
+
+        (size_x_1, size_y_1) = words_1.get_size()
+        (size_x_2, size_y_2) = words_2.get_size()
+        (size_x_3, size_y_3) = words_3.get_size()
+        pos_x_1 = (view_const.screen_size[0] - size_x_1)/2
+        pos_y_1 = (view_const.screen_size[1] - size_y_1 - 450 - size_y_3)/2
+        pos_x_2 = (view_const.screen_size[0] - size_x_2)/2
+        pos_y_2 = (view_const.screen_size[1] - size_y_2 - size_y_3)/2
+        pos_x_3 = (view_const.screen_size[0] - size_x_3)/2
+        pos_y_3 = (400 + size_y_3)
+
+        self.screen.blit(words_1, (pos_x_1, pos_y_1))
+        self.screen.blit(words_2, (pos_x_2, pos_y_2))
+        self.screen.blit(words_3, (pos_x_3, pos_y_3))
         """titlefont = pg.font.Font(view_const.notosans_font, 90)
         title_loop_counter = self.title_counter % 80
         littlefont = pg.font.Font(view_const.notosans_font, 40)
@@ -130,6 +157,8 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_ENDGAME:
             self.last_update = model.STATE_ENDGAME
+            self.animations = []
+            self.post_animations = []
             self.screen.fill(view_const.COLOR_WHITE)
             result = []
             for base in self.model.base_list:
@@ -179,7 +208,6 @@ class GraphicalView(object):
         self.items.draw(self.screen)
         self.pets.draw(self.screen)
         self.players.draw(self.screen)
-        pg.draw.rect(self.screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
         self.scoreboard.draw(self.screen)
 
         # draw time
