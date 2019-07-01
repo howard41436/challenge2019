@@ -49,7 +49,8 @@ class Animation_base():
     def update(self):
         pass
 
-    def draw(self, screen):
+    # the "update" argument is for the purpose of GraphicalView.theworld_background in View/main.py
+    def draw(self, screen, update=True):
         # draw first
         # update second
         pass
@@ -88,13 +89,14 @@ class Animation_raster(Animation_base):
         # or
         # self.pos[ next(iter(self.pos)) ] += pg.math.Vector2(dx, dy)
             
-    def draw(self, screen):
+    # the "update" argument is for the purpose of GraphicalView.theworld_background in View/main.py
+    def draw(self, screen, update=True):
         screen.blit(
             self.frames[self.frame_index_to_draw],
             self.frames[self.frame_index_to_draw].get_rect(**self.pos),
         )
 
-        self.update()
+        if update: self.update()
         
 
 class Animation_equalize(Animation_raster):
@@ -217,7 +219,7 @@ class Animation_shuffleBases(Animation_raster):
         if self._timer == self.expire_time:
             self.expired = True
 
-    def draw(self, screen):
+    def draw(self, screen, update=True):
         if self._timer % self.delay_of_frames:
             all_color = [player.color for player in self.model.player_list]
             random.shuffle(all_color)
@@ -229,7 +231,7 @@ class Animation_shuffleBases(Animation_raster):
                     160
                 )
                 screen.blit(self.image, self.image.get_rect(center=_base.center))
-        self.update()
+        if update: self.update()
 
 
 class Animation_endboard(Animation_raster):
@@ -254,7 +256,7 @@ class Animation_endboard(Animation_raster):
             self.height = self.max_height
             self.score = self.max_score
 
-    def draw(self, screen):
+    def draw(self, screen, update=True):
         col = pg.Rect(0,0,0,0)
         col.w = 200
         col.h = self.height
@@ -264,7 +266,7 @@ class Animation_endboard(Animation_raster):
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
         pg.draw.rect(screen, self.color, col)
-        self.update()
+        if update: self.update()
 
 
 class Animation_theworld(Animation_raster):
@@ -317,7 +319,7 @@ class Animation_theworld(Animation_raster):
         if self.tick_count == model_const.the_world_duration: self.expired = True
         if self.radius_vel < 0 and self.draw_twist: self.gray_index += 1
 
-    def draw(self, screen):
+    def draw(self, screen, update=True):
         if self.draw_twist:
             mask_inside = self.inside_cache[self.radius].copy()
 
@@ -342,7 +344,7 @@ class Animation_theworld(Animation_raster):
         
         else: screen.blit(self.image_gray[self.gray_index], (0, 0))
 
-        self.update()
+        if update: self.update()
 
 
 class Animation_freeze(Animation_raster):

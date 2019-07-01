@@ -33,6 +33,7 @@ class GraphicalView(object):
         self.clock = None
         self.small_font = None
         self.last_update = 0
+        self.theworld_background = pg.Surface(view_const.screen_size)
 
 
     def notify(self, event):
@@ -44,7 +45,11 @@ class GraphicalView(object):
             if cur_state == model.STATE_MENU:
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
-                self.render_play()
+                theworld = False
+                for ani in self.post_animations:
+                    if isinstance(ani, view_Animation.Animation_theworld):
+                        theworld = True
+                self.render_play(theworld)
             if cur_state == model.STATE_CUTIN:
                 self.cutin_manager.draw(self.screen)
             if cur_state == model.STATE_STOP:
@@ -84,7 +89,7 @@ class GraphicalView(object):
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
 
-    
+
     def render_menu(self):
         """
         Render the game menu.
@@ -130,15 +135,15 @@ class GraphicalView(object):
                 else          : ani.draw(self.screen)
 
         pg.display.flip()
- 
 
-    def render_play(self):
+
+    def render_play(self, theworld=False):
         """
         Render the game play.
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
-        
+
         # draw background
         self.background.draw(self.screen)
         self.bases.draw(self.screen)
@@ -146,7 +151,7 @@ class GraphicalView(object):
         # draw animation
         for ani in self.animations:
             if ani.expired: self.animations.remove(ani)
-            else          : ani.draw(self.screen)
+            else          : ani.draw(self.screen, (not theworld))
 
         # draw static objects
         self.oils.draw(self.screen)
@@ -157,14 +162,15 @@ class GraphicalView(object):
 
         # draw time
         time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        self.screen.blit(time, (950, 35))
         
         # draw post_animation
         for ani in self.post_animations:
             if ani.expired: self.post_animations.remove(ani)
-            else          : ani.draw(self.screen)
+            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen)
+            else: ani.draw(self.screen, (not theworld))
 
         # update screen
-        self.screen.blit(time, (950, 35))
         pg.display.flip()
         
 
