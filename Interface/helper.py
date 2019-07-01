@@ -20,6 +20,9 @@ class Helper(object):
         self.game_size = view_const.game_size
         self.market_position = tuple(model_const.priced_market_positions[0])
         self.market_radius = model_const.market_radius
+        self.radius_not_move_radius = model_const.radius_not_move_radius
+        self.radius_of_radiation_oil = model_const.radiation_oil_range
+        self.radius_of_magnetic_attract = model_const.magnet_attract_radius
 
     # Get player data
     def get_self_id(self):
@@ -119,14 +122,6 @@ class Helper(object):
     def get_player_item_duration(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return 0 if self.model.player_list[player_id].item == None else self.model.player_list[player_id].item.duration
-
-    def get_radius_not_move_radius(self):
-        return model_const.radius_not_move_radius
-
-    def get_radius_of_radiation_oil(self):
-        return model_const.radiation_oil_range
-    def get_radius_of_magnetic_attract(self):
-        return model_const.magnet_attract_radius
 
     # Get game informations
     def get_timer(self):

@@ -75,7 +75,7 @@ class TeamAI(BaseAI):
         bases_value = self.helper.get_bases_value()
         target = bases_value.index(max(bases_value))
         dest = self.helper.get_base_center(player_id=target)
-        if self.helper.get_distance(dest, my_pos) < self.helper.get_radius_of_radiation_oil():
+        if self.helper.get_distance(dest, my_pos) < self.helper.radius_of_radiation_oil:
             return 9
         return self.get_dir(dest, my_pos)
 
@@ -94,7 +94,7 @@ class TeamAI(BaseAI):
                         if max_value <= self.helper.get_player_value(i):
                             target = i
                             max_value = self.helper.get_player_value(i)
-                if self.helper.get_distance(self.helper.get_player_position(target), my_pos) < self.helper.get_radius_not_move_radius():
+                if self.helper.get_distance(self.helper.get_player_position(target), my_pos) < self.helper.radius_not_move_radius:
                     return True
             elif self.helper.get_player_item_name() == 'RadiationOil' \
                 and self.helper.player_id != bases_value.index(max(bases_value)):
