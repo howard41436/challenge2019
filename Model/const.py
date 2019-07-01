@@ -144,7 +144,7 @@ priced_item_activate = {
     'Invincible': False,
     'RadiusNotMove': False,
     'RadiationOil': False,
-    'ShuffleBases': True,
+    'ShuffleBases': False,
     'FaDaCai': False,
 }
 cutin_enable = {

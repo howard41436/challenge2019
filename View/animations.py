@@ -222,10 +222,12 @@ class Animation_shuffleBases(Animation_raster):
             all_color = [player.color for player in self.model.player_list]
             random.shuffle(all_color)
             for _base in self.model.base_list:
-                pg.draw.circle(screen, 
-                              all_color[_base.owner_index], 
-                              (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
-                              160)
+                pg.draw.circle(
+                    screen, 
+                    all_color[_base.owner_index], 
+                    (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                    160
+                )
                 screen.blit(self.image, self.image.get_rect(center=_base.center))
         self.update()
 
@@ -326,9 +328,9 @@ class Animation_theworld(Animation_raster):
             source = pg.surfarray.array2d(screen)
 
             # twist along y axis
-            twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 30*np.sin(np.arange(view_const.screen_size[0])/100 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
+            twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 25*np.sin(np.arange(view_const.screen_size[0])/65 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
             # twist along x axis
-            twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 30*np.cos(np.arange(view_const.screen_size[1])/100 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
+            twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 25*np.cos(np.arange(view_const.screen_size[1])/65 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
 
             # draw inside
             tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
