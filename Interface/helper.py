@@ -169,8 +169,8 @@ class Helper(object):
         move_dir = 0 #default
         vec_dot = 0
         for dir_vec in model_const.dir_mapping:
-            if Vec(dir_vec).dot(vector_to_go) > vec_dot:
-                vec_dot = Vec(dir_vec).dot(vector_to_go)
+            if Vec(dir_vec).dot(Vec(vector_to_go)) > vec_dot:
+                vec_dot = Vec(dir_vec).dot(Vec(vector_to_go))
                 move_dir = model_const.dir_mapping.index(dir_vec)
         return move_dir
 
