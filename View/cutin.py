@@ -23,6 +23,32 @@ class Cutin_manager():
         'front_theworld': load_and_scale('cutin_front_theworld.png', 0.93),
     }
 
+    # background moving lines for the speed visual effect
+    # there are two layers
+    line_color = (160, 160, 160) # need alpha?
+    mid_lines = {
+        'size': (300, 8),
+        'velocity': 30,
+    }
+    back_lines = {
+        'size': (200, 5),
+        'velocity': 20,
+    }
+
+    # format: (time, y_position)
+    # size of cutin_background: (798, 376)
+    # the last element (99, 0) is here to prevent out-of-bound indexing
+    mid_lines['time_pos'] = (
+        ( 1, 150), ( 2,  40), ( 7, 300), (15, 120), (19, 220), (23, 130), (28, 280),
+        (30,  90), (35, 150), (36, 340), (43, 150), (50, 170), (58,  70), (59, 200),
+        (60, 330), (62, 160), (67, 300), (73, 200), (80, 270), (84, 300), (99,   0),
+    )
+    back_lines['time_pos'] = (
+        ( 1,  60), ( 4, 200), ( 6, 100), (13, 330), (16, 300), (22,  60), (28, 120),
+        (32, 200), (34, 150), (35, 340), (42, 300), (47, 170), (57,  70), (59, 120),
+        (60, 180), (64, 130), (65, 340), (74,  80), (78, 120), (84, 110), (99,   0),
+    )
+
     @classmethod
     def init_convert(cls):
         cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
@@ -38,12 +64,46 @@ class Cutin_manager():
                     0.7
                 )
             )
+        self.background_width = 800
 
     def update_state(self, player_index, skill_name, prev_screen):
         self.player_index = player_index
         self.skill_name = skill_name
         self.background = prev_screen.copy()
         self.timer = 0
+        self.mid_lines_index = 0
+        self.back_lines_index = 0
+        self.mid_lines_to_draw = []
+        self.back_lines_to_draw = []
+
+    def update_lines_to_draw(self):
+        # append new lines
+        if self.timer == self.mid_lines['time_pos'][self.mid_lines_index][0]:
+            ypos = self.mid_lines['time_pos'][self.mid_lines_index][1]
+            self.mid_lines_to_draw.append(pg.Rect((-self.mid_lines['size'][0], ypos), self.mid_lines['size']))
+            self.mid_lines_index += 1
+        if self.timer == self.back_lines['time_pos'][self.back_lines_index][0]:
+            ypos = self.back_lines['time_pos'][self.back_lines_index][1]
+            self.back_lines_to_draw.append(pg.Rect((-self.back_lines['size'][0], ypos), self.back_lines['size']))
+            self.back_lines_index += 1
+        
+        # update position
+        for _mid_line in self.mid_lines_to_draw:
+            _mid_line.move_ip(self.mid_lines['velocity'], 0)
+        for _back_line in self.back_lines_to_draw:
+            _back_line.move_ip(self.back_lines['velocity'], 0)
+
+        # remove expired lines
+        if (self.mid_lines_to_draw) and (self.mid_lines_to_draw[0].left > self.background_width):
+            self.mid_lines_to_draw.remove(self.mid_lines_to_draw[0])
+        if (self.back_lines_to_draw) and (self.back_lines_to_draw[0].left > self.background_width):
+            self.back_lines_to_draw.remove(self.back_lines_to_draw[0])
+
+    def draw_lines(self, cutin_background):
+        for _mid_line in self.mid_lines_to_draw:
+            pg.draw.rect(cutin_background, self.line_color, _mid_line)
+        for _back_line in self.back_lines_to_draw:
+            pg.draw.rect(cutin_background, self.line_color, _back_line)
 
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
@@ -51,6 +111,8 @@ class Cutin_manager():
         cutin_front_player = self.images[f'front_blue']
         #cutin_front_skill = self.images[f'front_{self.skill_name}']
         cutin_front_skill = self.images[f'front_theworld']
+        self.update_lines_to_draw()
+        self.draw_lines(cutin_background)
 
         if self.timer < 30:
             # phase 1
