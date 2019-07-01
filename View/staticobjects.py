@@ -43,8 +43,8 @@ class View_background(__Object_base):
     
     def draw(self, screen): 
         screen.fill(view_const.COLOR_WHITE)
-        screen.blit(self.background, [0, 0])
-        screen.blit(self.priced_market, [322, 328])
+        screen.blit(self.background, (0, 0))
+        screen.blit(self.priced_market, (322, 328))
 
 
 class View_menu(__Object_base):
@@ -57,8 +57,29 @@ class View_menu(__Object_base):
         cls.base = cls.base.convert_alpha()
 
     def draw(self, screen):
-        screen.blit(self.menu, [0, 0])
-        screen.blit(self.base, [10, 645])
+        screen.blit(self.menu, (0, 0))
+        screen.blit(self.base, (10, 645))
+
+        titlefont = pg.font.Font(view_const.digitalt_font, 250)
+        titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
+
+        words_1 = titlefont.render     ('OIL',                             True, view_const.COLOR_BLACK)
+        words_2 = titlefont.render     ('TYCOON',                          True, view_const.COLOR_BLACK)
+        words_3 = titlesmallfont.render('presented by 2019 NTU CSIE CAMP', True, view_const.COLOR_BLACK)
+
+        (size_x_1, size_y_1) = words_1.get_size()
+        (size_x_2, size_y_2) = words_2.get_size()
+        (size_x_3, size_y_3) = words_3.get_size()
+        pos_x_1 = (view_const.screen_size[0] - size_x_1)/2
+        pos_y_1 = (view_const.screen_size[1] - size_y_1 - 450 - size_y_3)/2
+        pos_x_2 = (view_const.screen_size[0] - size_x_2)/2
+        pos_y_2 = (view_const.screen_size[1] - size_y_2 - size_y_3)/2
+        pos_x_3 = (view_const.screen_size[0] - size_x_3)/2
+        pos_y_3 = (400 + size_y_3)
+
+        screen.blit(words_1, (pos_x_1, pos_y_1))
+        screen.blit(words_2, (pos_x_2, pos_y_2))
+        screen.blit(words_3, (pos_x_3, pos_y_3))
 
 
 class View_characters(__Object_base):
@@ -88,7 +109,7 @@ class View_characters(__Object_base):
         image = self.images[self.picture_switch[self.index]]
         screen.blit(image, [self.position_switch[self.index], 520])
         if self.index < 10:
-            screen.blit(self.image_oil, [1220, 700])
+            screen.blit(self.image_oil, (1220, 700))
         if self.counter == 20:
             self.index += 1
             self.index %= 19
@@ -102,29 +123,31 @@ class View_players(__Object_base):
             pg.image.load(os.path.join(view_const.IMAGE_PATH, f'player_color{_rainbow}.png')),
             0.2
         )
-        for _rainbow in range(0,19,1)
+        for _rainbow in range(0, 19)
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
     image_koreanfish = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
-
-    def __init__(self, model):
-        self.model = model
-        self.color_switch = [0, 0, 0, 0]
-        self.images = tuple(
-            view_utils.scaled_surface(
-                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'player_outfit.png'),
-                                        view_const.COLOR_WHITE,
-                                        player.color),
-                0.2
-            )
-            for player in self.model.player_list
-        )
 
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_freeze = cls.image_freeze.convert_alpha()
         cls.images_color = tuple( _image.convert_alpha() for _image in cls.images_color)
+
+    def __init__(self, model):
+        self.model = model
+        self.color_switch = [0, 0, 0, 0]
+        self.images = tuple(
+            view_utils.scaled_surface(
+                view_utils.replace_color(
+                    os.path.join(view_const.IMAGE_PATH, 'player_outfit.png'),
+                    view_const.COLOR_WHITE,
+                    player.color
+                ),
+                0.2
+            )
+            for player in self.model.player_list
+        )
 
     def draw(self, screen):
         players = self.model.player_list
@@ -156,21 +179,22 @@ class View_oils(__Object_base):
             screen.blit(image, image.get_rect(center=_oil.position))
 
 
-
 class View_bases(__Object_base):
-    images = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
+    image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
     
     @classmethod
     def init_convert(cls):
-        cls.images = cls.images.convert_alpha()
+        cls.image = cls.image.convert_alpha()
 
     def draw(self, screen):
         for _base in self.model.base_list:
-            pg.draw.circle(screen, 
-                          self.model.player_list[_base.owner_index].color, 
-                          (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
-                          160)
-            screen.blit(self.images, self.images.get_rect(center=_base.center))
+            pg.draw.circle(
+                screen, 
+                self.model.player_list[_base.owner_index].color, 
+                (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                160
+            )
+            screen.blit(self.image, self.image.get_rect(center=_base.center))
 
 
 class View_pets(__Object_base):
@@ -178,9 +202,11 @@ class View_pets(__Object_base):
         self.model = model
         self.images = tuple(
             view_utils.scaled_surface(
-                view_utils.replace_color(os.path.join(view_const.IMAGE_PATH,'pet_robot_outfit.png'),
-                                        view_const.COLOR_WHITE,
-                                        player.color),
+                view_utils.replace_color(
+                    os.path.join(view_const.IMAGE_PATH,'pet_robot_outfit.png'),
+                    view_const.COLOR_WHITE,
+                    player.color
+                ),
                 0.08
             )
             for player in self.model.player_list
@@ -196,15 +222,15 @@ class View_pets(__Object_base):
 
 class View_scoreboard(__Object_base):
     images = {
-    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3),
-    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3),
-    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3),
-    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3),
-    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3),
-    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
-    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
-    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
-    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
+        'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.3),
+        'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.3),
+        'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.3),
+        'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.3),
+        'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.3),
+        'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.3),
+        'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.2),
+        'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3),
+        'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.3)
     }
 
     @classmethod
@@ -213,11 +239,10 @@ class View_scoreboard(__Object_base):
         cls.namefont = pg.font.Font(view_const.notosans_font, 55)
         cls.numfont = pg.font.Font(view_const.notosans_font, 25)
 
-
     def draw(self, screen):
-        pg.draw.rect(screen, view_const.COLOR_WHITE, [800, 0, 480, 800])
-        pg.draw.rect(screen, view_const.COLOR_KHAKI, [800, 0, 480, 160])
-        pg.draw.rect(screen, view_const.COLOR_BLACK, ((800, 0),(480,160)), 5)
+        pg.draw.rect(screen, view_const.COLOR_WHITE, (800, 0, 480, 800))
+        pg.draw.rect(screen, view_const.COLOR_KHAKI, (800, 0, 480, 160))
+        pg.draw.rect(screen, view_const.COLOR_BLACK, (800, 0, 480, 160), 5)
         for score in self.model.scoreboard.score_list:
             pg.draw.rect(screen, score.player.color, (score.position,(480,160)))
             pg.draw.rect(screen, view_const.COLOR_BLACK, (score.position,(480,160)), 5)
@@ -227,10 +252,10 @@ class View_scoreboard(__Object_base):
             player_value = self.numfont.render(f'Carried Value : {int(score.player.value)}', True, view_const.COLOR_BLACK)
             if score.player.item:
                 item_image = self.images[score.player.item.name]
-                screen.blit(item_image, score.position+[340, 5])
-            screen.blit(name, score.position+[10,-5])
-            screen.blit(base_value, score.position+[10,75])
-            screen.blit(player_value, score.position+[10,115])
+                screen.blit(item_image, score.position+(340, 5))
+            screen.blit(name, score.position+(10,-5))
+            screen.blit(base_value, score.position+(10,75))
+            screen.blit(player_value, score.position+(10,115))
         for new_score in self.model.scoreboard.p_varition_list:
             if new_score.varition >= 0:
                 carry_value = self.numfont.render(f'+{int(new_score.varition)}', True, view_const.COLOR_GOLD)
@@ -244,24 +269,19 @@ class View_scoreboard(__Object_base):
             else:
                 base_value = self.numfont.render(f'{int(new_base_score.varition)}', True, view_const.COLOR_GOLD)
             screen.blit(base_value, new_base_score.get_position()+[300, 120])
-        
-        
-
-
 
 
 class View_items(__Object_base):
     images = {
-    'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.2),
-    'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.2),
-    'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.2),
-    'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.2),
-    'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.2),
-    'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
-    'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
-    'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
-    'marketcenter'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'marketcenter.png')), 0.0001),
-    'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2)
+        'IGoHome'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'backbag.png')), 0.2),
+        'MagnetAttract' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'magnet.png')), 0.2),
+        'Invincible'    :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'star.png')), 0.2),
+        'TheWorld'      :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'clock.png')), 0.2),
+        'OtherGoHome'   :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hurricane.png')), 0.2),
+        'RadiusNotMove' :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'staff.png')), 0.2),
+        'RadiationOil'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'bomb.png')), 0.15),
+        'ShuffleBases'  :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2),
+        'FaDaCai'       :view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'shuffle.png')), 0.2)
     }
 
     @classmethod
@@ -269,13 +289,9 @@ class View_items(__Object_base):
         cls.images = { _name: cls.images[_name].convert_alpha() for _name in cls.images }
 
     def draw(self, screen):
-        image = self.images['marketcenter']
         for market in self.model.priced_market_list:
             if market.item:
-                image = self.images[market.item.name]
-            screen.blit(image, market.position+[5,5])
-
-
+                screen.blit(self.images[market.item.name], market.position+(5,5))
 
 
 def init_staticobjects():

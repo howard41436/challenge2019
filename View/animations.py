@@ -9,6 +9,14 @@ from math import *
 import random
 
 '''
+VERY IMPORTANT !!!
+VERY IMPORTANT !!!
+VERY IMPORTANT !!!
+
+Once you add a new class in this module, you have to add CLASS.init_convert()
+in the init_otherobjects() function!
+
+
 * How Animation works:
 
 tick = 0
@@ -191,7 +199,7 @@ class Animation_shuffleBases_horizontal(Animation_raster):
         super().__init__(1, 90, **pos)
 
 class Animation_shuffleBases(Animation_raster):
-    images = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
+    image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
     
     def __init__(self, model):
         self.model = model
@@ -200,16 +208,15 @@ class Animation_shuffleBases(Animation_raster):
         self.delay_of_frames = 10
         self._timer = 0
 
+    @classmethod
+    def init_convert(cls):
+        cls.image = cls.image.convert_alpha()
+
     def update(self):
         self._timer += 1
         if self._timer == self.expire_time:
             self.expired = True
 
-    
-    @classmethod
-    def init_convert(cls):
-        cls.images = cls.images.convert_alpha()
-    
     def draw(self, screen):
         if self._timer % self.delay_of_frames:
             all_color = [player.color for player in self.model.player_list]
@@ -219,7 +226,7 @@ class Animation_shuffleBases(Animation_raster):
                               all_color[_base.owner_index], 
                               (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
                               160)
-                screen.blit(self.images, self.images.get_rect(center=_base.center))
+                screen.blit(self.image, self.image.get_rect(center=_base.center))
         self.update()
 
 
@@ -251,7 +258,7 @@ class Animation_endboard(Animation_raster):
         col.h = self.height
         col.midbottom = self.midbottom
         score_num = self.scorefont.render(f'{int(self.score)}', True, view_const.COLOR_BLACK)
-        name = namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
+        name = self.namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
         pg.draw.rect(screen, self.color, col)
@@ -348,6 +355,7 @@ class Animation_freeze(Animation_raster):
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
 
+
 def init_animation():
     Animation_equalize.init_convert()
     Animation_gohome.init_convert()
@@ -356,4 +364,7 @@ def init_animation():
     Animation_radiationOil.init_convert()
     Animation_theworld.init_convert()
     Animation_freeze.init_convert()
+    Animation_shuffleBases.init_convert()
+    Animation_shuffleBases_vertical.init_convert()
+    Animation_shuffleBases_horizontal.init_convert()
 
