@@ -125,7 +125,7 @@ item_weight = {
 
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
-magnet_attract_radius = 100
+magnet_attract_radius = 150
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
 radiation_oil_range = 100

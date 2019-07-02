@@ -171,10 +171,17 @@ class GameEngine(object):
             pet.update(self.player_list, self.base_list) 
             player = self.player_list[self.za_warudo_id]
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            for player in self.player_list:
+                player.update_collision(self.player_list, self.ev_manager)
         else:
             self.try_create_oil()
             for player in self.player_list:
                 player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            for player in self.player_list:
+                player.update_collision(self.player_list, self.ev_manager)
+            if self.timer % 2400 == 1000:
+                for pet in self.pet_list:
+                    pet.change_status(1)
             for pet in self.pet_list:
                 pet.update(self.player_list, self.base_list)
 
