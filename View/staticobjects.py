@@ -148,10 +148,16 @@ class View_players(__Object_base):
             )
             for player in self.model.player_list
         )
+        self.theworld_player = None
 
-    def draw(self, screen):
+    def set_theworld_player(self, player_index):
+        self.theworld_player = player_index
+
+    def draw(self, screen, theworld=False):
         players = self.model.player_list
         for _i in range(len(players)):
+            if theworld and _i != self.theworld_player: continue
+
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
             image = pg.transform.rotate(self.images[_i], angle)
             if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)

@@ -1,12 +1,13 @@
 import pygame as pg
 import numpy as np
+import os.path, threading, random
+from math import *
+from queue import Queue
+
 import Model.main as model
 import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
-import os.path
-from math import *
-import random
 
 '''
 VERY IMPORTANT !!!
@@ -279,7 +280,9 @@ class Animation_theworld(Animation_raster):
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
     inside_cache = dict()
     t = 0
+    dt = 0.02
     max_radius = int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2)) # = 1509
+    radius_vel = 60
 
     @classmethod
     def init_convert(cls):
@@ -300,9 +303,6 @@ class Animation_theworld(Animation_raster):
         self.draw_twist = True
         self.center = center
         self.radius = 1
-        self.radius_vel = 60
-        self.dt = 0.02
-        self.radius_vel = 60
 
     def update(self):
         self.t += self.dt

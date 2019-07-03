@@ -1,9 +1,9 @@
 import pygame as pg
 from pygame.math import Vector2 as Vec
-import Model.main as model
-from Events.Manager import *
 import os, math, random
 
+from Events.Manager import *
+import Model.main            as model
 import Model.GameObject.item as model_item
 import Model.const           as model_const
 import View.const            as view_const
@@ -84,6 +84,9 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_shuffleBases(self.model))
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+            if event.skill_name == 'TheWorld':
+                self.players.set_theworld_player(event.player_index)
+                #view_Animation.Animation_theworld.pre_generate_frames()
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position))
         elif isinstance(event, EventRadiusNotMoveStart):
@@ -169,6 +172,9 @@ class GraphicalView(object):
             if ani.expired: self.post_animations.remove(ani)
             elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen)
             else: ani.draw(self.screen, (not theworld))
+
+        # the world specific
+        if theworld: self.players.draw(self.screen, True)
 
         # update screen
         pg.display.flip()
