@@ -278,7 +278,6 @@ class Animation_theworld(Animation_raster):
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
     inside_cache = dict()
-    image_gray = tuple()
     t = 0
     max_radius = int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2)) # = 1509
 
@@ -287,15 +286,11 @@ class Animation_theworld(Animation_raster):
         cls.image_inside = cls.image_inside.convert()
         for r in range(1, cls.max_radius+60+1, 60):
             cls.inside_cache[r] = pg.transform.scale(cls.image_inside, (2*r, 2*r))
-        tmp = []
-        for i in range(1, 180+180//27, 180//27):
-            sur = pg.Surface(view_const.screen_size)
-            sur.fill((22, 82, 117))
-            sur = sur.convert()
-            sur.set_alpha(i)
-            tmp.append(sur)
-        cls.image_gray = tuple(tmp)
-    
+        cls.gray_mask = pg.Surface(view_const.screen_size)
+        cls.gray_mask.fill((22, 82, 117))
+        cls.gray_mask.set_colorkey((255, 255, 255))
+        cls.gray_mask.set_alpha(128)
+
     def __init__(self, center):
         '''
         Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
@@ -303,7 +298,6 @@ class Animation_theworld(Animation_raster):
         self.tick_count = 0
         self.expired = False
         self.draw_twist = True
-        self.gray_index = 0
         self.center = center
         self.radius = 1
         self.radius_vel = 60
@@ -317,16 +311,11 @@ class Animation_theworld(Animation_raster):
         if self.radius > self.max_radius: self.radius_vel = -self.radius_vel
         if self.radius == 1: self.draw_twist = False
         if self.tick_count == model_const.the_world_duration: self.expired = True
-        if self.radius_vel < 0 and self.draw_twist: self.gray_index += 1
 
     def draw(self, screen, update=True):
         if self.draw_twist:
             mask_inside = self.inside_cache[self.radius].copy()
 
-            # draw outside
-            if self.radius_vel < 0:
-                screen.blit(self.image_gray[self.gray_index], (0, 0))
-            
             source = pg.surfarray.array2d(screen)
 
             # twist along y axis
@@ -341,8 +330,15 @@ class Animation_theworld(Animation_raster):
             mask_inside.set_alpha(128)
 
             screen.blit(mask_inside, mask_inside.get_rect(center=self.center))
-        
-        else: screen.blit(self.image_gray[self.gray_index], (0, 0))
+
+            # draw outside
+            if self.radius_vel < 0:
+                out_mask = self.gray_mask.copy()
+                out_mask.fill((22, 82, 117))
+                pg.draw.circle(out_mask, (255, 255, 255), tuple(map(int, self.center)), self.radius)
+                screen.blit(out_mask, (0, 0))
+
+        else: screen.blit(self.gray_mask, (0, 0))
 
         if update: self.update()
 
