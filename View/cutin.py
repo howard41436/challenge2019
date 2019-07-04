@@ -18,6 +18,12 @@ def load_and_scale(filename, scalar):
 
 
 class Cutin_manager():
+    '''
+    Handles everything about cut-in animation.
+    "update_state(...)" to setup for next cut-in animation.
+    "draw(...)" to draw cut-in animation.
+    '''
+
     images = {
         'front_blue': load_and_scale('cutin_front_blue.png', 0.9),
         'front_theworld': load_and_scale('cutin_front_theworld.png', 0.93),
@@ -62,7 +68,7 @@ class Cutin_manager():
                     player.color,
                     1.504,
                     0.7
-                )
+                ).convert()
             )
         self.background_width = 800
 

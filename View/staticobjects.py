@@ -92,18 +92,18 @@ class View_characters(__Object_base):
     )
     image_oil = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'oil_black.png')),0.4)
 
-    def __init__(self, model):
-        self.model = model
-        self.picture_switch = [0, 1, 2, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 4, 5, 6]
-        self.position_switch = [130, 240, 350, 460, 570, 680, 790, 900, 1010,
-                                1010, 900, 790, 680, 570, 460, 350, 240, 130, 120]
-        self.index = 0
-        self.counter = 0
-
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
         cls.image_oil = pg.Surface.convert_alpha( cls.image_oil )
+
+    def __init__(self, model):
+        self.model = model
+        self.picture_switch = (0, 1, 2, 1, 2, 1, 2, 1, 2, 3, 4, 5, 4, 5, 4, 5, 4, 5, 6)
+        self.position_switch = (130, 240, 350, 460, 570, 680, 790, 900, 1010,
+                                1010, 900, 790, 680, 570, 460, 350, 240, 130, 120)
+        self.index = 0
+        self.counter = 0
 
     def draw(self, screen):
         image = self.images[self.picture_switch[self.index]]
@@ -145,7 +145,7 @@ class View_players(__Object_base):
                     player.color
                 ),
                 0.2
-            )
+            ).convert_alpha()
             for player in self.model.player_list
         )
         self.theworld_player = None
@@ -214,7 +214,7 @@ class View_pets(__Object_base):
                     player.color
                 ),
                 0.08
-            )
+            ).convert_alpha()
             for player in self.model.player_list
         )
 
