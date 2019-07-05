@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 5
+game_length = 60 * 60 * 4
 cutin_time = 90
 #dir const
 """
@@ -137,22 +137,22 @@ fadacai_oil_probability = 1 / 3
 fadacai_max_oil_num = 300
 
 priced_item_activate = {
-    'IGoHome': False,
-    'OtherGoHome': False,
-    'TheWorld': True,
-    'MagnetAttract': True,
-    'Invincible': False,
-    'RadiusNotMove': False,
-    'RadiationOil': False,
-    'ShuffleBases': False,
-    'FaDaCai': False,
-}
-cutin_enable = {
     'IGoHome': True,
     'OtherGoHome': True,
     'TheWorld': True,
     'MagnetAttract': True,
     'Invincible': True,
+    'RadiusNotMove': True,
+    'RadiationOil': True,
+    'ShuffleBases': True,
+    'FaDaCai': False,
+}
+cutin_enable = {
+    'IGoHome': False,
+    'OtherGoHome': False,
+    'TheWorld': True,
+    'MagnetAttract': False,
+    'Invincible': False,
     'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,
