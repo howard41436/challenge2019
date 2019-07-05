@@ -140,7 +140,7 @@ priced_item_activate = {
     'IGoHome': False,
     'OtherGoHome': False,
     'TheWorld': True,
-    'MagnetAttract': True,
+    'MagnetAttract': False,
     'Invincible': False,
     'RadiusNotMove': False,
     'RadiationOil': False,

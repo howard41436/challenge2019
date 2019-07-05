@@ -246,3 +246,41 @@ class GraphicalView(object):
         # fonts
         self.titlefont = pg.font.Font(view_const.notosans_font, 60)
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
+
+
+pg.mixer.init(22050, -16, 2, 64)
+class Sound():
+    '''
+    Manages the background music and skill sounds.
+    '''
+    # reusable sounds
+    sounds = {
+        'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
+        'theworld': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeStop.ogg')),
+    }
+    pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
+
+
+    def __init__(self, ev_manager):
+        ev_manager.register_listener(self)
+        self.ev_manager = ev_manager
+        self.theworld_countdown = -1
+        self.play_equalize_after_theworld = False
+
+    def notify(self, event):
+        if isinstance(event, EventEveryTick):
+            if self.theworld_countdown > 0:
+                self.theworld_countdown -= 1
+            elif self.theworld_countdown == 0:
+                if self.play_equalize_after_theworld:
+                    self.sounds['equalize'].play()
+                self.play_equalize_after_theworld = False
+                self.theworld_countdown -= 1
+        elif isinstance(event, EventInitialize):
+            pg.mixer.music.play(-1)
+        elif isinstance(event, EventEqualize):
+            if self.theworld_countdown == -1: self.sounds['equalize'].play()
+            else                            : self.play_equalize_after_theworld = True
+        elif isinstance(event, EventTheWorldStart):
+            self.sounds['theworld'].play()
+            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
