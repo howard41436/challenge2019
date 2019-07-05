@@ -1,14 +1,23 @@
 import pygame as pg
 import numpy as np
+import os.path, threading, random
+from math import *
+from queue import Queue
+
 import Model.main as model
 import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
-import os.path
-from math import *
-import random
 
 '''
+VERY IMPORTANT !!!
+VERY IMPORTANT !!!
+VERY IMPORTANT !!!
+
+Once you add a new class in this module, you have to add CLASS.init_convert()
+in the init_otherobjects() function!
+
+
 * How Animation works:
 
 tick = 0
@@ -45,7 +54,8 @@ class Animation_base():
     def update(self):
         pass
 
-    def draw(self, screen):
+    # the "update" argument is for the purpose of GraphicalView.theworld_background in View/main.py
+    def draw(self, screen, update=True):
         # draw first
         # update second
         pass
@@ -84,13 +94,14 @@ class Animation_raster(Animation_base):
         # or
         # self.pos[ next(iter(self.pos)) ] += pg.math.Vector2(dx, dy)
             
-    def draw(self, screen):
+    # the "update" argument is for the purpose of GraphicalView.theworld_background in View/main.py
+    def draw(self, screen, update=True):
         screen.blit(
             self.frames[self.frame_index_to_draw],
             self.frames[self.frame_index_to_draw].get_rect(**self.pos),
         )
 
-        self.update()
+        if update: self.update()
         
 
 class Animation_equalize(Animation_raster):
@@ -195,7 +206,7 @@ class Animation_shuffleBases_horizontal(Animation_raster):
         super().__init__(1, 90, **pos)
 
 class Animation_shuffleBases(Animation_raster):
-    images = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
+    image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
     
     def __init__(self, model):
         self.model = model
@@ -204,27 +215,28 @@ class Animation_shuffleBases(Animation_raster):
         self.delay_of_frames = 10
         self._timer = 0
 
+    @classmethod
+    def init_convert(cls):
+        cls.image = cls.image.convert_alpha()
+
     def update(self):
         self._timer += 1
         if self._timer == self.expire_time:
             self.expired = True
 
-    
-    @classmethod
-    def init_convert(cls):
-        cls.images = cls.images.convert_alpha()
-    
-    def draw(self, screen):
+    def draw(self, screen, update=True):
         if self._timer % self.delay_of_frames:
             all_color = [player.color for player in self.model.player_list]
             random.shuffle(all_color)
             for _base in self.model.base_list:
-                pg.draw.circle(screen, 
-                              all_color[_base.owner_index], 
-                              (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
-                              160)
-                screen.blit(self.images, self.images.get_rect(center=_base.center))
-        self.update()
+                pg.draw.circle(
+                    screen, 
+                    all_color[_base.owner_index], 
+                    (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
+                    160
+                )
+                screen.blit(self.image, self.image.get_rect(center=_base.center))
+        if update: self.update()
 
 
 class Animation_endboard(Animation_raster):
@@ -249,18 +261,17 @@ class Animation_endboard(Animation_raster):
             self.height = self.max_height
             self.score = self.max_score
 
-    def draw(self, screen):
+    def draw(self, screen, update=True):
         col = pg.Rect(0,0,0,0)
         col.w = 200
         col.h = self.height
         col.midbottom = self.midbottom
         score_num = self.scorefont.render(f'{int(self.score)}', True, view_const.COLOR_BLACK)
-        name = namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
+        name = self.namefont.render(f'{self.name}', True, view_const.COLOR_BLACK)
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
         pg.draw.rect(screen, self.color, col)
-        self.update()
-
+        if update: self.update()
 
 
 class Animation_theworld(Animation_raster):
@@ -274,67 +285,77 @@ class Animation_theworld(Animation_raster):
     the_world_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1])
     inside_cache = dict()
     t = 0
+    dt = 0.02
+    max_radius = int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2)) # = 1509
+    radius_vel = 60
 
     @classmethod
     def init_convert(cls):
         cls.image_inside = cls.image_inside.convert()
-        for r in range(1, int(sqrt(view_const.screen_size[0]**2 + view_const.screen_size[1]**2))+60+1, 60):
+        for r in range(1, cls.max_radius+60+1, 60):
             cls.inside_cache[r] = pg.transform.scale(cls.image_inside, (2*r, 2*r))
+        cls.gray_mask = pg.Surface(view_const.screen_size)
+        cls.gray_mask.fill((22, 82, 117))
+        cls.gray_mask.set_colorkey((255, 255, 255))
+        cls.gray_mask.set_alpha(128)
 
-    def __get_max_radius(self):
-        x1 = self.center[0]
-        x2 = view_const.screen_size[0] - self.center[0]
-        y1 = self.center[1]
-        y2 = view_const.screen_size[1] - self.center[1]
-        return max(map(sqrt, (x1**2+y1**2, x1**2+y2**2, x2**2+y1**2, x2**2+y2**2)))
-    
     def __init__(self, center):
         '''
         Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
         '''
+        self.tick_count = 0
         self.expired = False
+        self.draw_twist = True
         self.center = center
         self.radius = 1
-        self.radius_vel = 60
-        self.max_radius = self.__get_max_radius()
         self.has_played_video = False
-        self.dt = 0.02
-        self.radius_vel = 60
-
+        
     def update(self):
         self.t += self.dt
         self.radius += self.radius_vel
+        self.tick_count += 1
         if self.radius > self.max_radius: self.radius_vel = -self.radius_vel
-        if self.radius == 1: self.expired = True
+        if self.radius == 1: self.draw_twist = False
+        if self.tick_count == model_const.the_world_duration: self.expired = True
 
-    def draw(self, screen):
-
+    def draw(self, screen, update=True):
         if not self.has_played_video:
             self.the_world_video.preview()
             self.has_played_video = True
 
+        if self.draw_twist:
+            mask_inside = self.inside_cache[self.radius].copy()
+            source = pg.surfarray.array2d(screen)
 
-        mask = self.inside_cache[self.radius].copy()
-        source = pg.surfarray.array2d(screen)
+            # twist along y axis
+            twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 25*np.sin(np.arange(view_const.screen_size[0])/65 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
+            # twist along x axis
+            twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 25*np.cos(np.arange(view_const.screen_size[1])/65 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
 
-        # twist along y axis
-        twisted = source[ np.clip(np.add(np.arange(view_const.screen_size[0]), 30*np.sin(np.arange(view_const.screen_size[0])/100 + self.t*7)).astype(int), 0, view_const.screen_size[0]-1) , : ]
-        # twist along x axis
-        twisted = twisted[ : , np.clip(np.add(np.arange(view_const.screen_size[1]), 30*np.cos(np.arange(view_const.screen_size[1])/100 + self.t*7)).astype(int), 0, view_const.screen_size[1]-1) ]
+            # draw inside
+            tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
+            pg.surfarray.blit_array(tmpsurf, twisted)
+            mask_inside.blit(tmpsurf, tmpsurf.get_rect(topleft=(self.radius-self.center[0], self.radius-self.center[1])), None, pg.BLEND_RGBA_MULT)
+            mask_inside.set_alpha(128)
 
-        tmpsurf = pg.Surface((view_const.screen_size[0], view_const.screen_size[1]))
-        pg.surfarray.blit_array(tmpsurf, twisted)
-        mask.blit(tmpsurf, tmpsurf.get_rect(topleft=(self.radius-self.center[0], self.radius-self.center[1])), None, pg.BLEND_RGBA_MULT)
-        mask.set_alpha(128)
-        screen.blit(mask, mask.get_rect(center=self.center))
+            screen.blit(mask_inside, mask_inside.get_rect(center=self.center))
 
-        self.update()
+            # draw outside
+            if self.radius_vel < 0:
+                out_mask = self.gray_mask.copy()
+                out_mask.fill((22, 82, 117))
+                pg.draw.circle(out_mask, (255, 255, 255), tuple(map(int, self.center)), self.radius)
+                screen.blit(out_mask, (0, 0))
+
+        else: screen.blit(self.gray_mask, (0, 0))
+
+        if update: self.update()
 
 
 class Animation_freeze(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png')), i*4),
+            pg.transform.rotate(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png') ), 1.1), i*4),
             1/60*i if i <= 30 else 1/2
         )
         for i in range(1, 300)
@@ -342,6 +363,7 @@ class Animation_freeze(Animation_raster):
 
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
+
 
 def init_animation():
     Animation_equalize.init_convert()
@@ -351,4 +373,7 @@ def init_animation():
     Animation_radiationOil.init_convert()
     Animation_theworld.init_convert()
     Animation_freeze.init_convert()
+    Animation_shuffleBases.init_convert()
+    Animation_shuffleBases_vertical.init_convert()
+    Animation_shuffleBases_horizontal.init_convert()
 

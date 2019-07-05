@@ -27,7 +27,8 @@ class Player(object):
         self.is_invincible = False
         self.magnet_attract = False #Use Magnet Attract to make it true
         self.freeze = False
-        self.collide_list = [False] * 4
+        self.theworld = False
+        self.collide_list = [i == index for i in range(4)]
 
     def get_name(self):
         return self.name
@@ -86,7 +87,7 @@ class Player(object):
             if new_collide_list[idx] and not self.collide_list[idx] and idx > self.index:
                 ev_manager.post(EventEqualize((player_list[idx].position + self.position) / 2))
         self.collide_list = new_collide_list
-        
+
 
     def check_market(self, market_list):
         for market in market_list:
@@ -113,7 +114,7 @@ class Player(object):
             for oil in oils:
                 if Vec.magnitude(oil.position - self.position) <= oil.radius + model_const.magnet_attract_radius:
                     oil.update_position(Vec.normalize(self.position - oil.position) * model_const.magnet_attract_speed)
-        if not self.freeze:
+        if not self.freeze and not self.theworld:
             new_x = self.position[0] + self.direction[0] * self.speed
             new_y = self.position[1] + self.direction[1] * self.speed
             if new_x < self.radius or new_x > view_const.game_size[0] - self.radius:
@@ -123,5 +124,8 @@ class Player(object):
             self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils)
         self.store_price(bases)
+
+    def update_collision(self, players, ev_manager):
         if not self.is_invincible:
             self.check_collide(players, ev_manager)
+

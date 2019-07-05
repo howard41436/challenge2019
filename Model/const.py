@@ -125,7 +125,7 @@ item_weight = {
 
 the_world_duration = 60 * 5
 magnet_attract_duration = 60 * 3
-magnet_attract_radius = 100
+magnet_attract_radius = 150
 magnet_attract_speed = 5
 invincible_duration = 60 * 10
 radiation_oil_range = 100
@@ -148,12 +148,12 @@ priced_item_activate = {
     'FaDaCai': False,
 }
 cutin_enable = {
-    'IGoHome': False,
-    'OtherGoHome': False,
+    'IGoHome': True,
+    'OtherGoHome': True,
     'TheWorld': True,
-    'MagnetAttract': False,
-    'Invincible': False,
-    'RadiusNotMove': False,
+    'MagnetAttract': True,
+    'Invincible': True,
+    'RadiusNotMove': True,
     'RadiationOil': True,
     'ShuffleBases': True,
     'FaDaCai': True,
