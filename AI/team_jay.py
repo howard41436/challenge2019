@@ -52,7 +52,7 @@ class TeamAI(BaseAI):
         for i in range(4):
             if self.helper.player_id == i:
                 continue
-            cp = 1e-3 * (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1)))
+            cp = 1e-3 * (players_value[i] - self.helper.get_player_insurance_value(i) - carry)/((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1))
             # print("{}th cp is {}".format(i, cp))
             if maximum <= cp and players_speed[i] < my_speed:
                 maximum = cp
