@@ -96,7 +96,7 @@ class GameEngine(object):
                 self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
             cur_state = self.state.peek()
-            if cur_state != STATE_CUTIN:
+            if cur_state != STATE_CUTIN and (self.za_warudo_id is None or self.za_warudo_id == event.player_index):
                 player = self.player_list[event.player_index]
                 if player.item is not None:
                     player.use_item(self.ev_manager)
