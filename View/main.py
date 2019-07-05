@@ -1,9 +1,9 @@
 import pygame as pg
-import Model.main as model
-from Events.Manager import *
-import os, math
-import random
+from pygame.math import Vector2 as Vec
+import os, math, random
 
+from Events.Manager import *
+import Model.main            as model
 import Model.GameObject.item as model_item
 import Model.const           as model_const
 import View.const            as view_const
@@ -13,7 +13,6 @@ import View.staticobjects    as view_staticobjects
 import View.cutin            as view_cutin
 import Controller.const      as ctrl_const
 import Interface.const       as ifa_const
-from pygame.math import Vector2 as Vec
 
 
 class GraphicalView(object):
@@ -25,29 +24,32 @@ class GraphicalView(object):
         evManager (EventManager): Allows posting messages to the event queue.
         model (GameEngine): a strong reference to the game Model.
         """
-        self.ev_manager = ev_manager
         ev_manager.register_listener(self)
-        self.model = model
 
+        self.ev_manager = ev_manager
+        self.model = model
         self.is_initialized = False
         self.screen = None
         self.clock = None
         self.small_font = None
-
         self.last_update = 0
+        self.theworld_background = pg.Surface(view_const.screen_size)
 
 
     def notify(self, event):
         """
         Receive events posted to the message queue. 
         """
-        if isinstance(event, EventEveryTick) \
-           and self.is_initialized:
+        if isinstance(event, EventEveryTick) and self.is_initialized:
             cur_state = self.model.state.peek()
             if cur_state == model.STATE_MENU:
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
-                self.render_play()
+                theworld = False
+                for ani in self.post_animations:
+                    if isinstance(ani, view_Animation.Animation_theworld):
+                        theworld = True
+                self.render_play(theworld)
             if cur_state == model.STATE_CUTIN:
                 self.cutin_manager.draw(self.screen)
             if cur_state == model.STATE_STOP:
@@ -59,8 +61,7 @@ class GraphicalView(object):
         elif isinstance(event, EventQuit):
             self.is_initialized = False
             pg.quit()
-        elif isinstance(event, EventInitialize) or\
-             isinstance(event, EventRestart):
+        elif isinstance(event, EventInitialize) or isinstance(event, EventRestart):
             self.initialize()
         elif isinstance(event, EventEqualize):
             self.animations.append(view_Animation.Animation_equalize(center=event.position))
@@ -76,78 +77,29 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_radiationOil(center=event.position))
         elif isinstance(event, EventShuffleBases):
             ani_pos = [(400, 20), (400, 780), (20, 400), (780, 400)]
-            for pos in ani_pos:
-                if pos[1] == 400: self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=pos))
-                else: self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=pos))
+            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[0]))
+            self.animations.append(view_Animation.Animation_shuffleBases_horizontal(center=ani_pos[1]))
+            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[2]))
+            self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[3]))
             self.animations.append(view_Animation.Animation_shuffleBases(self.model))
-            self.bases.draw(self.screen)
-            pg.display.flip()
         elif isinstance(event, EventCutInStart):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+            self.players.set_theworld_player(event.player_index)
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position))
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
 
-    
+
     def render_menu(self):
         """
         Render the game menu.
         """
         if self.last_update != model.STATE_MENU:
             self.last_update = model.STATE_MENU
-            self.title_counter = 0
 
-        # draw backround
         self.menu.draw(self.screen)
         self.characters.draw(self.screen)
-
-        # word animation
-        titlefont = pg.font.Font(view_const.hack_font, 250)
-        titlesmallfont = pg.font.Font(view_const.notosans_font, 40)
-        words_1 = titlefont.render(
-                    'OIL', 
-                    True, view_const.COLOR_BLACK)
-
-        words_2 = titlefont.render(
-                    'TYCOON', 
-                    True, view_const.COLOR_BLACK)
-
-        words_3 = titlesmallfont.render(
-                    'presented by 2019 NTU CSIE CAMP',
-                    True, view_const.COLOR_BLACK)
-
-        (size_x_1, size_y_1) = words_1.get_size()
-        (size_x_2, size_y_2) = words_2.get_size()
-        (size_x_3, size_y_3) = words_3.get_size()
-        pos_x_1 = (view_const.screen_size[0] - size_x_1)/2
-        pos_y_1 = (view_const.screen_size[1] - size_y_1 - 450 - size_y_3)/2
-        pos_x_2 = (view_const.screen_size[0] - size_x_2)/2
-        pos_y_2 = (view_const.screen_size[1] - size_y_2 - size_y_3)/2
-        pos_x_3 = (view_const.screen_size[0] - size_x_3)/2
-        pos_y_3 = (400 + size_y_3)
-
-        self.screen.blit(words_1, (pos_x_1, pos_y_1))
-        self.screen.blit(words_2, (pos_x_2, pos_y_2))
-        self.screen.blit(words_3, (pos_x_3, pos_y_3))
-        """titlefont = pg.font.Font(view_const.notosans_font, 90)
-        title_loop_counter = self.title_counter % 80
-        littlefont = pg.font.Font(view_const.notosans_font, 40)
-        if not title_loop_counter:
-            self.darken_time = [random.randint(25, 35), random.randint(55,65)]
-
-        if self.title_counter <= 10:
-            gray = (155 + int(self.title_counter / 10 * 100),) * 3
-        elif self.darken_time[0] <= title_loop_counter <= self.darken_time[0] + 5:
-            gray = ((155 + (title_loop_counter - self.darken_time[0]) / 5 * 100),) * 3
-        elif self.darken_time[1] <= title_loop_counter <= self.darken_time[1] + 5:
-            gray = ((155 + (title_loop_counter - self.darken_time[1]) / 5 * 100),) * 3
-        else:
-            gray = (255,) * 3
-
-        self.title_counter += 1"""
-        
-        # update surface
         pg.display.flip()
 
 
@@ -175,7 +127,6 @@ class GraphicalView(object):
                 pos_x += 256
                 prize += 1
 
-
         if self.animations:
             self.screen.fill(view_const.COLOR_WHITE)
             title = self.titlefont.render('Scoreboard', True, view_const.COLOR_BLACK)
@@ -185,15 +136,15 @@ class GraphicalView(object):
                 else          : ani.draw(self.screen)
 
         pg.display.flip()
- 
 
-    def render_play(self):
+
+    def render_play(self, theworld=False):
         """
         Render the game play.
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
-        
+
         # draw background
         self.background.draw(self.screen)
         self.bases.draw(self.screen)
@@ -201,7 +152,7 @@ class GraphicalView(object):
         # draw animation
         for ani in self.animations:
             if ani.expired: self.animations.remove(ani)
-            else          : ani.draw(self.screen)
+            else          : ani.draw(self.screen, (not theworld))
 
         # draw static objects
         self.oils.draw(self.screen)
@@ -211,16 +162,19 @@ class GraphicalView(object):
         self.scoreboard.draw(self.screen)
 
         # draw time
-        
         time = self.timefont.render(str(round(self.model.timer/60, 1)), True, view_const.COLOR_BLACK)
+        self.screen.blit(time, (950, 35))
         
         # draw post_animation
         for ani in self.post_animations:
             if ani.expired: self.post_animations.remove(ani)
-            else          : ani.draw(self.screen)
+            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen)
+            else: ani.draw(self.screen, (not theworld))
+
+        # the world specific
+        if theworld: self.players.draw(self.screen, True)
 
         # update screen
-        self.screen.blit(time, (950, 35))
         pg.display.flip()
         
 
@@ -245,8 +199,6 @@ class GraphicalView(object):
             pg.display.flip()
 
 
-
-
     def display_fps(self):
         """Show the programs FPS in the window handle."""
         caption = "{} - FPS: {:.2f}".format(
@@ -268,13 +220,14 @@ class GraphicalView(object):
         self.small = pg.font.Font(None, 40)
         self.is_initialized = True
 
+        # convert images
         view_staticobjects.init_staticobjects()
         view_Animation.init_animation()
         view_cutin.init_cutin()
 
         # animations
         self.animations = []
-        self.post_animations = [] # animations such as the world need to be rendered lastly
+        self.post_animations = [] # animations such as "the world" need to be rendered lastly
 
         # about cutin
         self.cutin_manager = view_cutin.Cutin_manager(self.model)
@@ -290,6 +243,6 @@ class GraphicalView(object):
         self.menu = view_staticobjects.View_menu(self.model)
         self.characters = view_staticobjects.View_characters(self.model)
 
-        #Some font
+        # fonts
         self.titlefont = pg.font.Font(view_const.notosans_font, 60)
         self.timefont = pg.font.Font(view_const.notosans_font, 60)

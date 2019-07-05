@@ -91,7 +91,9 @@ class GameEngine(object):
                 # push a new state on the stack
                 self.state.push(event.state)
         elif isinstance(event, EventMove):
-            self.set_player_direction(event.player_index, event.direction)
+            # Deal with Za Warudo
+            if self.za_warudo_id is None or self.za_warudo_id == event.player_index:
+                self.set_player_direction(event.player_index, event.direction)
         elif isinstance(event, EventTriggerItem):
             cur_state = self.state.peek()
             if cur_state != STATE_CUTIN:
@@ -172,6 +174,8 @@ class GameEngine(object):
             pet.update(self.player_list, self.base_list) 
             player = self.player_list[self.za_warudo_id]
             player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)
+            for player in self.player_list:
+                player.update_collision(self.player_list, self.ev_manager)
         else:
             self.try_create_oil()
             for player in self.player_list:
