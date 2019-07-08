@@ -88,7 +88,7 @@ class EventTriggerItem(BaseEvent):
         self.name = "Trigger item event"
         self.player_index = player_index
     def __str__(self):
-        return f"{self.name} => player_index = {player}"
+        return f"{self.name} => player_index = {self.player_index}"
 
 
 class EventEqualize(BaseEvent):
@@ -244,21 +244,6 @@ class EventFaDaCaiStop(BaseEvent):
     def __str__(self):
         return self.name
 
-class EventEqualize(BaseEvent):
-    """
-    Equalize event.
-    This event should be triggered when two player bump into each other.
-    """
-    def __init__(self, position):
-        """
-        position : tuple(x, y) or vec2(x, y) indicates the collision position
-        """
-        self.name = "Equalize event"
-        self.position = position
-    def __str__(self):
-        return f"{self.name} => collision_position = {self.position}"
-
-
 class EventCutInStart(BaseEvent):
     '''
     A player triggers a strong skill.
@@ -272,7 +257,8 @@ class EventCutInStart(BaseEvent):
 
 class EventEatOil(BaseEvent):
     '''
-    A player triggers a strong skill.
+    A player eats an oil.
+    This event is for triggering sound effect.
     '''
     def __init__(self, oil_value):
         self.name = "Eat oil"
