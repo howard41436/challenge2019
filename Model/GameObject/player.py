@@ -53,12 +53,14 @@ class Player(object):
         if self.item is not None and not self.item.active:
             self.item.trigger(ev_manager)
 
-    def pick_oil(self, oils):
+    def pick_oil(self, oils, ev_manager):
         for i, oil in reversed(list(enumerate(oils))):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
                 if self.value + oil.price * self.oil_multiplier <= model_const.bag_capacity:
                     self.value += oil.price * self.oil_multiplier
+                    ev_manager.post(EventEatOil(oil.price))
                     oils.remove(oil)
+                    
 
     def store_price(self, bases):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
@@ -122,7 +124,7 @@ class Player(object):
             if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
                 self.direction[1] = 0
             self.position += Vec(self.direction) * self.speed
-        self.pick_oil(oils)
+        self.pick_oil(oils, ev_manager)
         self.store_price(bases)
 
     def update_collision(self, players, ev_manager):

@@ -154,7 +154,7 @@ class GameEngine(object):
             self.pet_list.append(Pet(index, model_const.base_center[index]))
 
     def init_markets(self):
-        self.priced_market_list = [ Market(position) for position in model_const.priced_market_positions ]
+        self.priced_market_list = [ Market(position, self.ev_manager) for position in model_const.priced_market_positions ]
 
     def set_player_direction(self, player_index, direction):
         if self.player_list[player_index] is not None:
@@ -162,11 +162,13 @@ class GameEngine(object):
             player.direction = Vec(model_const.dir_mapping[direction]) 
             if direction > 0:
                 player.direction_no = direction
+
     def init_menu(self):
         robot = Menu_robot(100)
         menu_oil = Menu_oil(100)
         self.menu_robot_list.append(robot)
         self.menu_oil_list.append(menu_oil)
+
     def update_objects(self):
         if self.za_warudo_id is not None:
             pet = self.pet_list[self.za_warudo_id]

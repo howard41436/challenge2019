@@ -270,6 +270,26 @@ class EventCutInStart(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventEatOil(BaseEvent):
+    '''
+    A player triggers a strong skill.
+    '''
+    def __init__(self, oil_value):
+        self.name = "Eat oil"
+        self.oil_value = oil_value
+    def __str__(self):
+        return self.name
+
+class EventBuyItem(BaseEvent):
+    '''
+    A player buys a item from market
+    '''
+    def __init__(self, item):
+        self.name = f"{item.name} is brought"
+        self.bought_item = item
+
+    def __str__(self):
+        return self.name
 
 class EventManager(object):
     """
