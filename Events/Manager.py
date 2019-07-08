@@ -280,6 +280,17 @@ class EventEatOil(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventBuyItem(BaseEvent):
+    '''
+    A player buys a item from market
+    '''
+    def __init__(self, item):
+        self.name = f"{item.name} is brought"
+        self.bought_item = item
+
+    def __str__(self):
+        return self.name
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
