@@ -58,7 +58,7 @@ class Player(object):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
                 if self.value + oil.price * self.oil_multiplier <= model_const.bag_capacity:
                     self.value += oil.price * self.oil_multiplier
-                    ev_manager.post(EventEatOil(oil.level))
+                    ev_manager.post(EventEatOil(oil.price))
                     oils.remove(oil)
                     
 
