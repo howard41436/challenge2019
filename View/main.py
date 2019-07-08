@@ -249,14 +249,19 @@ class GraphicalView(object):
 
 
 pg.mixer.init(22050, -16, 2, 64)
-class Sound():
+class Sound:
     '''
     Manages the background music and skill sounds.
     '''
     # reusable sounds
     sounds = {
         'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
-        'theworld': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeStop.ogg')),
+        'theworld_start': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeStop.ogg')),
+        'theworld_resume': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeResume.ogg')),
+        'eat_oil_low': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_low.ogg')),
+        'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
+        'eat_oil_high': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_high.ogg')),
+        'buy_item': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'buy.ogg')),
     }
     pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -274,13 +279,22 @@ class Sound():
             elif self.theworld_countdown == 0:
                 if self.play_equalize_after_theworld:
                     self.sounds['equalize'].play()
+                self.sounds['theworld_resume'].play()
                 self.play_equalize_after_theworld = False
                 self.theworld_countdown -= 1
         elif isinstance(event, EventInitialize):
             pg.mixer.music.play(-1)
+        elif isinstance(event, EventEatOil):
+            max_price = model_const.price_max
+            if                    event.oil_value < max_price/3  : level = 'low'
+            elif max_price/3   <= event.oil_value < max_price/3*2: level = 'mid'
+            elif max_price/3*2 <= event.oil_value                : level = 'high'
+            self.sounds[f'eat_oil_{level}'].play()
         elif isinstance(event, EventEqualize):
             if self.theworld_countdown == -1: self.sounds['equalize'].play()
             else                            : self.play_equalize_after_theworld = True
         elif isinstance(event, EventTheWorldStart):
-            self.sounds['theworld'].play()
-            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
+            self.sounds['theworld_start'].play()
+            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time - 70
+        elif isinstance(event, EventBuyItem):
+            self.sounds['buy_item'].play()
