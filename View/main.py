@@ -2,6 +2,8 @@ import pygame as pg
 from pygame.math import Vector2 as Vec
 import os, math, random
 
+pg.mixer.init(22050, -16, 2, 64)
+
 from Events.Manager import *
 import Model.main            as model
 import Model.GameObject.item as model_item
@@ -86,7 +88,7 @@ class GraphicalView(object):
             self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
             self.players.set_theworld_player(event.player_index)
         elif isinstance(event, EventTheWorldStart):
-            self.post_animations.append(view_Animation.Animation_theworld(event.position))
+            self.post_animations.append(view_Animation.Animation_theworld(event.position, self.ev_manager))
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
 
@@ -248,7 +250,6 @@ class GraphicalView(object):
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
 
 
-pg.mixer.init(22050, -16, 2, 64)
 class Sound:
     '''
     Manages the background music and skill sounds.
@@ -298,3 +299,9 @@ class Sound:
             self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time - 70
         elif isinstance(event, EventBuyItem):
             self.sounds['buy_item'].play()
+        elif isinstance(event, EventPauseSound):
+            pg.mixer.pause()
+            pg.mixer.music.pause()
+        elif isinstance(event, EventResumeSound):
+            pg.mixer.unpause()
+            pg.mixer.music.unpause()

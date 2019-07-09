@@ -4,10 +4,22 @@ import os.path, threading, random
 from math import *
 from queue import Queue
 
+#os.environ['FFMPEG_BINARY'] = 'ffmpeg'
+import moviepy
+import moviepy.editor
+
 import Model.main as model
 import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
+import View.sound as snd_manager
+from Events.Manager import EventPauseSound, EventResumeSound
+
+from View.customized_video_preview import preview as video_preview
+moviepy.video.io.VideoFileClip.VideoFileClip.preview = video_preview
+from View.customized_audio_preview import preview as audio_preview
+moviepy.audio.io.AudioFileClip.AudioFileClip.preview = audio_preview
+
 
 '''
 VERY IMPORTANT !!!
@@ -34,6 +46,7 @@ while True:
     
     tick += 1
 '''
+
 
 class Animation_base():
     '''
@@ -270,6 +283,7 @@ class Animation_endboard(Animation_raster):
         if update: self.update()
 
 
+pg.mixer.init(22050, -16, 2, 64)
 class Animation_theworld(Animation_raster):
     '''
     There are two phases in "the world" skill.
@@ -278,6 +292,7 @@ class Animation_theworld(Animation_raster):
     '''
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
+    the_world_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1])
     inside_cache = dict()
     t = 0
     dt = 0.02
@@ -294,7 +309,7 @@ class Animation_theworld(Animation_raster):
         cls.gray_mask.set_colorkey((255, 255, 255))
         cls.gray_mask.set_alpha(128)
 
-    def __init__(self, center):
+    def __init__(self, center, ev_manager):
         '''
         Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
         '''
@@ -303,7 +318,9 @@ class Animation_theworld(Animation_raster):
         self.draw_twist = True
         self.center = center
         self.radius = 1
-
+        self.has_played_video = False
+        self.ev_manager = ev_manager
+        
     def update(self):
         self.t += self.dt
         self.radius += self.radius_vel
@@ -313,9 +330,14 @@ class Animation_theworld(Animation_raster):
         if self.tick_count == model_const.the_world_duration: self.expired = True
 
     def draw(self, screen, update=True):
+        if not self.has_played_video:
+            self.ev_manager.post(EventPauseSound())
+            self.the_world_video.preview()
+            self.ev_manager.post(EventResumeSound())
+            self.has_played_video = True
+
         if self.draw_twist:
             mask_inside = self.inside_cache[self.radius].copy()
-
             source = pg.surfarray.array2d(screen)
 
             # twist along y axis

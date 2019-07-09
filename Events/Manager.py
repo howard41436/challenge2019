@@ -277,6 +277,26 @@ class EventBuyItem(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventPauseSound(BaseEvent):
+    '''
+    Pause all sounds, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventPauseSound'
+
+    def __str__(self):
+        return self.name
+
+class EventResumeSound(BaseEvent):
+    '''
+    Resume all sounds, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventResumeSound'
+
+    def __str__(self):
+        return self.name
+
 class EventManager(object):
     """
     We coordinate communication between the Model, View, and Controller.
