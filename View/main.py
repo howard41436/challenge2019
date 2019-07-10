@@ -263,6 +263,8 @@ class Sound:
         'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
         'eat_oil_high': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_high.ogg')),
         'buy_item': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'buy.ogg')),
+        'igohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'igohome.ogg')),
+        'othergohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'othergohome.ogg')),
     }
     pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -275,12 +277,13 @@ class Sound:
 
     def notify(self, event):
         if isinstance(event, EventEveryTick):
+            if self.theworld_countdown == 70:
+                self.sounds['theworld_resume'].play()
             if self.theworld_countdown > 0:
                 self.theworld_countdown -= 1
             elif self.theworld_countdown == 0:
                 if self.play_equalize_after_theworld:
                     self.sounds['equalize'].play()
-                self.sounds['theworld_resume'].play()
                 self.play_equalize_after_theworld = False
                 self.theworld_countdown -= 1
         elif isinstance(event, EventInitialize):
@@ -296,7 +299,7 @@ class Sound:
             else                            : self.play_equalize_after_theworld = True
         elif isinstance(event, EventTheWorldStart):
             self.sounds['theworld_start'].play()
-            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time - 70
+            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
         elif isinstance(event, EventBuyItem):
             self.sounds['buy_item'].play()
         elif isinstance(event, EventPauseSound):
@@ -305,3 +308,7 @@ class Sound:
         elif isinstance(event, EventResumeSound):
             pg.mixer.unpause()
             pg.mixer.music.unpause()
+        elif isinstance(event, EventIGoHome):
+            self.sounds['igohome'].play()
+        elif isinstance(event, EventOtherGoHome):
+            self.sounds['othergohome'].play()
