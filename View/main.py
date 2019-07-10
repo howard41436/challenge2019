@@ -266,6 +266,9 @@ class Sound:
         'igohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'igohome.ogg')),
         'othergohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'othergohome.ogg')),
         'money_collected': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'money_collected.ogg')),
+        'star': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'star.ogg')),
+        'boom': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'boom.ogg')),
+        'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
     }
     pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -315,3 +318,9 @@ class Sound:
             self.sounds['othergohome'].play()
         elif isinstance(event, EventStorePrice):
             self.sounds['money_collected'].play()
+        elif isinstance(event, EventInvincibleStart):
+            self.sounds['star'].play()
+        elif isinstance(event, EventRadiationOil):
+            self.sounds['boom'].play()
+        elif isinstance(event, EventRadiusNotMoveStart):
+            self.sounds['freeze'].play()
