@@ -62,12 +62,14 @@ class Player(object):
                     oils.remove(oil)
                     
 
-    def store_price(self, bases):
+    def store_price(self, bases, ev_manager):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
             and self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
+            if self.value > 0:
+                ev_manager.post(EventStorePrice(self.value))
             self.value = 0
 
     def check_collide(self, player_list, ev_manager):
@@ -125,7 +127,7 @@ class Player(object):
                 self.direction[1] = 0
             self.position += Vec(self.direction) * self.speed
         self.pick_oil(oils, ev_manager)
-        self.store_price(bases)
+        self.store_price(bases, ev_manager)
 
     def update_collision(self, players, ev_manager):
         if not self.is_invincible:
