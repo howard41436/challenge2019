@@ -257,7 +257,7 @@ class Sound:
     # reusable sounds
     sounds = {
         'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
-        'theworld_start': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeStop.ogg')),
+        'theworld_start': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoCutIn.ogg')),
         'theworld_resume': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeResume.ogg')),
         'eat_oil_low': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_low.ogg')),
         'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
