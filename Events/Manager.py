@@ -268,7 +268,8 @@ class EventEatOil(BaseEvent):
 
 class EventStorePrice(BaseEvent):
     '''
-    A player triggers a strong skill.
+    A player goes home and the score increases.
+    This event is for triggering sound effect.
     '''
     def __init__(self, store_price):
         self.name = "Store Price"
