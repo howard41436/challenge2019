@@ -3,6 +3,8 @@ import Model.const as model_const
 from pygame.math import Vector2 as Vec
 
 class Base(object) :
+    __slots__ = ('owner_index', 'value_sum', 'center', 'length')
+
     def __init__(self, owner_index, center) :
         self.owner_index = owner_index
         self.value_sum = 0

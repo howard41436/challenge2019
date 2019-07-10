@@ -13,12 +13,14 @@ class EventInitialize(BaseEvent):
     """
     Initialize event.
     """
+    __slots__ = ()
     def __init__(self):
         self.name = "Initialize event"
     def __str__(self):
         return self.name
 
 class EventRestart(BaseEvent):
+    __slots__ = ()
     def __init__(self):
         self.name = "Restart event"
     def __str__(self):
@@ -28,6 +30,7 @@ class EventQuit(BaseEvent):
     """
     Quit event.
     """
+    __slots__ = ()
     def __init__ (self):
         self.name = "Quit event"
     def __str__(self):
@@ -48,6 +51,7 @@ class EventEveryTick(BaseEvent):
     """
     Tick event.
     """
+    __slots__ = ()
     def __init__ (self):
         self.name = "Tick event"
     def __str__(self):
@@ -57,6 +61,7 @@ class EventEverySec(BaseEvent):
     """
     Sec event.
     """
+    __slots__ = ()
     def __init__(self):
         self.name = "Sec event"
     def __str__(self):
@@ -66,6 +71,7 @@ class EventTimeUp(BaseEvent):
     """
     TimeUp event.
     """
+    __slots__ = ()
     def __init__(self):
         self.name = "TimeUp event"
     def __str__(self):

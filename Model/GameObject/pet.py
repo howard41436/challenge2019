@@ -3,6 +3,7 @@ from pygame.math import Vector2 as Vec
 import random
 
 class Pet(object):
+    __slots__ = ('owner_index', 'carry_max', 'carry_now', 'position', 'radius', 'color', 'direction', 'status', 'speed', 'cd_time', 'cd')
     def __init__(self, owner_index, position):
         self.owner_index = owner_index
         self.carry_max = model_const.pet_carry_max
