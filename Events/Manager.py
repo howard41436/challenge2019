@@ -266,6 +266,16 @@ class EventEatOil(BaseEvent):
     def __str__(self):
         return self.name
 
+class EventStorePrice(BaseEvent):
+    '''
+    A player triggers a strong skill.
+    '''
+    def __init__(self, store_price):
+        self.name = "Store Price"
+        self.stroe_price = store_price
+    def __str__(self):
+        return self.name
+
 class EventBuyItem(BaseEvent):
     '''
     A player buys a item from market
