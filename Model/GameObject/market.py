@@ -7,6 +7,7 @@ import Model.GameObject.item as Item
 import numpy as np
 
 class Market(object):
+    __slots__ = ('position', 'item', 'item_list', 'p_distribution', 'timer', 'ev_manager')
     def __init__(self, position, ev_manager):
         self.position = Vec(position)
         self.item = None

@@ -8,6 +8,7 @@ from Events.Manager import *
 
 
 class Player(object):
+    __slots__ = ('index', 'name', 'radius', 'position', 'value', 'color', 'is_AI', 'direction', 'direction_no', 'oil_multiplier', 'insurance_value', 'speed', 'pet', 'item', 'is_invincible', 'magnet_attract', 'freeze', 'theworld', 'collide_list', 'equipments', 'speed_multiplier', 'bag')
     def __init__(self, name, index, pet_list, equipments = [0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
@@ -29,6 +30,7 @@ class Player(object):
         self.freeze = False
         self.theworld = False
         self.collide_list = [i == index for i in range(4)]
+        self.bag = None
 
     def get_name(self):
         return self.name

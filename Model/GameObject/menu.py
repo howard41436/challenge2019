@@ -4,6 +4,7 @@ import Model.const     as model_const
 from Events.Manager import *
 
 class Menu_robot(object):
+    __slots__ = ('radius', 'position', 'direction', 'speed')
     def __init__(self, radius):
         self.radius = radius
         self.position = Vec(200 + radius, -view_const.screen_size[1] + radius)
@@ -19,6 +20,7 @@ class Menu_robot(object):
         if self.position[0] > home:
             self.position -= self.direction * self.speed
 class Menu_oil(object):
+    __slots__ = ('radius', 'position')
     def __init__(self, radius):
         self.radius = radius
         self.position = Vec(view_const.screen_size[0] - radius, -view_const.screen_size[0] + radius)

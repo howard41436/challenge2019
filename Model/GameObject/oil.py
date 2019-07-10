@@ -6,6 +6,7 @@ import random
 from pygame.math import Vector2 as Vec
 
 class Oil(object):
+    __slots__ = ('position', 'price', 'radius', 'level')
     def __init__(self, pos, price, level):
         self.position = pos
         self.price = price

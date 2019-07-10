@@ -3,6 +3,7 @@ import View.const as view_const
 from pygame.math import Vector2 as Vec
 
 class Score(object):
+    __slots__ = ('player', 'base', 'rank', 'position', 'target', 'velocity', 'acceleration', 'p_value', 'b_value', 'timer')
     def __init__(self, player, base, rank):
         self.player = player
         self.base = base
@@ -44,6 +45,7 @@ class Score(object):
         return model_const.rank_str[self.rank]
 
 class Score_varition(object):
+    __slots__ = ('score', 'varition', 'position', 'velocity', 'timer')
     def __init__(self, score, varition):
         self.score = score
         self.varition = varition
@@ -68,6 +70,7 @@ def update_varition_list(score, varition, varition_list):
             varition_list.pop(i)
 
 class Scoreboard(object): 
+    __slots__ = ('index_list', 'score_list', 'p_varition_list', 'b_varition_list')
     def __init__(self, player_list, base_list):
         self.index_list = [i for i in range(model_const.player_number)]
         self.score_list = [Score(player_list[i], base_list[i], i) for i in range(model_const.player_number)]
