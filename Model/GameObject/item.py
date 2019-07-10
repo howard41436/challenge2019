@@ -9,6 +9,7 @@ class Item(object):
     '''
     Base Item
     '''
+    __slots__ = ('active', 'duration', 'position', 'player_index', 'player_list', 'oil_list', 'base_list', 'name', 'is_activate', 'price', 'weight')
     def __init__(self, player_list, oil_list, base_list, player_index, item_name):
         self.active = False # taking effect or not
         self.duration = 0
@@ -30,6 +31,7 @@ class IGoHome(Item):
     '''
     Make one player move to his/her base
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'IGoHome')
 
@@ -45,6 +47,7 @@ class OtherGoHome(Item):
     '''
     Make other players move to their base
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'OtherGoHome')
 
@@ -63,6 +66,7 @@ class TheWorld(Item):
     like the whole game is the player's own world.
     This effect will last ? seconds.
     '''
+    __slots__ = ('freeze_list')
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'TheWorld')
         self.freeze_list = []
@@ -93,6 +97,7 @@ class MagnetAttract(Item):
     '''
     Make all oils attract to this player
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'MagnetAttract')
 
@@ -122,6 +127,7 @@ class RadiationOil(Item):
     '''
     Make some's bases balue * multiplier (< 1 constant)
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'RadiationOil')
 
@@ -139,6 +145,7 @@ class Invincible(Item):
     '''
     Make the player itself immune to collision
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'Invincible')
 
@@ -165,6 +172,7 @@ class RadiusNotMove(Item):
     '''
     Make all the other players in the range of ? that can not move for ? seconds
     '''
+    __slots__ = ('freeze_list')
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'RadiusNotMove')
         self.freeze_list = []
@@ -211,6 +219,7 @@ class ShuffleBases(Item):
     '''
     Make other players move to their base
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'ShuffleBases')
 
@@ -232,6 +241,7 @@ class FaDaCai(Item):
     '''
     發大財(Only MasterAI can use this item)
     '''
+    __slots__ = ()
     def __init__(self, player_list, oil_list, base_list, player_index):
         super().__init__(player_list, oil_list, base_list, player_index, 'FaDaCai')
 
