@@ -2,8 +2,6 @@ import pygame as pg
 from pygame.math import Vector2 as Vec
 import os, math, random
 
-pg.mixer.init(22050, -16, 2, 64)
-
 from Events.Manager import *
 import Model.main            as model
 import Model.GameObject.item as model_item
@@ -47,6 +45,9 @@ class GraphicalView(object):
             if cur_state == model.STATE_MENU:
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
+                if self.play_fadacai_cutin_video:
+                    self.video_manager.play_fadacai()
+                    self.play_fadacai_cutin_video = False
                 theworld = False
                 for ani in self.post_animations:
                     if isinstance(ani, view_Animation.Animation_theworld):
@@ -91,6 +92,8 @@ class GraphicalView(object):
             self.post_animations.append(view_Animation.Animation_theworld(event.position, self.ev_manager))
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
+        elif isinstance(event, EventFaDaCaiStart):
+            self.play_fadacai_cutin_video = True
 
 
     def render_menu(self):
@@ -170,7 +173,7 @@ class GraphicalView(object):
         # draw post_animation
         for ani in self.post_animations:
             if ani.expired: self.post_animations.remove(ani)
-            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen)
+            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen, self.video_manager)
             else: ani.draw(self.screen, (not theworld))
 
         # the world specific
@@ -233,6 +236,8 @@ class GraphicalView(object):
 
         # about cutin
         self.cutin_manager = view_cutin.Cutin_manager(self.model)
+        self.video_manager = view_cutin.Video_manager(self.ev_manager)
+        self.play_fadacai_cutin_video = False
 
         # static objects
         self.players = view_staticobjects.View_players(self.model)
@@ -250,14 +255,15 @@ class GraphicalView(object):
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
 
 
-class Sound:
+pg.mixer.init(22050, -16, 2, 64)
+class Sound(object):
     '''
     Manages the background music and skill sounds.
     '''
     # reusable sounds
     sounds = {
         'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
-        'theworld_start': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoCutIn.ogg')),
+        'theworld_cutin': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoCutIn.ogg')),
         'theworld_resume': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeResume.ogg')),
         'eat_oil_low': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_low.ogg')),
         'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
@@ -271,6 +277,7 @@ class Sound:
         'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
         'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
         'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
+        #'fadacai_cutin': None,
     }
     pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -281,6 +288,7 @@ class Sound:
         self.theworld_countdown = -1
         self.cutin_countdown = -1
         self.play_equalize_after_theworld = False
+
 
     def notify(self, event):
         if isinstance(event, EventEveryTick):
@@ -295,7 +303,6 @@ class Sound:
                 self.play_equalize_after_theworld = False
                 self.theworld_countdown -= 1
             if self.cutin_countdown > 0:
-                self.ev_manager.post(EventPauseSound())
                 self.cutin_countdown -= 1
             elif self.cutin_countdown == 0:
                 self.ev_manager.post(EventResumeSound())
@@ -312,21 +319,14 @@ class Sound:
             if self.theworld_countdown == -1: self.sounds['equalize'].play()
             else                            : self.play_equalize_after_theworld = True
         elif isinstance(event, EventTheWorldStart):
-            self.sounds['theworld_start'].play()
             self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
         elif isinstance(event, EventBuyItem):
             self.sounds['buy_item'].play()
         elif isinstance(event, EventCutInStart):
             self.cutin_countdown = model_const.cutin_time - 1
             self.ev_manager.post(EventPauseSound())
-        elif isinstance(event, EventPauseSound):
-            pg.mixer.pause()
-        elif isinstance(event, EventPauseMusic):
-            pg.mixer.music.pause()
-        elif isinstance(event, EventResumeSound):
-            pg.mixer.unpause()
-        elif isinstance(event, EventResumeMusic):
-            pg.mixer.music.unpause()
+            if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
+            # elif event.skill_name == 'FaDaCai': self.sounds['fadacai_cutin'].play()
         elif isinstance(event, EventIGoHome):
             self.sounds['igohome'].play()
         elif isinstance(event, EventOtherGoHome):
@@ -343,3 +343,11 @@ class Sound:
             self.sounds['electric'].play()
         elif isinstance(event, EventMagnetAttractStart):
             self.sounds['magnet'].play()
+        elif isinstance(event, EventPauseSound):
+            pg.mixer.pause()
+        elif isinstance(event, EventPauseMusic):
+            pg.mixer.music.pause()
+        elif isinstance(event, EventResumeSound):
+            pg.mixer.unpause()
+        elif isinstance(event, EventResumeMusic):
+            pg.mixer.music.unpause()

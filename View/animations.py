@@ -2,11 +2,6 @@ import pygame as pg
 import numpy as np
 import os.path, threading, random
 from math import *
-from queue import Queue
-
-#os.environ['FFMPEG_BINARY'] = 'ffmpeg'
-import moviepy
-import moviepy.editor
 
 import Model.main as model
 import Model.const as model_const
@@ -14,11 +9,6 @@ import View.const as view_const
 import View.utils as view_utils
 import View.sound as snd_manager
 from Events.Manager import EventPauseSound, EventPauseMusic, EventResumeSound, EventResumeMusic
-
-from View.customized_video_preview import preview as video_preview
-moviepy.video.io.VideoFileClip.VideoFileClip.preview = video_preview
-from View.customized_audio_preview import preview as audio_preview
-moviepy.audio.io.AudioFileClip.AudioFileClip.preview = audio_preview
 
 
 '''
@@ -292,7 +282,6 @@ class Animation_theworld(Animation_raster):
     '''
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
-    the_world_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1])
     inside_cache = dict()
     t = 0
     dt = 0.02
@@ -329,12 +318,9 @@ class Animation_theworld(Animation_raster):
         if self.radius == 1: self.draw_twist = False
         if self.tick_count == model_const.the_world_duration: self.expired = True
 
-    def draw(self, screen, update=True):
+    def draw(self, screen, video_manager, update=True):
         if not self.has_played_video:
-            self.ev_manager.post(EventPauseMusic())
-            self.ev_manager.post(EventPauseSound())
-            self.the_world_video.preview()
-            self.ev_manager.post(EventResumeMusic())
+            video_manager.play_theworld()
             self.has_played_video = True
 
         if self.draw_twist:
