@@ -269,6 +269,8 @@ class Sound:
         'star': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'star.ogg')),
         'boom': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'boom.ogg')),
         'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
+        'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
+        'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
     }
     pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -277,6 +279,7 @@ class Sound:
         ev_manager.register_listener(self)
         self.ev_manager = ev_manager
         self.theworld_countdown = -1
+        self.cutin_countdown = -1
         self.play_equalize_after_theworld = False
 
     def notify(self, event):
@@ -324,3 +327,7 @@ class Sound:
             self.sounds['boom'].play()
         elif isinstance(event, EventRadiusNotMoveStart):
             self.sounds['freeze'].play()
+        elif isinstance(event, EventShuffleBases):
+            self.sounds['electric'].play()
+        elif isinstance(event, EventMagnetAttractStart):
+            self.sounds['magnet'].play()
