@@ -13,7 +13,7 @@ import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
 import View.sound as snd_manager
-from Events.Manager import EventPauseSound, EventResumeSound
+from Events.Manager import EventPauseSound, EventPauseMusic, EventResumeSound, EventResumeMusic
 
 from View.customized_video_preview import preview as video_preview
 moviepy.video.io.VideoFileClip.VideoFileClip.preview = video_preview
@@ -331,9 +331,10 @@ class Animation_theworld(Animation_raster):
 
     def draw(self, screen, update=True):
         if not self.has_played_video:
+            self.ev_manager.post(EventPauseMusic())
             self.ev_manager.post(EventPauseSound())
             self.the_world_video.preview()
-            self.ev_manager.post(EventResumeSound())
+            self.ev_manager.post(EventResumeMusic())
             self.has_played_video = True
 
         if self.draw_twist:

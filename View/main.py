@@ -291,8 +291,15 @@ class Sound:
             elif self.theworld_countdown == 0:
                 if self.play_equalize_after_theworld:
                     self.sounds['equalize'].play()
+                self.ev_manager.post(EventResumeSound())
                 self.play_equalize_after_theworld = False
                 self.theworld_countdown -= 1
+            if self.cutin_countdown > 0:
+                self.ev_manager.post(EventPauseSound())
+                self.cutin_countdown -= 1
+            elif self.cutin_countdown == 0:
+                self.ev_manager.post(EventResumeSound())
+                self.cutin_countdown -= 1
         elif isinstance(event, EventInitialize):
             pg.mixer.music.play(-1)
         elif isinstance(event, EventEatOil):
@@ -309,11 +316,16 @@ class Sound:
             self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
         elif isinstance(event, EventBuyItem):
             self.sounds['buy_item'].play()
+        elif isinstance(event, EventCutInStart):
+            self.cutin_countdown = model_const.cutin_time - 1
+            self.ev_manager.post(EventPauseSound())
         elif isinstance(event, EventPauseSound):
             pg.mixer.pause()
+        elif isinstance(event, EventPauseMusic):
             pg.mixer.music.pause()
         elif isinstance(event, EventResumeSound):
             pg.mixer.unpause()
+        elif isinstance(event, EventResumeMusic):
             pg.mixer.music.unpause()
         elif isinstance(event, EventIGoHome):
             self.sounds['igohome'].play()

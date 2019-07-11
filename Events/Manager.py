@@ -318,19 +318,37 @@ class EventBuyItem(BaseEvent):
 
 class EventPauseSound(BaseEvent):
     '''
-    Pause all sounds, for the purpose of cutin_movie.
+    Pause all sound effects, for the purpose of cut-in.
     '''
     def __init__(self):
         self.name = 'EventPauseSound'
     def __str__(self):
         return self.name
 
+class EventPauseMusic(BaseEvent):
+    '''
+    Pause background music, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventPauseMusic'
+    def __str__(self):
+        return self.name
+
 class EventResumeSound(BaseEvent):
     '''
-    Resume all sounds, for the purpose of cutin_movie.
+    Resume all sounds, for the purpose of cut-in.
     '''
     def __init__(self):
         self.name = 'EventResumeSound'
+    def __str__(self):
+        return self.name
+
+class EventResumeMusic(BaseEvent):
+    '''
+    Resume background music, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventResumeMusic'
     def __str__(self):
         return self.name
 
