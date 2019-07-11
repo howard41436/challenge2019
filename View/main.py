@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.math import Vector2 as Vec
-import os, math, random
+import os, math, random, moviepy.editor
 
 from Events.Manager import *
 import Model.main            as model
@@ -45,6 +45,9 @@ class GraphicalView(object):
             if cur_state == model.STATE_MENU:
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
+                if self.play_fadacai_cutin_video:
+                    self.fadacai_video.preview()
+                    self.play_fadacai_cutin_video = False
                 theworld = False
                 for ani in self.post_animations:
                     if isinstance(ani, view_Animation.Animation_theworld):
@@ -89,6 +92,8 @@ class GraphicalView(object):
             self.post_animations.append(view_Animation.Animation_theworld(event.position))
         elif isinstance(event, EventRadiusNotMoveStart):
             self.animations.append(view_Animation.Animation_freeze(center=event.position))
+        elif isinstance(event, EventFaDaCaiStart):
+            self.play_fadacai_cutin_video = True
 
 
     def render_menu(self):
@@ -246,3 +251,7 @@ class GraphicalView(object):
         # fonts
         self.titlefont = pg.font.Font(view_const.notosans_font, 60)
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
+
+        # fadacai cutin_video
+        self.play_fadacai_cutin_video = False
+        self.fadacai_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
