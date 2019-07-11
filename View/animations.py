@@ -35,9 +35,6 @@ while True:
     tick += 1
 '''
 
-#os.environ['FFMPEG_BINARY'] = 'ffmpeg'
-import moviepy
-import moviepy.editor
 
 class Animation_base():
     '''
@@ -282,7 +279,6 @@ class Animation_theworld(Animation_raster):
     '''
 
     image_inside = pg.image.load(os.path.join(view_const.IMAGE_PATH, 'theworld_inside.png'))
-    the_world_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1])
     inside_cache = dict()
     t = 0
     dt = 0.02
@@ -318,9 +314,9 @@ class Animation_theworld(Animation_raster):
         if self.radius == 1: self.draw_twist = False
         if self.tick_count == model_const.the_world_duration: self.expired = True
 
-    def draw(self, screen, update=True):
+    def draw(self, screen, video_manager, update=True):
         if not self.has_played_video:
-            self.the_world_video.preview()
+            video_manager.play_theworld()
             self.has_played_video = True
 
         if self.draw_twist:

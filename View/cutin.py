@@ -7,14 +7,34 @@ phase 2 (30 ticks): faded
 '''
 
 import pygame as pg
+
 import os.path
 import View.const as view_const
 import View.utils as view_utils
 from View.utils import scaled_surface
 
+pg.mixer.init(22050, -16, 2, 64)
+import moviepy.editor
+
 
 def load_and_scale(filename, scalar):
     return scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, filename)), scalar)
+
+
+class Video_manager():
+    videos = {
+        'theworld': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1]),
+        'fadacai': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
+    }
+
+    def __init__(self):
+        pass
+
+    def play_theworld(self):
+        self.videos['theworld'].preview()
+
+    def play_fadacai(self):
+        self.videos['fadacai'].preview()
 
 
 class Cutin_manager():

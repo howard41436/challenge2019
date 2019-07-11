@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.math import Vector2 as Vec
-import os, math, random, moviepy.editor
+import os, math, random
 
 from Events.Manager import *
 import Model.main            as model
@@ -46,7 +46,7 @@ class GraphicalView(object):
                 self.render_menu()
             if cur_state == model.STATE_PLAY:
                 if self.play_fadacai_cutin_video:
-                    self.fadacai_video.preview()
+                    self.video_manager.play_fadacai()
                     self.play_fadacai_cutin_video = False
                 theworld = False
                 for ani in self.post_animations:
@@ -173,7 +173,7 @@ class GraphicalView(object):
         # draw post_animation
         for ani in self.post_animations:
             if ani.expired: self.post_animations.remove(ani)
-            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen)
+            elif isinstance(ani, view_Animation.Animation_theworld): ani.draw(self.screen, self.video_manager)
             else: ani.draw(self.screen, (not theworld))
 
         # the world specific
@@ -236,6 +236,8 @@ class GraphicalView(object):
 
         # about cutin
         self.cutin_manager = view_cutin.Cutin_manager(self.model)
+        self.video_manager = view_cutin.Video_manager()
+        self.play_fadacai_cutin_video = False
 
         # static objects
         self.players = view_staticobjects.View_players(self.model)
@@ -251,7 +253,3 @@ class GraphicalView(object):
         # fonts
         self.titlefont = pg.font.Font(view_const.notosans_font, 60)
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
-
-        # fadacai cutin_video
-        self.play_fadacai_cutin_video = False
-        self.fadacai_video = moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
