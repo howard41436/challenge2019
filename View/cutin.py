@@ -7,14 +7,46 @@ phase 2 (30 ticks): faded
 '''
 
 import pygame as pg
+
 import os.path
 import View.const as view_const
 import View.utils as view_utils
 from View.utils import scaled_surface
+from Events.Manager import EventPauseSound, EventPauseMusic, EventResumeMusic, EventResumeSound
+
+pg.mixer.init(22050, -16, 8, 64)
+import moviepy.editor
+from View.customized_video_preview import preview as video_preview
+moviepy.video.io.VideoFileClip.VideoFileClip.preview = video_preview
+from View.customized_audio_preview import preview as audio_preview
+moviepy.audio.io.AudioFileClip.AudioFileClip.preview = audio_preview
 
 
 def load_and_scale(filename, scalar):
     return scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, filename)), scalar)
+
+
+class Video_manager():
+    videos = {
+        'theworld': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1]),
+        'fadacai': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
+    }
+
+    def __init__(self, ev_manager):
+        self.ev_manager = ev_manager
+
+    def play_theworld(self):
+        self.ev_manager.post(EventPauseMusic())
+        self.ev_manager.post(EventPauseSound())
+        self.videos['theworld'].preview()
+        self.ev_manager.post(EventResumeMusic())
+
+    def play_fadacai(self):
+        self.ev_manager.post(EventPauseMusic())
+        self.ev_manager.post(EventPauseSound())
+        self.videos['fadacai'].preview()
+        self.ev_manager.post(EventResumeMusic())
+        self.ev_manager.post(EventResumeSound())
 
 
 class Cutin_manager():

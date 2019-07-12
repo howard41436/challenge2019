@@ -8,6 +8,7 @@ from Events.Manager import *
 
 
 class Player(object):
+    __slots__ = ('index', 'name', 'radius', 'position', 'value', 'color', 'is_AI', 'direction', 'direction_no', 'oil_multiplier', 'insurance_value', 'speed', 'pet', 'item', 'is_invincible', 'magnet_attract', 'freeze', 'theworld', 'collide_list', 'equipments', 'speed_multiplier', 'bag')
     def __init__(self, name, index, pet_list, equipments = [0, 0, 0, 0, 0], is_AI = False):
         self.index = index
         self.name = name
@@ -29,6 +30,7 @@ class Player(object):
         self.freeze = False
         self.theworld = False
         self.collide_list = [i == index for i in range(4)]
+        self.bag = None
 
     def get_name(self):
         return self.name
@@ -53,19 +55,23 @@ class Player(object):
         if self.item is not None and not self.item.active:
             self.item.trigger(ev_manager)
 
-    def pick_oil(self, oils):
+    def pick_oil(self, oils, ev_manager):
         for i, oil in reversed(list(enumerate(oils))):
             if (oil.position - self.position).length_squared() <= (oil.radius + self.radius)**2:
                 if self.value + oil.price * self.oil_multiplier <= model_const.bag_capacity:
                     self.value += oil.price * self.oil_multiplier
+                    ev_manager.post(EventEatOil(oil.price))
                     oils.remove(oil)
+                    
 
-    def store_price(self, bases):
+    def store_price(self, bases, ev_manager):
         if self.position[0] <= bases[self.index].center[0] + bases[self.index].length/2 \
             and self.position[0] >= bases[self.index].center[0] - bases[self.index].length/2 \
             and self.position[1] <= bases[self.index].center[1] + bases[self.index].length/2 \
             and self.position[1] >= bases[self.index].center[1] - bases[self.index].length/2:
             bases[self.index].change_value_sum(self.value)
+            if self.value > 0:
+                ev_manager.post(EventStorePrice(self.value))
             self.value = 0
 
     def check_collide(self, player_list, ev_manager):
@@ -122,8 +128,8 @@ class Player(object):
             if new_y < self.radius or new_y > view_const.game_size[1] - self.radius:
                 self.direction[1] = 0
             self.position += Vec(self.direction) * self.speed
-        self.pick_oil(oils)
-        self.store_price(bases)
+        self.pick_oil(oils, ev_manager)
+        self.store_price(bases, ev_manager)
 
     def update_collision(self, players, ev_manager):
         if not self.is_invincible:

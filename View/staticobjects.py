@@ -178,10 +178,11 @@ class View_oils(__Object_base):
     
     def draw(self, screen):
         for _oil in self.model.oil_list:
-            if _oil.price < 400          : image = self.images[0]
-            elif 600 > _oil.price >= 400 : image = self.images[1]
-            elif 800 > _oil.price >= 600 : image = self.images[2]
-            elif 1200 > _oil.price >= 800: image = self.images[3]
+            max_price = model_const.price_max
+            if                    _oil.price < max_price/3  : image = self.images[0]
+            elif max_price/3   <= _oil.price < max_price/2  : image = self.images[1]
+            elif max_price/2   <= _oil.price < max_price/3*2: image = self.images[2]
+            elif max_price/3*2 <= _oil.price                : image = self.images[3]
             screen.blit(image, image.get_rect(center=_oil.position))
 
 

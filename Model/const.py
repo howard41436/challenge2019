@@ -153,10 +153,10 @@ cutin_enable = {
     'TheWorld': True,
     'MagnetAttract': False,
     'Invincible': False,
-    'RadiusNotMove': True,
-    'RadiationOil': True,
-    'ShuffleBases': True,
-    'FaDaCai': False,
+    'RadiusNotMove': False,
+    'RadiationOil': False,
+    'ShuffleBases': False,
+    'FaDaCai': True,
 }
 
 
