@@ -255,99 +255,117 @@ class GraphicalView(object):
         self.timefont = pg.font.Font(view_const.notosans_font, 60)
 
 
-pg.mixer.init(22050, -16, 2, 64)
-class Sound(object):
-    '''
-    Manages the background music and skill sounds.
-    '''
-    # reusable sounds
-    sounds = {
-        'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
-        'theworld_cutin': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoCutIn.ogg')),
-        'theworld_resume': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeResume.ogg')),
-        'eat_oil_low': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_low.ogg')),
-        'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
-        'eat_oil_high': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_high.ogg')),
-        'buy_item': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'buy.ogg')),
-        'igohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'igohome.ogg')),
-        'othergohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'othergohome.ogg')),
-        'money_collected': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'money_collected.ogg')),
-        'star': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'star.ogg')),
-        'boom': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'boom.ogg')),
-        'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
-        'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
-        'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
-        #'fadacai_cutin': None,
-    }
-    pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
+# test sound
+try:
+    pg.mixer.init(22050, -16, 2, 64)
+    view_const.SOUND_ENABLE = True
+
+    class Sound(object):
+        '''
+        Manages the background music and skill sounds.
+        '''
+        # reusable sounds
+        sounds = {
+            'equalize': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'equalize.ogg')),
+            'theworld_cutin': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoCutIn.ogg')),
+            'theworld_resume': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ZaWarudoTimeResume.ogg')),
+            'eat_oil_low': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_low.ogg')),
+            'eat_oil_mid': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_mid.ogg')),
+            'eat_oil_high': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'eatoil_high.ogg')),
+            'buy_item': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'buy.ogg')),
+            'igohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'igohome.ogg')),
+            'othergohome': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'othergohome.ogg')),
+            'money_collected': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'money_collected.ogg')),
+            'star': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'star.ogg')),
+            'boom': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'boom.ogg')),
+            'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
+            'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
+            'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
+            #'fadacai_cutin': None,
+        }
+        pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
 
-    def __init__(self, ev_manager):
-        ev_manager.register_listener(self)
-        self.ev_manager = ev_manager
-        self.theworld_countdown = -1
-        self.cutin_countdown = -1
-        self.play_equalize_after_theworld = False
+        def __init__(self, ev_manager):
+            if not view_const.SOUND_ENABLE: return
+
+            ev_manager.register_listener(self)
+            self.ev_manager = ev_manager
+            self.theworld_countdown = -1
+            self.cutin_countdown = -1
+            self.play_equalize_after_theworld = False
 
 
-    def notify(self, event):
-        if isinstance(event, EventEveryTick):
-            if self.theworld_countdown == 70:
-                self.sounds['theworld_resume'].play()
-            if self.theworld_countdown > 0:
-                self.theworld_countdown -= 1
-            elif self.theworld_countdown == 0:
-                if self.play_equalize_after_theworld:
-                    self.sounds['equalize'].play()
-                self.ev_manager.post(EventResumeSound())
-                self.play_equalize_after_theworld = False
-                self.theworld_countdown -= 1
-            if self.cutin_countdown > 0:
-                self.cutin_countdown -= 1
-            elif self.cutin_countdown == 0:
-                self.ev_manager.post(EventResumeSound())
-                self.cutin_countdown -= 1
-        elif isinstance(event, EventInitialize):
-            pg.mixer.music.play(-1)
-        elif isinstance(event, EventEatOil):
-            max_price = model_const.price_max
-            if                    event.oil_value < max_price/3  : level = 'low'
-            elif max_price/3   <= event.oil_value < max_price/3*2: level = 'mid'
-            elif max_price/3*2 <= event.oil_value                : level = 'high'
-            self.sounds[f'eat_oil_{level}'].play()
-        elif isinstance(event, EventEqualize):
-            if self.theworld_countdown == -1: self.sounds['equalize'].play()
-            else                            : self.play_equalize_after_theworld = True
-        elif isinstance(event, EventTheWorldStart):
-            self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
-        elif isinstance(event, EventBuyItem):
-            self.sounds['buy_item'].play()
-        elif isinstance(event, EventCutInStart):
-            self.cutin_countdown = model_const.cutin_time - 1
-            self.ev_manager.post(EventPauseSound())
-            if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
-            # elif event.skill_name == 'FaDaCai': self.sounds['fadacai_cutin'].play()
-        elif isinstance(event, EventIGoHome):
-            self.sounds['igohome'].play()
-        elif isinstance(event, EventOtherGoHome):
-            self.sounds['othergohome'].play()
-        elif isinstance(event, EventStorePrice):
-            self.sounds['money_collected'].play()
-        elif isinstance(event, EventInvincibleStart):
-            self.sounds['star'].play()
-        elif isinstance(event, EventRadiationOil):
-            self.sounds['boom'].play()
-        elif isinstance(event, EventRadiusNotMoveStart):
-            self.sounds['freeze'].play()
-        elif isinstance(event, EventShuffleBases):
-            self.sounds['electric'].play()
-        elif isinstance(event, EventMagnetAttractStart):
-            self.sounds['magnet'].play()
-        elif isinstance(event, EventPauseSound):
-            pg.mixer.pause()
-        elif isinstance(event, EventPauseMusic):
-            pg.mixer.music.pause()
-        elif isinstance(event, EventResumeSound):
-            pg.mixer.unpause()
-        elif isinstance(event, EventResumeMusic):
-            pg.mixer.music.unpause()
+        def notify(self, event):
+            if not view_const.SOUND_ENABLE: return
+
+            if isinstance(event, EventEveryTick):
+                if self.theworld_countdown == 70:
+                    self.sounds['theworld_resume'].play()
+                if self.theworld_countdown > 0:
+                    self.theworld_countdown -= 1
+                elif self.theworld_countdown == 0:
+                    if self.play_equalize_after_theworld:
+                        self.sounds['equalize'].play()
+                    self.ev_manager.post(EventResumeSound())
+                    self.play_equalize_after_theworld = False
+                    self.theworld_countdown -= 1
+                if self.cutin_countdown > 0:
+                    self.cutin_countdown -= 1
+                elif self.cutin_countdown == 0:
+                    self.ev_manager.post(EventResumeSound())
+                    self.cutin_countdown -= 1
+            elif isinstance(event, EventInitialize):
+                pg.mixer.music.play(-1)
+            elif isinstance(event, EventEatOil):
+                max_price = model_const.price_max
+                if                    event.oil_value < max_price/3  : level = 'low'
+                elif max_price/3   <= event.oil_value < max_price/3*2: level = 'mid'
+                elif max_price/3*2 <= event.oil_value                : level = 'high'
+                self.sounds[f'eat_oil_{level}'].play()
+            elif isinstance(event, EventEqualize):
+                if self.theworld_countdown == -1: self.sounds['equalize'].play()
+                else                            : self.play_equalize_after_theworld = True
+            elif isinstance(event, EventTheWorldStart):
+                self.theworld_countdown = model_const.the_world_duration + model_const.cutin_time
+            elif isinstance(event, EventBuyItem):
+                self.sounds['buy_item'].play()
+            elif isinstance(event, EventCutInStart):
+                self.cutin_countdown = model_const.cutin_time - 1
+                self.ev_manager.post(EventPauseSound())
+                if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
+                # elif event.skill_name == 'FaDaCai': self.sounds['fadacai_cutin'].play()
+            elif isinstance(event, EventIGoHome):
+                self.sounds['igohome'].play()
+            elif isinstance(event, EventOtherGoHome):
+                self.sounds['othergohome'].play()
+            elif isinstance(event, EventStorePrice):
+                self.sounds['money_collected'].play()
+            elif isinstance(event, EventInvincibleStart):
+                self.sounds['star'].play()
+            elif isinstance(event, EventRadiationOil):
+                self.sounds['boom'].play()
+            elif isinstance(event, EventRadiusNotMoveStart):
+                self.sounds['freeze'].play()
+            elif isinstance(event, EventShuffleBases):
+                self.sounds['electric'].play()
+            elif isinstance(event, EventMagnetAttractStart):
+                self.sounds['magnet'].play()
+            elif isinstance(event, EventPauseSound):
+                pg.mixer.pause()
+            elif isinstance(event, EventPauseMusic):
+                pg.mixer.music.pause()
+            elif isinstance(event, EventResumeSound):
+                pg.mixer.unpause()
+            elif isinstance(event, EventResumeMusic):
+                pg.mixer.music.unpause()
+
+except pg.error:
+    view_const.SOUND_ENABLE = False
+
+    class Sound(object):
+        def __init__(self, ev_manager):
+            pass
+
+        def notify(self, event):
+            pass

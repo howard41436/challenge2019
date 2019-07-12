@@ -6,6 +6,7 @@ import numpy as np
 from moviepy.decorators import (requires_duration, convert_masks_to_RGB)
 from moviepy.tools import cvsecs
 
+from View.const import SOUND_ENABLE
 
 pg.init()
 # pg.display.set_caption('MoviePy')
@@ -99,7 +100,7 @@ def preview(clip, fps=15, audio=True, audio_fps=22050, audio_buffersize=3000,
     # compute and splash the first image
     screen = pg.display.set_mode(clip.size, flags)
     
-    audio = audio and (clip.audio is not None)
+    audio = SOUND_ENABLE and ( audio and (clip.audio is not None) )
     
     if audio:
         # the sound will be played in parrallel. We are not
