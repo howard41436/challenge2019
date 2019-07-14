@@ -99,5 +99,3 @@ corner=[
     [0, 800],
     [800, 800]
 ]
-
-SOUND_ENABLE = None # will be set to True or False after initialized somewhere

@@ -3,6 +3,7 @@ from pygame.math import Vector2 as Vec
 import os, math, random
 
 from Events.Manager import *
+from View import SOUND_ENABLE
 import Model.main            as model
 import Model.GameObject.item as model_item
 import Model.const           as model_const
@@ -256,10 +257,7 @@ class GraphicalView(object):
 
 
 # test sound
-try:
-    pg.mixer.init(22050, -16, 2, 64)
-    view_const.SOUND_ENABLE = True
-
+if SOUND_ENABLE:
     class Sound(object):
         '''
         Manages the background music and skill sounds.
@@ -288,8 +286,6 @@ try:
 
 
         def __init__(self, ev_manager):
-            if not view_const.SOUND_ENABLE: return
-
             ev_manager.register_listener(self)
             self.ev_manager = ev_manager
             self.theworld_countdown = -1
@@ -298,8 +294,6 @@ try:
 
 
         def notify(self, event):
-            if not view_const.SOUND_ENABLE: return
-
             if isinstance(event, EventEveryTick):
                 if self.theworld_countdown == 70:
                     self.sounds['theworld_resume'].play()
@@ -361,9 +355,7 @@ try:
             elif isinstance(event, EventResumeMusic):
                 pg.mixer.music.unpause()
 
-except pg.error:
-    view_const.SOUND_ENABLE = False
-
+else:
     class Sound(object):
         def __init__(self, ev_manager):
             pass
