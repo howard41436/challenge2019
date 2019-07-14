@@ -12,6 +12,7 @@ def main(argv):
     Control   = controller.Control(evManager, gamemodel)
     interface = helper.Interface(evManager, gamemodel)
     graphics  = view.GraphicalView(evManager, gamemodel)
+    sound = view.Sound(evManager)
 
     gamemodel.run()
  

@@ -283,7 +283,8 @@ class EventCutInStart(BaseEvent):
 
 class EventEatOil(BaseEvent):
     '''
-    A player triggers a strong skill.
+    A player eats an oil.
+    This event is for triggering sound effect.
     '''
     __slots__ = ('name', 'oil_value')
     def __init__(self, oil_value):
@@ -312,6 +313,42 @@ class EventBuyItem(BaseEvent):
     def __init__(self, item):
         self.name = f"{item.name} is brought"
         self.bought_item = item
+    def __str__(self):
+        return self.name
+
+class EventPauseSound(BaseEvent):
+    '''
+    Pause all sound effects, for the purpose of cut-in.
+    '''
+    def __init__(self):
+        self.name = 'EventPauseSound'
+    def __str__(self):
+        return self.name
+
+class EventPauseMusic(BaseEvent):
+    '''
+    Pause background music, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventPauseMusic'
+    def __str__(self):
+        return self.name
+
+class EventResumeSound(BaseEvent):
+    '''
+    Resume all sounds, for the purpose of cut-in.
+    '''
+    def __init__(self):
+        self.name = 'EventResumeSound'
+    def __str__(self):
+        return self.name
+
+class EventResumeMusic(BaseEvent):
+    '''
+    Resume background music, for the purpose of cutin_movie.
+    '''
+    def __init__(self):
+        self.name = 'EventResumeMusic'
     def __str__(self):
         return self.name
 

@@ -2,12 +2,14 @@ import pygame as pg
 import numpy as np
 import os.path, threading, random
 from math import *
-from queue import Queue
 
 import Model.main as model
 import Model.const as model_const
 import View.const as view_const
 import View.utils as view_utils
+import View.sound as snd_manager
+from Events.Manager import EventPauseSound, EventPauseMusic, EventResumeSound, EventResumeMusic
+
 
 '''
 VERY IMPORTANT !!!
@@ -34,6 +36,7 @@ while True:
     
     tick += 1
 '''
+
 
 class Animation_base():
     '''
@@ -294,7 +297,7 @@ class Animation_theworld(Animation_raster):
         cls.gray_mask.set_colorkey((255, 255, 255))
         cls.gray_mask.set_alpha(128)
 
-    def __init__(self, center):
+    def __init__(self, center, ev_manager):
         '''
         Note that the argument "center" is not **kwarg, so just pass a tuple with length 2.
         '''
@@ -303,7 +306,9 @@ class Animation_theworld(Animation_raster):
         self.draw_twist = True
         self.center = center
         self.radius = 1
-
+        self.has_played_video = False
+        self.ev_manager = ev_manager
+        
     def update(self):
         self.t += self.dt
         self.radius += self.radius_vel
@@ -312,10 +317,13 @@ class Animation_theworld(Animation_raster):
         if self.radius == 1: self.draw_twist = False
         if self.tick_count == model_const.the_world_duration: self.expired = True
 
-    def draw(self, screen, update=True):
+    def draw(self, screen, video_manager, update=True):
+        if not self.has_played_video:
+            video_manager.play_theworld()
+            self.has_played_video = True
+
         if self.draw_twist:
             mask_inside = self.inside_cache[self.radius].copy()
-
             source = pg.surfarray.array2d(screen)
 
             # twist along y axis

@@ -78,6 +78,8 @@ digitalt_font = os.path.join('Font', 'digitalt', 'Digitalt.ttf')
 
 # Path
 IMAGE_PATH = os.path.join('View', 'image')
+SOUND_PATH = os.path.join('View', 'sound')
+VIDEO_PATH = os.path.join('View', 'video')
 
 # Cut-in parameters
 CUTIN_BACKGROUND_PHASE1_TOPLEFT = Vector2(-800, 200)
@@ -97,3 +99,5 @@ corner=[
     [0, 800],
     [800, 800]
 ]
+
+SOUND_ENABLE = None # will be set to True or False after initialized somewhere
