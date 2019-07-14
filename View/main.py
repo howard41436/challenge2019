@@ -87,7 +87,7 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[3]))
             self.animations.append(view_Animation.Animation_shuffleBases(self.model))
         elif isinstance(event, EventCutInStart):
-            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+            self.cutin_manager.update_state(event.player_index, self.model.player_list[event.player_index].team_index, event.skill_name, self.screen)
             self.players.set_theworld_player(event.player_index)
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position, self.ev_manager))

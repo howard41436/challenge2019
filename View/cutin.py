@@ -56,8 +56,19 @@ class Cutin_manager():
     '''
 
     images = {
-        'front_blue': load_and_scale('cutin_front_blue.png', 0.9),
         'front_theworld': load_and_scale('cutin_front_theworld.png', 0.93),
+        'front_team_0': load_and_scale('cutin_front_team_0.png', 0.9), # default
+        'front_team_1': load_and_scale('cutin_front_team_1.png', 0.65),
+        'front_team_2': load_and_scale('cutin_front_team_2.png', 2.45),
+        'front_team_3': load_and_scale('cutin_front_team_3.png', 1.95),
+        'front_team_4': load_and_scale('cutin_front_team_4.png', 0.65),
+        'front_team_5': load_and_scale('cutin_front_team_5.png', 0.32),
+        'front_team_6': load_and_scale('cutin_front_team_6.png', 0.71),
+        'front_team_7': load_and_scale('cutin_front_team_7.png', 0.61),
+        'front_team_8': load_and_scale('cutin_front_team_8.png', 1.),
+        'front_team_9': load_and_scale('cutin_front_team_9.png', 1.5),
+        'front_team_10': load_and_scale('cutin_front_team_10.png', 0.6),
+        'front_team_11': load_and_scale('cutin_front_team_11.png', 0.9), # master
     }
 
     # background moving lines for the speed visual effect
@@ -103,8 +114,9 @@ class Cutin_manager():
             )
         self.background_width = 800
 
-    def update_state(self, player_index, skill_name, prev_screen):
+    def update_state(self, player_index, team_index, skill_name, prev_screen):
         self.player_index = player_index
+        self.team_index = team_index
         self.skill_name = skill_name
         self.background = prev_screen.copy()
         self.timer = 0
@@ -145,7 +157,7 @@ class Cutin_manager():
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
         cutin_background = self.images[f'{self.player_index}'].copy()
-        cutin_front_player = self.images[f'front_blue']
+        cutin_front_player = self.images[f'front_team_{self.team_index}']
         #cutin_front_skill = self.images[f'front_{self.skill_name}']
         cutin_front_skill = self.images[f'front_theworld']
         self.update_lines_to_draw()
@@ -155,18 +167,18 @@ class Cutin_manager():
             # phase 1
             screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE1_TOPLEFT + (800/30*(self.timer+1), 0) )
             screen.blit( cutin_front_skill, view_const.CUTIN_FRONT_SKILL_PHASE1_TOPLEFT + ((800/30*(self.timer+1)), 0) )
-            screen.blit( cutin_front_player, view_const.CUTIN_FRONT_PLAYER_PHASE1_TOPLEFT + ((800/30*(self.timer+1)), 0) )
+            screen.blit( cutin_front_player, view_const.CUTIN_FRONT_PLAYER_PHASE1_TOPLEFT + view_const.CUTIN_OFFSET[self.team_index] + ((800/30*(self.timer+1)), 0) )
 
         elif 30 <= self.timer < 60:
             # phase 2
             screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT )
             screen.blit( cutin_front_skill, view_const.CUTIN_FRONT_SKILL_PHASE2_TOPLEFT + ((view_const.CUTIN_PHASE2_SHIFT/30*(self.timer-29)), 0) )
-            screen.blit( cutin_front_player, view_const.CUTIN_FRONT_PLAYER_PHASE2_TOPLEFT + ((view_const.CUTIN_PHASE2_SHIFT/30*(self.timer-29)), 0) )
+            screen.blit( cutin_front_player, view_const.CUTIN_FRONT_PLAYER_PHASE2_TOPLEFT + view_const.CUTIN_OFFSET[self.team_index] + ((view_const.CUTIN_PHASE2_SHIFT/30*(self.timer-29)), 0) )
 
         else:
             # phase 3
             cutin_background.blit(cutin_front_skill, (view_const.CUTIN_FRONT_SKILL_PHASE3_TOPLEFT[0], view_const.CUTIN_FRONT_SKILL_PHASE3_TOPLEFT[1] - view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT[1]))
-            cutin_background.blit(cutin_front_player, (view_const.CUTIN_FRONT_PLAYER_PHASE3_TOPLEFT[0], view_const.CUTIN_FRONT_PLAYER_PHASE3_TOPLEFT[1] - view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT[1]))
+            cutin_background.blit(cutin_front_player, view_const.CUTIN_OFFSET[self.team_index] + (view_const.CUTIN_FRONT_PLAYER_PHASE3_TOPLEFT[0], view_const.CUTIN_FRONT_PLAYER_PHASE3_TOPLEFT[1] - view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT[1]))
             cutin_background = cutin_background.convert()
             cutin_background.set_alpha(255/30*(90-self.timer))
             screen.blit( cutin_background, view_const.CUTIN_BACKGROUND_PHASE2_TOPLEFT )
