@@ -281,7 +281,8 @@ try:
             'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
             'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
             'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
-            #'fadacai_cutin': None,
+            'fadacai_cutin1': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans1.ogg')),
+            'fadacai_cutin2': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans2.ogg')),
         }
         pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
@@ -334,7 +335,7 @@ try:
                 self.cutin_countdown = model_const.cutin_time - 1
                 self.ev_manager.post(EventPauseSound())
                 if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
-                # elif event.skill_name == 'FaDaCai': self.sounds['fadacai_cutin'].play()
+                elif event.skill_name == 'FaDaCai': self.sounds[f'fadacai_cutin{random.randint(1, 2)}'].play()
             elif isinstance(event, EventIGoHome):
                 self.sounds['igohome'].play()
             elif isinstance(event, EventOtherGoHome):
