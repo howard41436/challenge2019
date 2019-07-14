@@ -6,7 +6,7 @@ import numpy as np
 from moviepy.decorators import (requires_duration, convert_masks_to_RGB)
 from moviepy.tools import cvsecs
 
-from View.const import SOUND_ENABLE
+from View import SOUND_ENABLE
 
 pg.init()
 # pg.display.set_caption('MoviePy')

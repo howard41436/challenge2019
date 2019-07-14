@@ -14,14 +14,6 @@ import View.utils as view_utils
 from View.utils import scaled_surface
 from Events.Manager import EventPauseSound, EventPauseMusic, EventResumeMusic, EventResumeSound
 
-# test sound
-if view_const.SOUND_ENABLE is None:
-    try:
-        pg.mixer.init(22050, -16, 2, 64)
-        view_const.SOUND_ENABLE = True
-    except pg.error:
-        view_const.SOUND_ENABLE = False
-
 import moviepy.editor
 from View.customized_video_preview import preview as video_preview
 moviepy.video.io.VideoFileClip.VideoFileClip.preview = video_preview
