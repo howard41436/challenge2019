@@ -91,9 +91,9 @@ CUTIN_FRONT_PLAYER_PHASE3_TOPLEFT = Vector2(CUTIN_FRONT_PLAYER_PHASE2_TOPLEFT[0]
 CUTIN_FRONT_SKILL_PHASE1_TOPLEFT = Vector2(-890, 235)
 CUTIN_FRONT_SKILL_PHASE2_TOPLEFT = Vector2(CUTIN_FRONT_SKILL_PHASE1_TOPLEFT[0] + 800, CUTIN_FRONT_SKILL_PHASE1_TOPLEFT[1])
 CUTIN_FRONT_SKILL_PHASE3_TOPLEFT = Vector2(CUTIN_FRONT_SKILL_PHASE2_TOPLEFT[0] + CUTIN_PHASE2_SHIFT, CUTIN_FRONT_SKILL_PHASE2_TOPLEFT[1])
-CUTIN_OFFSET = (
-    Vector2(0, 0),
-    Vector2(-40, 0),
+CUTIN_PLAYER_OFFSET = (
+    Vector2(0, 100),
+    Vector2(-40, 20),
     Vector2(-70, -5),
     Vector2(-80, -100),
     Vector2(-50, -45),
@@ -105,6 +105,12 @@ CUTIN_OFFSET = (
     Vector2(-30, 0),
     Vector2(0, 0),
 )
+CUTIN_SKILL_OFFSET = {
+    'TheWorld': Vector2(0, 0),
+    'ShuffleBases': Vector2(20, -30),
+    'RadiusNotMove': Vector2(20, -35),
+    'FaDaCai': Vector2(110, -10),
+}
 
 
 corner=[
