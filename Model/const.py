@@ -1,6 +1,6 @@
 import View.const as view_const
 
-game_length = 60 * 60 * 5
+game_length = 60 * 60 * 4
 cutin_time = 90
 #dir const
 """
@@ -96,7 +96,7 @@ default_equipments = [
 priced_market_positions = [
     (376, 373.5)
 ]
-market_radius = 70
+market_radius = 50
 market_cd_time = 60 * 5
 
 item_price = {
