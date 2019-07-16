@@ -182,8 +182,8 @@ class Animation_start():
 class Animation_shuffleBases_vertical(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ver.png')),
-            1/30 * i
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_vertical.png')),
+            1/45 * i
         )
         for i in range(1, 45)
     )
@@ -195,8 +195,8 @@ class Animation_shuffleBases_vertical(Animation_raster):
 class Animation_shuffleBases_horizontal(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'hor.png')),
-            1/30 * i
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_horizontal.png')),
+            1/45 * i
         )
         for i in range(1, 45)
     )
