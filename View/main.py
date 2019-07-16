@@ -300,6 +300,7 @@ if SOUND_ENABLE:
             self.cutin_countdown = -1
             self.play_equalize_after_theworld = False
             self.play_after_cutin = None
+            self.fadacai_count = 1
 
 
         def notify(self, event):
@@ -343,7 +344,7 @@ if SOUND_ENABLE:
                 self.cutin_countdown = model_const.cutin_time - 1
                 self.ev_manager.post(EventPauseSound())
                 if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
-                elif event.skill_name == 'FaDaCai': self.sounds[f'fadacai_cutin{random.randint(1, 2)}'].play()
+                elif event.skill_name == 'FaDaCai': self.sounds[f'fadacai_cutin{1+self.fadacai_count//2}'].play(); self.fadacai_count += 1
                 elif event.skill_name == 'ShuffleBases': self.sounds[f'sandien'].play()
                 elif event.skill_name == 'RadiusNotMove': self.sounds[f'letitgo'].play()
             elif isinstance(event, EventIGoHome):

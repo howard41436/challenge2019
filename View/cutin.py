@@ -60,7 +60,7 @@ class Cutin_manager():
         'front_ShuffleBases': load_and_scale('cutin_front_shufflebases.png', 0.65),
         'front_RadiusNotMove': load_and_scale('cutin_front_radiusnotmove.png', 0.52),
         'front_FaDaCai': load_and_scale('cutin_front_fadacai.png', 0.9),
-        'front_team_0': load_and_scale('cutin_front_team_0.png', 0.9), # default
+        'front_team_0': load_and_scale('cutin_front_team_0.png', 0.8), # default
         **{f'front_team_1_{_i}': load_and_scale(f'cutin_front_team_1_{_i}.png', 1.5) for _i in range(20)},
         'front_team_2': load_and_scale('cutin_front_team_2.png', 2.45),
         'front_team_3': load_and_scale('cutin_front_team_3.png', 1.95),
