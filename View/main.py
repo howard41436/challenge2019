@@ -3,6 +3,7 @@ from pygame.math import Vector2 as Vec
 import os, math, random
 
 from Events.Manager import *
+from View import SOUND_ENABLE
 import Model.main            as model
 import Model.GameObject.item as model_item
 import Model.const           as model_const
@@ -86,7 +87,7 @@ class GraphicalView(object):
             self.animations.append(view_Animation.Animation_shuffleBases_vertical(center=ani_pos[3]))
             self.animations.append(view_Animation.Animation_shuffleBases(self.model))
         elif isinstance(event, EventCutInStart):
-            self.cutin_manager.update_state(event.player_index, event.skill_name, self.screen)
+            self.cutin_manager.update_state(event.player_index, self.model.player_list[event.player_index].team_index, event.skill_name, self.screen)
             self.players.set_theworld_player(event.player_index)
         elif isinstance(event, EventTheWorldStart):
             self.post_animations.append(view_Animation.Animation_theworld(event.position, self.ev_manager))
@@ -149,6 +150,8 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_PLAY:
             self.last_update = model.STATE_PLAY
+            self.ev_manager.post(EventResumeMusic())
+            self.ev_manager.post(EventResumeSound())
 
         # draw background
         self.background.draw(self.screen)
@@ -189,6 +192,8 @@ class GraphicalView(object):
         """
         if self.last_update != model.STATE_STOP:
             self.last_update = model.STATE_STOP
+            self.ev_manager.post(EventPauseMusic())
+            self.ev_manager.post(EventPauseSound())
 
             # draw backgound
             s = pg.Surface(view_const.screen_size, pg.SRCALPHA)
@@ -256,10 +261,7 @@ class GraphicalView(object):
 
 
 # test sound
-try:
-    pg.mixer.init(22050, -16, 2, 64)
-    view_const.SOUND_ENABLE = True
-
+if SOUND_ENABLE:
     class Sound(object):
         '''
         Manages the background music and skill sounds.
@@ -283,24 +285,27 @@ try:
             'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
             'fadacai_cutin1': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans1.ogg')),
             'fadacai_cutin2': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans2.ogg')),
+            'sandien': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'sandien.ogg')),
+            'letitgo': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'letitgo.ogg')),
+            'blizzard': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'blizzard.ogg')),
         }
         pg.mixer.music.load(os.path.join(view_const.SOUND_PATH, 'bgm_test.ogg'))
 
 
-        def __init__(self, ev_manager):
-            if not view_const.SOUND_ENABLE: return
-
+        def __init__(self, ev_manager, model):
             ev_manager.register_listener(self)
             self.ev_manager = ev_manager
+            self.model = model
             self.theworld_countdown = -1
             self.cutin_countdown = -1
             self.play_equalize_after_theworld = False
+            self.play_after_cutin = None
 
 
         def notify(self, event):
-            if not view_const.SOUND_ENABLE: return
-
             if isinstance(event, EventEveryTick):
+                if self.model.state.peek() == model.STATE_STOP: return
+
                 if self.theworld_countdown == 70:
                     self.sounds['theworld_resume'].play()
                 if self.theworld_countdown > 0:
@@ -315,6 +320,9 @@ try:
                     self.cutin_countdown -= 1
                 elif self.cutin_countdown == 0:
                     self.ev_manager.post(EventResumeSound())
+                    if self.play_after_cutin:
+                        self.sounds[self.play_after_cutin].play()
+                    self.play_after_cutin = None
                     self.cutin_countdown -= 1
             elif isinstance(event, EventInitialize):
                 pg.mixer.music.play(-1)
@@ -336,6 +344,8 @@ try:
                 self.ev_manager.post(EventPauseSound())
                 if event.skill_name == 'TheWorld': self.sounds['theworld_cutin'].play()
                 elif event.skill_name == 'FaDaCai': self.sounds[f'fadacai_cutin{random.randint(1, 2)}'].play()
+                elif event.skill_name == 'ShuffleBases': self.sounds[f'sandien'].play()
+                elif event.skill_name == 'RadiusNotMove': self.sounds[f'letitgo'].play()
             elif isinstance(event, EventIGoHome):
                 self.sounds['igohome'].play()
             elif isinstance(event, EventOtherGoHome):
@@ -347,9 +357,11 @@ try:
             elif isinstance(event, EventRadiationOil):
                 self.sounds['boom'].play()
             elif isinstance(event, EventRadiusNotMoveStart):
-                self.sounds['freeze'].play()
+                self.cutin_countdown = model_const.cutin_time - 1
+                self.play_after_cutin = 'blizzard'
             elif isinstance(event, EventShuffleBases):
-                self.sounds['electric'].play()
+                self.cutin_countdown = model_const.cutin_time - 1
+                self.play_after_cutin = 'electric'
             elif isinstance(event, EventMagnetAttractStart):
                 self.sounds['magnet'].play()
             elif isinstance(event, EventPauseSound):
@@ -361,9 +373,7 @@ try:
             elif isinstance(event, EventResumeMusic):
                 pg.mixer.music.unpause()
 
-except pg.error:
-    view_const.SOUND_ENABLE = False
-
+else:
     class Sound(object):
         def __init__(self, ev_manager):
             pass

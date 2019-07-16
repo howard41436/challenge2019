@@ -20,7 +20,10 @@ def scaled_surface(surface, scale):
     example:
     image = scaled_surface(image, 0.3)
     '''
-    return pg.transform.smoothscale(surface, (int(scale * surface.get_width()), int(scale * surface.get_height())))
+    try:
+        return pg.transform.smoothscale(surface, (int(scale * surface.get_width()), int(scale * surface.get_height())))
+    except:
+        return pg.transform.scale(surface, (int(scale * surface.get_width()), int(scale * surface.get_height())))
 
 
 """
