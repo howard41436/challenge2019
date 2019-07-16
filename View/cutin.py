@@ -28,7 +28,7 @@ def load_and_scale(filename, scalar):
 class Video_manager():
     videos = {
         'theworld': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'zawarudo_cutin_video.mp4'), target_resolution=view_const.screen_size[::-1]),
-        'fadacai': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
+        #'fadacai': moviepy.editor.VideoFileClip(os.path.join(view_const.VIDEO_PATH, 'fadacai_cutin_video.wmv'), target_resolution=view_const.screen_size[::-1])
     }
 
     def __init__(self, ev_manager):
@@ -41,6 +41,7 @@ class Video_manager():
         self.ev_manager.post(EventResumeMusic())
 
     def play_fadacai(self):
+        pass
         self.ev_manager.post(EventPauseMusic())
         self.ev_manager.post(EventPauseSound())
         self.videos['fadacai'].preview()
@@ -59,7 +60,7 @@ class Cutin_manager():
         'front_TheWorld': load_and_scale('cutin_front_theworld.png', 0.93),
         'front_ShuffleBases': load_and_scale('cutin_front_shufflebases.png', 0.65),
         'front_RadiusNotMove': load_and_scale('cutin_front_radiusnotmove.png', 0.52),
-        'front_FaDaCai': load_and_scale('cutin_front_fadacai.png', 0.9),
+        #'front_FaDaCai': load_and_scale('cutin_front_fadacai.png', 0.9),
         'front_team_0': load_and_scale('cutin_front_team_0.png', 0.8), # default
         **{f'front_team_1_{_i}': load_and_scale(f'cutin_front_team_1_{_i}.png', 1.5) for _i in range(20)},
         'front_team_2': load_and_scale('cutin_front_team_2.png', 2.45),
@@ -71,7 +72,7 @@ class Cutin_manager():
         'front_team_8': load_and_scale('cutin_front_team_8.png', 1.),
         'front_team_9': load_and_scale('cutin_front_team_9.png', 1.5),
         'front_team_10': load_and_scale('cutin_front_team_10.png', 0.6),
-        'front_team_11': load_and_scale('cutin_front_team_11.png', 0.9), # master
+        #'front_team_11': load_and_scale('cutin_front_team_11.png', 0.9), # master
     }
 
     # background moving lines for the speed visual effect

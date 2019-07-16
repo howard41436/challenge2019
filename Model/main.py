@@ -120,8 +120,7 @@ class GameEngine(object):
 
     def get_team_index(self, name):
         #getting the team_index of name
-        if name == "master":
-            return 11
+
         try:
             val = int(name)
         except ValueError:
@@ -151,7 +150,6 @@ class GameEngine(object):
 
         # init Player object
         for index in range(model_const.player_number):
-            print(self.AI_names[index])
             if self.AI_names[index] in ["~" or "Error"]:
                 Tmp_P = Player("manual", index, 0, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":

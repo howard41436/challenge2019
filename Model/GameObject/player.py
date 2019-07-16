@@ -13,7 +13,6 @@ class Player(object):
         self.index = index
         self.name = name
         self.team_index = team_index
-        print("team_index", team_index)
         self.radius = model_const.player_radius
         self.position = Vec(model_const.base_center[self.index])
         self.value = 0

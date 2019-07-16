@@ -61,8 +61,7 @@ class Interface(object):
                 loadtmp = imp.load_source('', f"./AI/team_{player.name}.py")
             except:
                 self.load_msg(str(index), player.name, "AI can't load")
-                print(player.name)
-                player.name, player.is_AI, player.ai = "Error", False, None
+                player.name, player.is_AI = "Error", False
                 continue
             self.load_msg(str(index), player.name, "Loading")
             # init TeamAI class
@@ -71,7 +70,7 @@ class Interface(object):
             except:
                 self.load_msg(str(index), player.name, "AI init crashed")
                 traceback.print_exc()
-                player.name, player.is_AI, player.ai = "Error", False, None
+                player.name, player.is_AI = "Error", False
                 continue
             self.load_msg(str(index), player.name, "Successful to Load")
             #if self.player_AI[player.index].equipments and len(self.player_AI[player.index].equipments) == model_const.equipment_num:

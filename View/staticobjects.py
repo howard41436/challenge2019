@@ -126,7 +126,7 @@ class View_players(__Object_base):
         for _rainbow in range(0, 19)
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
-    image_koreanfish = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
+    #image_koreanfish = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
 
     @classmethod
     def init_convert(cls):
