@@ -1,7 +1,7 @@
 """
 const of AI code use.
 """
-AI_DIR_stop     = 0
+AI_DIR_STOP     = 0
 AI_DIR_U        = 1
 AI_DIR_RU       = 2
 AI_DIR_R        = 3
