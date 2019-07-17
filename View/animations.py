@@ -270,6 +270,7 @@ class Animation_endboard(Animation_raster):
         screen.blit(name, name.get_rect(midtop=(self.midbottom[0], 690)))
         screen.blit(score_num, score_num.get_rect(midbottom=(self.midbottom[0], 680-self.height)))
         pg.draw.rect(screen, self.color, col)
+        pg.draw.rect(screen, view_const.COLOR_BLACK, col, 3)
         if update: self.update()
 
 
