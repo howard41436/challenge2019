@@ -376,7 +376,7 @@ if SOUND_ENABLE:
 
 else:
     class Sound(object):
-        def __init__(self, ev_manager):
+        def __init__(self, ev_manager, model):
             pass
 
         def notify(self, event):
