@@ -19,6 +19,10 @@ class Helper(object):
         self.base_length = model_const.base_length
         self.game_size = view_const.game_size
         self.market_position = tuple(model_const.priced_market_positions[0])
+        self.market_radius = model_const.market_radius
+        self.radius_not_move_radius = model_const.radius_not_move_radius
+        self.radius_of_radiation_oil = model_const.radiation_oil_range
+        self.radius_of_magnetic_attract = model_const.magnet_attract_radius
 
     # Get player data
     def get_self_id(self):
@@ -82,7 +86,7 @@ class Helper(object):
     def get_oils_distance_to_center(self):
         return [self.get_distance_to_center(oil) for oil in self.get_oils()]
     def get_oils_by_distance_from_center(self):
-        return sort(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
+        return sorted(self.get_oils(), key=lambda p: self.get_distance_to_center(p))
 
     # Get base data 
     def get_bases_center(self):
@@ -90,11 +94,21 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
+    def get_base_value(self):
+        return self.model.base_list[self.player_id].value_sum
+    def get_bases_value(self):
+        return [base.value_sum for base in self.model.base_list]
 
     # Get market data
     def get_market(self):
         market = self.model.priced_market_list[0]
         return (None, None, market.timer) if market.item is None else (market.item.name, market.item.price, 0)
+    def player_in_market(self, player_id = None):
+        if player_id == None: player_id = self.player_id
+        return True if self.model.player_list[player_id].check_market(self.model.priced_market_list) is not None else False
+    def get_market_center(self):
+        market = self.model.priced_market_list[0]
+        return market.position
 
     # Get item data
     def get_player_item_name(self, player_id = None):
@@ -146,4 +160,11 @@ class Helper(object):
         return (Vec(p1) - Vec(p2)).length()
     def get_distance_to_center(self, p1):
         return self.get_distance(p1, Vec(self.game_size) / 2)
-
+    def get_direction(self, vector_to_go):
+        move_dir = 0 #default
+        vec_dot = 0
+        for dir_vec in model_const.dir_mapping:
+            if Vec(dir_vec).dot(Vec(vector_to_go)) > vec_dot:
+                vec_dot = Vec(dir_vec).dot(Vec(vector_to_go))
+                move_dir = model_const.dir_mapping.index(dir_vec)
+        return move_dir
