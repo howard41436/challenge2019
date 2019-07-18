@@ -7,6 +7,7 @@ from Model.GameObject.oil import *
 from Model.GameObject.base import *
 from Model.GameObject.pet import *
 from Model.GameObject.market import *
+from Model.GameObject.item import *
 from Model.GameObject.scoreboard import Scoreboard
 
 import Model.const       as model_const
@@ -46,6 +47,7 @@ class GameEngine(object):
         self.priced_market_list = []
         self.turn_to = 0
         self.timer = 0
+        self.items = []
         self.fadacai = False
         self.za_warudo_id = None
 
@@ -102,6 +104,12 @@ class GameEngine(object):
                     player.use_item(self.ev_manager)
                 else:
                     player.buy(self.priced_market_list)
+        elif isinstance(event, EventObtainFaDaCai):
+            cur_state = self.state.peek()
+            if cur_state != STATE_CUTIN:
+                self.items.append(FaDaCai(self.player_list, self.oil_list, self.base_list, event.player_index))
+                self.items[0].trigger(self.ev_manager)
+                player = self.player_list[event.player_index]
         elif isinstance(event, EventQuit):
             self.running = False
         elif isinstance(event, (EventInitialize, EventRestart)):
@@ -151,7 +159,6 @@ class GameEngine(object):
 
         # init Player object
         for index in range(model_const.player_number):
-            print(self.AI_names[index])
             if self.AI_names[index] in ["~" or "Error"]:
                 Tmp_P = Player("manual", index, 0, self.pet_list, model_const.default_equipments[index])
             elif self.AI_names[index] == "_":
@@ -190,6 +197,8 @@ class GameEngine(object):
             for player in self.player_list:
                 player.update_collision(self.player_list, self.ev_manager)
         else:
+            for item in self.items:
+                item.update(self.ev_manager)
             self.try_create_oil()
             for player in self.player_list:
                 player.update(self.oil_list, self.base_list, self.player_list, self.ev_manager)

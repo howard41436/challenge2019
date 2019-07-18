@@ -100,6 +100,17 @@ class EventTriggerItem(BaseEvent):
     def __str__(self):
         return f"{self.name} => player_index = {self.player_index}"
 
+class EventObtainFaDaCai(BaseEvent):
+    """
+    Obtain and use FaDaCai
+    """
+    __slots__ = ('name', 'player_index')
+    def __init__(self, player_index):
+        self.name = "Obtain FaDaCai event"
+        self.player_index = player_index
+    def __str__(self):
+        return f"{self.name} => player_index = {self.player_index}"
+
 
 class EventEqualize(BaseEvent):
     """

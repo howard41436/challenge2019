@@ -1,5 +1,6 @@
 from AI.base import *
 import Model.const as model_const
+
 from pygame.math import Vector2 as Vec
 import random
 PICK = 9
@@ -20,8 +21,10 @@ class TeamAI(BaseAI):
         self.equipments = [0, 0, 0, 0, 0]
         self.prev = Vec(self.helper.market_position) - Vec(self.helper.get_player_position())
         self.prev /= self.prev.magnitude()
+        self.want_to_buy = {'RadiusNotMove' : 100, 'TheWorld' : 100, 'IGoHome' : 100, 'ShuffleBases': 1, 'Invincible': 1}
+        self.FaDaCai1 = True
     def update_direction(self, v):
-        beta = 0.1
+        beta = 0
         v = v / v.magnitude() if v.magnitude() > 1e-5 else v
         self.prev = beta * self.prev + (1 - beta) * v
         return self.prev
@@ -48,7 +51,7 @@ class TeamAI(BaseAI):
         maximum = 0
         target = -1
         for i in range(4):
-            if self.helper.player_id == i:
+            if self.helper.player_id == i or self.helper.get_player_is_invincible(i) or self.helper.get_player_is_invincible():
                 continue
             cp = 1e-3 * (players_value[i] - carry)/(((Vec(my_pos) - Vec(players_position[i])).length() / abs(players_speed[i] - my_speed + 1)))
             # print("{}th cp is {}".format(i, cp))
@@ -89,14 +92,16 @@ class TeamAI(BaseAI):
                 continue
             if total_value < self.helper.get_player_value(player_id=i) + self.helper.get_player_value(player_id=i):
                 the_max = False
-        if (item[0] == 'RadiusNotMove' or item[0] == 'TheWorld' or item[0] == 'IGoHome') and carry > item[1] and not self.helper.get_player_item_name():
+        if item[0] in self.want_to_buy and self.want_to_buy[item[0]] > 0 and carry > item[1] and not self.helper.get_player_item_name():
             if (Vec(my_pos) - Vec(self.helper.get_market_center())).length() < self.helper.player_radius:
+                self.want_to_buy[item[0]] -= 1
                 return PICK
             return self.helper.get_market_center()
         return dest
     def use(self, my_pos):
         if not self.helper.get_player_item_is_active():
-            if self.helper.get_player_item_name() == 'TheWorld':
+            use_directly = ['TheWorld', 'ShuffleBases', 'Invincible', 'ShuffleBases']
+            if self.helper.get_player_item_name() in use_directly:
                 return True
             elif self.helper.get_player_item_name() == 'RadiusNotMove':
                 tmp = 0
@@ -112,6 +117,10 @@ class TeamAI(BaseAI):
                     return True
         return False
     def decide(self):
+        #print(self.helper.get_timer())
+        if self.helper.get_timer() == 179 * 60 and self.FaDaCai1:
+            self.FaDaCai1 = False
+            return 10
         carry = self.helper.get_player_value()
         best_pos, my_pos, best_cp = self.get_best_oil_position()
         home = self.helper.get_base_center()
