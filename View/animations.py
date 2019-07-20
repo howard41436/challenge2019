@@ -353,16 +353,48 @@ class Animation_theworld(Animation_raster):
 
 
 class Animation_freeze(Animation_raster):
-    frames = tuple(
-        view_utils.scaled_surface(
-            pg.transform.rotate(view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, f'ice.png') ), 1.1), i*4),
-            0.6/30*i if i <= 30 else 0.6
-        )
-        for i in range(1, 300)
-    )
+    frames = {
+        'ice': tuple(view_utils.scaled_surface(
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')), i*2),
+                0.66/30*i if i <= 30 else 0.66
+            )
+            for i in range(1, model_const.radius_not_move_duration)
+        ),
+        'ice_text': tuple(view_utils.scaled_surface(
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_text.png')), -i*1),
+                0.66/30*i if i <= 30 else 0.66
+            )
+            for i in range(1, model_const.radius_not_move_duration)
+        ),
+    }
+
+    @classmethod
+    def init_convert(cls):
+        for _key in cls.frames:
+            cls.frames[_key] = tuple( _frame.convert_alpha() for _frame in cls.frames[_key] )
 
     def __init__(self, **pos):
-        super().__init__(1, len(self.frames), **pos)
+        super().__init__(1, model_const.radius_not_move_duration, **pos)
+
+    def update(self):
+        self._timer += 1
+
+        if self._timer == self.expire_time:
+            self.expired = True
+        elif self._timer % self.delay_of_frames == 0:
+            self.frame_index_to_draw = (self.frame_index_to_draw + 1) % len(self.frames['ice'])
+
+    def draw(self, screen, update=True):
+        screen.blit(
+            self.frames['ice_text'][self.frame_index_to_draw],
+            self.frames['ice_text'][self.frame_index_to_draw].get_rect(**self.pos),
+        )
+        screen.blit(
+            self.frames['ice'][self.frame_index_to_draw],
+            self.frames['ice'][self.frame_index_to_draw].get_rect(**self.pos),
+        )
+
+        if update: self.update()
 
 
 def init_animation():
