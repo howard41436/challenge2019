@@ -164,14 +164,27 @@ class Animation_othergohome(Animation_raster):
 class Animation_radiationOil(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
-            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'radiation.png')),
-            1/30 * i
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'boom.png')),
+            1/40 * (i**2) / 28
         )
-        for i in range(1, 30)
+        for i in range(1, 28)
     )
 
     def __init__(self, **pos):
-        super().__init__(1, 2*len(self.frames), **pos)
+        super().__init__(1, len(self.frames), **pos)
+        self.vibration = tuple((
+            *((0, 0) for _ in range(10)),
+            *((random.randint(-9, 9), random.randint(-9, 9)) for _ in range(self.expire_time-10))
+        ))
+
+    def draw(self, screen, update=True):
+        screen.blit(
+            self.frames[self.frame_index_to_draw],
+            self.frames[self.frame_index_to_draw].get_rect(**self.pos),
+        )
+        screen.blit(screen.copy(), self.vibration[self.frame_index_to_draw])
+
+        if update: self.update()
 
 
 # the countdown animation
