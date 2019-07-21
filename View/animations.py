@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy as np
 import os.path, threading, random
-from math import *
+from math import sin, cos, sqrt
 
 import Model.main as model
 import Model.const as model_const
@@ -355,7 +355,7 @@ class Animation_theworld(Animation_raster):
 class Animation_freeze(Animation_raster):
     frames = {
         'ice': tuple(view_utils.scaled_surface(
-                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')), i*2),
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')), i*1),
                 0.66/30*i if i <= 30 else 0.66
             )
             for i in range(1, model_const.radius_not_move_duration)
@@ -363,6 +363,12 @@ class Animation_freeze(Animation_raster):
         'ice_text': tuple(view_utils.scaled_surface(
                 pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_text.png')), -i*1),
                 0.66/30*i if i <= 30 else 0.66
+            )
+            for i in range(1, model_const.radius_not_move_duration)
+        ),
+        'ice_inside': tuple(view_utils.scaled_surface(
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_inside.png')), i*3),
+                0.2376/30*i if i <= 30 else 0.2376
             )
             for i in range(1, model_const.radius_not_move_duration)
         ),
@@ -385,6 +391,12 @@ class Animation_freeze(Animation_raster):
             self.frame_index_to_draw = (self.frame_index_to_draw + 1) % len(self.frames['ice'])
 
     def draw(self, screen, update=True):
+        for angle in np.linspace(0, 2*np.pi*5/6, num=6):
+            dest = pg.math.Vector2(self.pos[next(iter(self.pos))]) + pg.math.Vector2(95*cos(angle + self._timer/180*np.pi), 95*sin(angle + self._timer/180*np.pi))
+            screen.blit(
+                self.frames['ice_inside'][self.frame_index_to_draw],
+                self.frames['ice_inside'][self.frame_index_to_draw].get_rect(center=dest)
+            )
         screen.blit(
             self.frames['ice_text'][self.frame_index_to_draw],
             self.frames['ice_text'][self.frame_index_to_draw].get_rect(**self.pos),
