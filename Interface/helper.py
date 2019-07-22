@@ -94,7 +94,8 @@ class Helper(object):
     def get_base_center(self, player_id = None):
         if player_id == None: player_id = self.player_id
         return tuple(self.model.base_list[player_id].center)
-    def get_base_value(self):
+    def get_base_value(self, player_id = None):
+        if player_id == None: player_id = self.player_id
         return self.model.base_list[self.player_id].value_sum
     def get_bases_value(self):
         return [base.value_sum for base in self.model.base_list]

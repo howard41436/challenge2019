@@ -3,7 +3,7 @@ from AI.base import *
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
-        self.equipments = [0, 0, 0, 0, 0] # Set the number of your equipments.
+        self.equipments = [0, 1, 3, 1, 1] # Set the number of your equipments.
         self.color = (245, 245, 10) # Set the color you like.
 
 
@@ -66,7 +66,7 @@ class TeamAI(BaseAI):
             direction = (nearest_player_position[0] - my_pos[0], nearest_player_position[1] - my_pos[1])
             return self.helper.get_direction(direction)
         #道具使用1
-        destination = nearest_oil_pos if carry < 5000 else home
+        destination = nearest_oil_pos if carry < 4000 else home
         for x in range(len(oils)):
             dis = self.helper.get_distance(oils[x],my_pos)
             if dis <= self.helper.radius_of_magnetic_attract:
@@ -81,7 +81,7 @@ class TeamAI(BaseAI):
             destination = self.helper.market_position
             direction = (destination[0] - my_pos[0], destination[1] - my_pos[1]) 
             return self.helper.get_direction(direction)         
-        if 5000 < carry and self.helper.get_player_item_name(self.helper.player_id) == 'IGoHome' and \
+        if 4000 < carry and self.helper.get_player_item_name(self.helper.player_id) == 'IGoHome' and \
             self.helper.get_player_item_is_active(self.helper.player_id) == False:
             return AI_TRIGGER_ITEM
         if 500 < carry and item[0] == 'IGoHome':

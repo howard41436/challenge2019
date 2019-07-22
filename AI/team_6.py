@@ -9,7 +9,7 @@ class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
         self.equipments = [1, 1, 0, 1, 3] # Set the number of your equipments.
-        self.color = (240, 50, 230) # Set the color you like.
+        self.color = (233, 78, 199) # mandy red # Set the color you like.
 
     def get_near_oil_level(self):
         value = 0

@@ -224,7 +224,7 @@ class GraphicalView(object):
         pg.init()
         pg.font.init()
         pg.display.set_caption(view_const.game_caption)
-        self.screen = pg.display.set_mode(view_const.screen_size)
+        self.screen = pg.display.set_mode(view_const.screen_size, pg.FULLSCREEN)
 
         self.clock = pg.time.Clock()
         self.small = pg.font.Font(None, 40)

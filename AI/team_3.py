@@ -3,7 +3,7 @@ from AI.base import *
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
-        self.equipments = [0, 0, 0, 0, 0] # Set the number of your equipments.
+        self.equipments = [1, 0, 3, 1, 0] # Set the number of your equipments.
         self.color = (255, 0, 255) # Set the color you like.
 
 

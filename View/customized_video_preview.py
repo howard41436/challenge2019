@@ -16,7 +16,7 @@ def imdisplay(imarray, screen=None):
     """Splashes the given image array on the given pygame screen """
     a = pg.surfarray.make_surface(imarray.swapaxes(0, 1))
     if screen is None:
-        screen = pg.display.set_mode(imarray.shape[:2][::-1])
+        screen = pg.display.set_mode(imarray.shape[:2][::-1], pg.FULLSCREEN)
     screen.blit(a, (0, 0))
     pg.display.flip()
 
@@ -92,13 +92,13 @@ def preview(clip, fps=15, audio=True, audio_fps=22050, audio_buffersize=3000,
       ``True`` if you want the preview to be displayed fullscreen.
       
     """
-    if fullscreen:
-        flags = pg.FULLSCREEN
-    else:
-        flags = 0
+    # if fullscreen:
+    #     flags = pg.FULLSCREEN
+    # else:
+    #     flags = 0
     
     # compute and splash the first image
-    screen = pg.display.set_mode(clip.size, flags)
+    screen = pg.display.set_mode(clip.size, pg.FULLSCREEN)
     
     audio = SOUND_ENABLE and ( audio and (clip.audio is not None) )
     
