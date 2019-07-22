@@ -35,6 +35,18 @@ class TeamAI(BaseAI):
                 players_distance_below_150 += 1
                 players_array.append((i, self.helper.get_player_value(i)))
 
+        # Begin of Merge
+        # The world
+        if self.helper.get_market()[0] == "TheWorld" and carry >= 1450:
+            destination = self.helper.market_position
+            dist = self.helper.get_distance(my_pos, destination)
+            if dist < self.helper.player_radius + self.helper.market_radius:
+                return AI_TRIGGER_ITEM
+
+
+        if not self.helper.get_player_item_is_active() and self.helper.get_player_item_name() == "TheWorld":
+            return AI_TRIGGER_ITEM
+        # End of Merge
 
         #I go home
         #購買
