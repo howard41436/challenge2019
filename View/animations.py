@@ -107,9 +107,9 @@ class Animation_equalize(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'equalize_background.png')),
-            1 / 20 * i
+            1 / 20 * _i
         )
-        for i in range(1, 21)
+        for _i in range(1, 21)
     )
 
     def __init__(self, **pos):
@@ -120,9 +120,9 @@ class Animation_gohome(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'gohome.png')),
-            1/20 * i
+            1/20 * _i
         )
-        for i in range(1, 20)
+        for _i in range(1, 20)
     )
 
     def __init__(self, **pos):
@@ -133,9 +133,9 @@ class Animation_magnetattract(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'mag.png')),
-            1 / 20 * i
+            1 / 20 * _i
         )
-        for i in range(1, 11)
+        for _i in range(1, 11)
     )
 
     def __init__(self, player_index, model):
@@ -152,9 +152,9 @@ class Animation_othergohome(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'othergohome.png')),
-            1/20 * i
+            1/20 * _i
         )
-        for i in range(1, 20)
+        for _i in range(1, 20)
     )
 
     def __init__(self, **pos):
@@ -162,20 +162,43 @@ class Animation_othergohome(Animation_raster):
 
 
 class Animation_radiationOil(Animation_raster):
-    frames = tuple(
-        view_utils.scaled_surface(
+    '''
+    stage 1: boom & screen vibration
+    stage 2: smoke (fade out?)
+    '''
+
+    frames = tuple([
+        *(view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'boom.png')),
-            1/40 * (i**2) / 28
-        )
-        for i in range(1, 28)
-    )
+            1/40 * (_i**2) / view_const.RADIATIONOIL_STAGE1_DURATION
+        ) for _i in range(1, view_const.RADIATIONOIL_STAGE1_DURATION+1)),
+        *(pg.transform.scale(
+            pg.image.load(os.path.join(view_const.IMAGE_PATH, 'boom_smoke.png')),
+            (375, 375)
+        ) for _ in range(1, view_const.RADIATIONOIL_STAGE2_DURATION+1)),
+    ])
+
+    @classmethod
+    def init_convert(cls):
+        _tmp_frames = []
+        for _i in range(view_const.RADIATIONOIL_STAGE1_DURATION):
+            _tmp_frames.append( cls.frames[_i].convert_alpha() )
+        for _x, _i in zip(range(view_const.RADIATIONOIL_STAGE2_DURATION), range(view_const.RADIATIONOIL_STAGE1_DURATION, view_const.RADIATIONOIL_STAGE1_DURATION + view_const.RADIATIONOIL_STAGE2_DURATION)):
+            _tmp_frames.append( cls.frames[_i].convert() )
+            _tmp_frames[-1].set_colorkey((164, 147, 147))
+            _tmp_frames[-1].set_alpha( - _x**4 / view_const.RADIATIONOIL_STAGE2_DURATION**3 +view_const.RADIATIONOIL_STAGE2_DURATION )
+
+        cls.frames = tuple(_tmp_frames)
 
     def __init__(self, **pos):
         super().__init__(1, len(self.frames), **pos)
-        self.vibration = tuple((
+        pos[next(iter(pos))] = pg.math.Vector2(pos[next(iter(pos))]) + view_const.RADIATIONOIL_CENTER_OFFSET
+        self.pos = pos
+        self.vibration = tuple([
             *((0, 0) for _ in range(10)),
-            *((random.randint(-9, 9), random.randint(-9, 9)) for _ in range(self.expire_time-10))
-        ))
+            *((random.randint(-9, 9), random.randint(-9, 9)) for _ in range(view_const.RADIATIONOIL_STAGE1_DURATION-10)),
+            *((0, 0) for _ in range(view_const.RADIATIONOIL_STAGE2_DURATION))
+        ])
 
     def draw(self, screen, update=True):
         screen.blit(
@@ -196,9 +219,9 @@ class Animation_shuffleBases_vertical(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_vertical.png')),
-            1/45 * i
+            1/45 * _i
         )
-        for i in range(1, 45)
+        for _i in range(1, 45)
     )
 
     def __init__(self, **pos):
@@ -209,9 +232,9 @@ class Animation_shuffleBases_horizontal(Animation_raster):
     frames = tuple(
         view_utils.scaled_surface(
             pg.image.load(os.path.join(view_const.IMAGE_PATH, 'thunder_horizontal.png')),
-            1/45 * i
+            1/45 * _i
         )
-        for i in range(1, 45)
+        for _i in range(1, 45)
     )
 
     def __init__(self, **pos):
@@ -368,22 +391,22 @@ class Animation_theworld(Animation_raster):
 class Animation_freeze(Animation_raster):
     frames = {
         'ice': tuple(view_utils.scaled_surface(
-                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')), i*1),
-                0.66/30*i if i <= 30 else 0.66
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice.png')), _i*1),
+                0.66/30*_i if _i <= 30 else 0.66
             )
-            for i in range(1, model_const.radius_not_move_duration)
+            for _i in range(1, model_const.radius_not_move_duration)
         ),
         'ice_text': tuple(view_utils.scaled_surface(
-                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_text.png')), -i*1),
-                0.66/30*i if i <= 30 else 0.66
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_text.png')), -_i*1),
+                0.66/30*_i if _i <= 30 else 0.66
             )
-            for i in range(1, model_const.radius_not_move_duration)
+            for _i in range(1, model_const.radius_not_move_duration)
         ),
         'ice_inside': tuple(view_utils.scaled_surface(
-                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_inside.png')), i*3),
-                0.2376/30*i if i <= 30 else 0.2376
+                pg.transform.rotate(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'ice_inside.png')), _i*3),
+                0.2376/30*_i if _i <= 30 else 0.2376
             )
-            for i in range(1, model_const.radius_not_move_duration)
+            for _i in range(1, model_const.radius_not_move_duration)
         ),
     }
 
