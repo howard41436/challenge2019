@@ -51,7 +51,7 @@ class TeamAI(BaseAI):
         if carry < 2000:
             if distance(my_pos,ene[number_one_id])<self.helper.game_size[0]/4 and max(player_list)> max(500+carry,1000) - 500*self.equipments[2] :
                 destination = ene[number_one_id] 
-            else:
+            elif self.helper.get_oils():
                 destination = self.get_best_oil()
         else:
             destination =  home

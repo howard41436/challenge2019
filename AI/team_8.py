@@ -8,8 +8,6 @@ class TeamAI(BaseAI):
         self.destination = None
 
     def decide(self):
-        best_destination = None
-
         my_pos = self.helper.get_player_position()
         radius = self.helper.player_radius
         carry = self.helper.get_player_value()
@@ -28,6 +26,7 @@ class TeamAI(BaseAI):
         str_item = self.helper.get_player_item_name()
         item = self.helper.get_market()
         market = self.helper.get_market_center()
+        best_destination = None
        
         if str_item and not self.helper.get_player_item_is_active():
             return AI_TRIGGER_ITEM
@@ -60,13 +59,13 @@ class TeamAI(BaseAI):
         if(dist < 40 and self.helper.get_player_value(nearplayer)-self.helper.get_player_value()>1000):
             if(self.helper.get_player_speed(nearplayer)<self.helper.get_player_speed()):   
                 attack_cp = 1/(((self.helper.get_player_value(nearplayer)-self.helper.get_player_value())/2)*dist)
-                # print(attack_cp)
+                #print(attack_cp)
                 if attack_cp > best_cp:
                     best_cp=attack_cp
                     best_destination=nearplayerpos
         #defense
         elif(dist < 40 and self.helper.get_player_value(nearplayer)<=self.helper.get_player_value()):
-                #  print("defense emerge")
+                 #print("defense emerge")
                  direction = (my_pos[0]-nearplayerpos[0], my_pos[1]-nearplayerpos[1]) 
                  return self.helper.get_direction(direction)
         #oil
@@ -81,8 +80,8 @@ class TeamAI(BaseAI):
             best_cp = max_cp
             best_destination = max_oil_pos
 
-        # if(best_destination == nearplayerpos):
-        #     print("attack emerge")
+        #if(best_destination == nearplayerpos):
+            #print("attack emerge")
 
         if len(oil_pos) == 0:
             best_destination = None

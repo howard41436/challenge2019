@@ -67,7 +67,7 @@ class TeamAI(BaseAI):
             if destination is None:
                 return AI_DIR_STOP
             else:
-                print(destination, my_pos)
+                #print(destination, my_pos)
 
                 for i in range(len(all_oils_pos)):
                     dist=self.helper.get_distance(all_oils_pos[i],my_pos)
