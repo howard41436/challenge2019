@@ -6,7 +6,14 @@ import View.main        as view
 import Controller.main  as controller
 import Interface.main   as helper
 
+import random
+import numpy as np
+
 def main(argv):
+    seed = 41436
+    random.seed(seed)
+    np.random.seed(seed)
+
     evManager = EventManager.EventManager()
     gamemodel = model.GameEngine(evManager, argv[1:])
     Control   = controller.Control(evManager, gamemodel)
