@@ -94,7 +94,7 @@ default_equipments = [
 ]
 
 priced_market_positions = [
-    (376, 373.5)
+    (view_const.game_size[0] / 2, view_const.game_size[1] / 2)
 ]
 market_radius = 50
 market_cd_time = 60 * 5
