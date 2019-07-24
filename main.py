@@ -24,7 +24,11 @@ seeds = {
 }
 
 def main(argv):
-    seed = seeds[' '.join(argv[1:5]).strip()]
+    try:
+        seed = seeds[' '.join(argv[1:5]).strip()]
+    except KeyError:
+        print('.')
+        seed = 41436
     random.seed(seed)
     np.random.seed(seed)
 
