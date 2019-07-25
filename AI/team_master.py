@@ -1,7 +1,6 @@
 from AI.base import *
-import Model.const as model_const
 from pygame.math import Vector2 as Vec
-import random
+
 PICK = 9
 direct = [
 [0, 0],             #steady
@@ -14,6 +13,7 @@ direct = [
 [-1, 0],            #left
 [-0.707, -0.707],    #left up
 ]
+
 class TeamAI(BaseAI):
     def __init__(self, helper):
         self.helper = helper
@@ -21,6 +21,7 @@ class TeamAI(BaseAI):
         self.color = (163, 193, 173)
         self.want_to_buy = {'RadiusNotMove' : 100, 'TheWorld' : 100, 'IGoHome' : 100, 'ShuffleBases': 1, 'Invincible': 1}
         self.FaDaCai1 = True
+
     def get_best_oil_position(self):
         my_pos = self.helper.get_player_position()
         oil_poses = self.helper.get_oils()
@@ -104,7 +105,7 @@ class TeamAI(BaseAI):
                     if value > tmp:
                         tmp = value
                         best_idx = idx
-                if self.helper.get_distance(self.helper.get_player_position(best_idx), my_pos) < model_const.radius_not_move_radius:
+                if self.helper.get_distance(self.helper.get_player_position(best_idx), my_pos) < self.helper.radius_not_move_radius:
                     return True
             elif self.helper.get_player_item_name() == 'RadiationOil' \
                 and self.helper.player_id != bases_value.index(max(bases_value)) \

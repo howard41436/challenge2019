@@ -1,3 +1,20 @@
+'''
+* How Animation works:
+
+tick = 0
+animations = []
+while True:
+    for ani in animations:
+        if ani.expired:
+            animations.remove(ani)
+
+    animations.append(new_animation)
+
+    for ani in animations:
+        ani.draw(screen)
+    
+    tick += 1
+'''
 import pygame as pg
 import numpy as np
 import os.path, threading, random
@@ -18,23 +35,6 @@ VERY IMPORTANT !!!
 
 Once you add a new class in this module, you have to add CLASS.init_convert()
 in the init_otherobjects() function!
-
-
-* How Animation works:
-
-tick = 0
-animations = []
-while True:
-    for ani in animations:
-        if ani.expired:
-            animations.remove(ani)
-
-    animations.append(new_animation)
-
-    for ani in animations:
-        ani.draw(screen)
-    
-    tick += 1
 '''
 
 
@@ -164,7 +164,7 @@ class Animation_othergohome(Animation_raster):
 class Animation_radiationOil(Animation_raster):
     '''
     stage 1: boom & screen vibration
-    stage 2: smoke (fade out?)
+    stage 2: smoke
     '''
 
     frames = tuple([
@@ -208,11 +208,6 @@ class Animation_radiationOil(Animation_raster):
         screen.blit(screen.copy(), self.vibration[self.frame_index_to_draw])
 
         if update: self.update()
-
-
-# the countdown animation
-class Animation_start():
-    pass
 
 
 class Animation_shuffleBases_vertical(Animation_raster):

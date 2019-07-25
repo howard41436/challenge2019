@@ -64,8 +64,7 @@ class GameEngine(object):
 
         self.scoreboard = Scoreboard(self.player_list, self.base_list)
 
-        # random seed is set in main.py of the game for demonstration purpose
-        # random.seed(time.time())
+        random.seed(time.time())
         
 
     def notify(self, event):

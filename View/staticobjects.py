@@ -1,3 +1,7 @@
+'''
+* "Static" object means that it is rendered every tick!
+* The term "static" is designed compared to "animation", which is dynamic.
+'''
 import pygame as pg
 import os.path
 import math
@@ -9,9 +13,6 @@ import Model.const       as model_const
 import View.animations   as view_animation
 
 '''
-* "Static" object means that it is rendered every tick!
-* The term "static" is designed compared to "animation", which is dynamic.
-
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!
