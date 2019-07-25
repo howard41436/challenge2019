@@ -250,6 +250,7 @@ class FaDaCai(Item):
         ev_manager.post(EventFaDaCaiStart(self.player_list[self.player_index]))
         self.duration = model_const.fadacai_duration
         self.active = True
+        self.player_list[self.player_index].item = None
 
     def update(self, ev_manager):
         self.duration -= 1
@@ -259,5 +260,4 @@ class FaDaCai(Item):
     def close(self, ev_manager):
         ev_manager.post(EventFaDaCaiStop(self.player_list[self.player_index]))
         self.active = False
-        self.player_list[self.player_index].item = None
 

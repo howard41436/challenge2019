@@ -215,8 +215,8 @@ class GraphicalView(object):
             view_const.game_caption, self.clock.get_fps()
         )
         pg.display.set_caption(caption)
-        
-        
+
+
     def initialize(self):
         """
         Set up the pygame graphical display and loads graphical resources.
@@ -283,8 +283,8 @@ if SOUND_ENABLE:
             'freeze': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'freeze.ogg')),
             'electric': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'electric.ogg')),
             'magnet': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'magnet.ogg')),
-            #'fadacai_cutin1': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans1.ogg')),
-            #'fadacai_cutin2': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans2.ogg')),
+            'fadacai_cutin1': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans1.ogg')),
+            'fadacai_cutin2': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'ironfans2.ogg')),
             'sandien': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'sandien.ogg')),
             'letitgo': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'letitgo.ogg')),
             'blizzard': pg.mixer.Sound(os.path.join(view_const.SOUND_PATH, 'blizzard.ogg')),

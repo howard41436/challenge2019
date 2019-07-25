@@ -46,6 +46,9 @@ class Interface(object):
                 elif AI_dir == 9:
                     self.ev_manager.post(EventMove(player.index, 0))
                     self.ev_manager.post(EventTriggerItem(player.index))
+                elif player.name == 'master' and AI_dir == 10:
+                    self.ev_manager.post(EventMove(player.index, 0))
+                    self.ev_manager.post(EventObtainFaDaCai(player.index))
                 else:
                     self.ev_manager.post(EventMove(player.index, 0))
         

@@ -1,3 +1,7 @@
+'''
+* "Static" object means that it is rendered every tick!
+* The term "static" is designed compared to "animation", which is dynamic.
+'''
 import pygame as pg
 import os.path
 import math
@@ -9,9 +13,6 @@ import Model.const       as model_const
 import View.animations   as view_animation
 
 '''
-* "Static" object means that it is rendered every tick!
-* The term "static" is designed compared to "animation", which is dynamic.
-
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!
 VERY IMPORTANT !!!
@@ -126,8 +127,8 @@ class View_players(__Object_base):
         for _rainbow in range(0, 19)
     )
     image_freeze = view_utils.scaled_surface(pg.image.load(os.path.join(view_const.IMAGE_PATH, 'freeze.png')),0.5)
-    #image_koreanfish = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
-
+    image_koreanfish = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish.png') ), 0.2)
+    image_captainkaoshiung = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'koreanfish_leader.png') ), 0.2)
     @classmethod
     def init_convert(cls):
         cls.images = tuple( _image.convert_alpha() for _image in cls.images )
@@ -145,7 +146,8 @@ class View_players(__Object_base):
                     player.color
                 ),
                 0.2
-            ).convert_alpha()
+            ).convert_alpha() if player.name != 'master'
+            else self.image_koreanfish
             for player in self.model.player_list
         )
         self.theworld_player = None
@@ -161,9 +163,12 @@ class View_players(__Object_base):
             angle = ((8 - players[_i].direction_no) % 8 - 3) * 45
             image = pg.transform.rotate(self.images[_i], angle)
             if not players[_i].is_invincible: image = pg.transform.rotate(self.images[_i], angle)
-            else: 
-                image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
-                self.color_switch[_i] += 1
+            else:
+                if players[_i].name == 'master':
+                    image = pg.transform.rotate(self.image_captainkaoshiung, angle)
+                else:
+                    image = pg.transform.rotate(self.images_color[self.color_switch[_i]%19], angle)
+                    self.color_switch[_i] += 1
             screen.blit(image, image.get_rect(center=players[_i].position))
             if players[_i].freeze: screen.blit(self.image_freeze, players[_i].position+[-17, -50])
 
@@ -188,20 +193,23 @@ class View_oils(__Object_base):
 
 class View_bases(__Object_base):
     image = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'base.png') ), 0.3)
-    
+    image_bathtub = view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'bathtub.png') ), 0.4)
     @classmethod
     def init_convert(cls):
         cls.image = cls.image.convert_alpha()
 
     def draw(self, screen):
-        for _base in self.model.base_list:
+        for idx, _base in enumerate(self.model.base_list):
             pg.draw.circle(
                 screen, 
                 self.model.player_list[_base.owner_index].color, 
                 (round(int(_base.center[0]), -2), round(int(_base.center[1]), -2)), 
                 160
             )
-            screen.blit(self.image, self.image.get_rect(center=_base.center))
+            if self.model.player_list[idx].name == 'master':
+                screen.blit(self.image_bathtub, self.image_bathtub.get_rect(center=_base.center))
+            else:
+                screen.blit(self.image, self.image.get_rect(center=_base.center))
 
 
 class View_pets(__Object_base):
@@ -215,7 +223,8 @@ class View_pets(__Object_base):
                     player.color
                 ),
                 0.08
-            ).convert_alpha()
+            ).convert_alpha() if player.name != 'master'
+            else view_utils.scaled_surface(pg.image.load( os.path.join(view_const.IMAGE_PATH, 'pet_dog.png') ), 0.12).convert_alpha()
             for player in self.model.player_list
         )
 

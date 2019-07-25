@@ -19,7 +19,7 @@ AI_dir_mapping = [
     [0.707, 0.707],    #right down
     [0, 1],            #down
     [-0.707, 0.707],   #left down
-    [-1, 0],	        #left
+    [-1, 0],            #left
     [-0.707, -0.707],    #left up
 ]
 """
@@ -31,4 +31,4 @@ class BaseAI:
         self.helper = helper
 
     def decide(self):
-    	pass
+        pass
