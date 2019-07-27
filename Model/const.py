@@ -116,7 +116,7 @@ item_weight = {
     'OtherGoHome': 4,
     'TheWorld': 2,
     'MagnetAttract': 4,
-    'Invincible': 30,
+    'Invincible': 3,
     'RadiusNotMove': 3,
     'RadiationOil': 2,
     'ShuffleBases': 2,
